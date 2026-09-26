@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claimbridge.example/schemas/document.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "filename": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "mime": {
+      "enum": [
+        "application/pdf",
+        "text/plain"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "policy",
+        "eob",
+        "denial",
+        "bill",
+        "authorization",
+        "correspondence",
+        "unknown"
+      ]
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "uploaded",
+        "extracting",
+        "ready",
+        "needs_ocr",
+        "invalid",
+        "encrypted",
+        "failed"
+      ]
+    },
+    "pages": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "extraction_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "workspace_id",
+    "filename",
+    "sha256",
+    "mime",
+    "kind",
+    "synthetic",
+    "status",
+    "pages",
+    "error_code",
+    "extraction_version"
+  ]
+}

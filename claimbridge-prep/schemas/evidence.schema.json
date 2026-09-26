@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claimbridge.example/schemas/evidence.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "domain": {
+      "enum": [
+        "user",
+        "plan",
+        "external",
+        "user_answer"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "policy",
+        "eob",
+        "denial",
+        "bill",
+        "authorization",
+        "correspondence",
+        "government_guidance",
+        "regulation",
+        "source_summary",
+        "answer"
+      ]
+    },
+    "document_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "section": {
+          "type": "string"
+        },
+        "start_char": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end_char": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "page",
+        "section",
+        "start_char",
+        "end_char",
+        "bbox"
+      ]
+    },
+    "text": {
+      "type": "string"
+    },
+    "text_kind": {
+      "enum": [
+        "verbatim",
+        "verified_paraphrase",
+        "user_statement"
+      ]
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "verification": {
+      "enum": [
+        "exact_match",
+        "human_reviewed",
+        "unverified"
+      ]
+    },
+    "authority_scope": {
+      "type": "string"
+    },
+    "accessed_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "domain",
+    "kind",
+    "document_id",
+    "source_id",
+    "source_url",
+    "location",
+    "text",
+    "text_kind",
+    "content_sha256",
+    "verification",
+    "authority_scope",
+    "accessed_at"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "const": "external"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "accessed_at": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "enum": [
+              "user",
+              "plan"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "document_id": {
+            "type": "string"
+          },
+          "location": {
+            "properties": {
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

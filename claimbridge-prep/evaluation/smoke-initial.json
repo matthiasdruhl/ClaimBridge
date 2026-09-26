@@ -1,0 +1,229 @@
+{
+  "stage": "initial",
+  "passed": 22,
+  "total": 22,
+  "results": [
+    {
+      "id": "initial-01",
+      "category": "document",
+      "passed": true,
+      "actual": "SYN-C260812-A",
+      "expected": "SYN-C260812-A"
+    },
+    {
+      "id": "initial-02",
+      "category": "document",
+      "passed": true,
+      "actual": "SYN-M1042",
+      "expected": "SYN-M1042"
+    },
+    {
+      "id": "initial-03",
+      "category": "document",
+      "passed": true,
+      "actual": "2026-08-12",
+      "expected": "2026-08-12"
+    },
+    {
+      "id": "initial-04",
+      "category": "document",
+      "passed": true,
+      "actual": "11",
+      "expected": "11"
+    },
+    {
+      "id": "initial-05",
+      "category": "document",
+      "passed": true,
+      "actual": "network",
+      "expected": "network"
+    },
+    {
+      "id": "initial-06",
+      "category": "financial",
+      "passed": true,
+      "actual": 420000,
+      "expected": 420000
+    },
+    {
+      "id": "initial-07",
+      "category": "financial",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "id": "initial-08",
+      "category": "financial",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "id": "initial-09",
+      "category": "financial",
+      "passed": true,
+      "actual": 420000,
+      "expected": 420000
+    },
+    {
+      "id": "initial-10",
+      "category": "financial",
+      "passed": true,
+      "actual": 600000,
+      "expected": 600000
+    },
+    {
+      "id": "initial-11",
+      "category": "financial",
+      "passed": true,
+      "actual": 120000,
+      "expected": 120000
+    },
+    {
+      "id": "initial-12",
+      "category": "financial",
+      "passed": true,
+      "actual": 420000,
+      "expected": 420000
+    },
+    {
+      "id": "initial-13",
+      "category": "financial",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "id": "initial-14",
+      "category": "scope",
+      "passed": true,
+      "actual": "self_funded",
+      "expected": "self_funded"
+    },
+    {
+      "id": "initial-15",
+      "category": "scope",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "id": "initial-16",
+      "category": "scope",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "id": "initial-extra-1",
+      "category": "missing_information",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "id": "initial-extra-2",
+      "category": "missing_information",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "id": "initial-extra-3",
+      "category": "clarification",
+      "passed": true,
+      "actual": "open",
+      "expected": "open"
+    },
+    {
+      "id": "initial-policy",
+      "category": "policy_retrieval",
+      "passed": true,
+      "actual": [
+        "P7",
+        "P8",
+        "P13"
+      ],
+      "expected": [
+        "P7",
+        "P8",
+        "P13"
+      ]
+    },
+    {
+      "id": "initial-external",
+      "category": "external_retrieval",
+      "passed": true,
+      "actual": [
+        "D01:P1",
+        "D01:P2",
+        "D01:P3",
+        "D01:P4",
+        "D01:P5",
+        "D01:P6",
+        "D01:P7",
+        "D01:P8",
+        "D01:P9",
+        "D01:P10",
+        "D01:P11",
+        "D01:P12",
+        "D01:P13",
+        "D01:P14",
+        "D01:P15",
+        "D02:E1",
+        "D02:E2",
+        "D02:E3",
+        "D02:E4",
+        "D02:E5",
+        "D02:E6",
+        "D03:N1",
+        "D03:N2",
+        "D03:N3",
+        "D04:B1",
+        "D04:B2",
+        "D04:B3",
+        "D05:A1",
+        "D05:A2",
+        "D05:A3",
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14"
+      ],
+      "expected": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R06"
+      ]
+    },
+    {
+      "id": "initial-questions",
+      "category": "clarification",
+      "passed": true,
+      "actual": [
+        "Q-location",
+        "Q-receipt",
+        "Q-payment"
+      ],
+      "expected": [
+        "Q-location",
+        "Q-receipt",
+        "Q-payment"
+      ]
+    }
+  ],
+  "limitations": "Field/source-presence assertions only; human citation entailment/actionability review still required."
+}

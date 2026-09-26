@@ -1,0 +1,22 @@
+{
+  "name": "claimbridge",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev:web": "npm run dev --workspace @claimbridge/web",
+    "build:web": "npm run build --workspace @claimbridge/web",
+    "typecheck": "npm run typecheck --workspace @claimbridge/web",
+    "lint:web": "npm run lint --workspace @claimbridge/web",
+    "format:check": "prettier --check apps/web docs README.md CONTRIBUTING.md package.json",
+    "format": "prettier --write apps/web docs README.md CONTRIBUTING.md package.json"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.0"
+  }
+}

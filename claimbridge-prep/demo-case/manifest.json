@@ -1,0 +1,56 @@
+[
+  {
+    "id": "D01",
+    "title": "Lumen Meadow Employee Health Plan",
+    "path": "documents/01-plan.pdf",
+    "stage": "initial",
+    "sha256": "29ec2344f9ca97cd4ab4734744f64acbf83cd5756c96c9b4bb9ee8d98bd2bd08",
+    "pages": 5,
+    "synthetic": true
+  },
+  {
+    "id": "D02",
+    "title": "Harborlight - Explanation of Benefits",
+    "path": "documents/02-eob.pdf",
+    "stage": "initial",
+    "sha256": "17004943f512876d2eb6e5834686804149c5cd2ee9dd1df5f63d1b7e8a0ec4ec",
+    "pages": 2,
+    "synthetic": true
+  },
+  {
+    "id": "D03",
+    "title": "Harborlight - Adverse Benefit Determination",
+    "path": "documents/03-denial.pdf",
+    "stage": "initial",
+    "sha256": "87cb285ea04f134c81a2733624ecb4bc371ed3ffefca6471d218217ea326bf79",
+    "pages": 1,
+    "synthetic": true
+  },
+  {
+    "id": "D04",
+    "title": "Seabright Anesthesia Group - Patient Statement",
+    "path": "documents/04-provider-bill.pdf",
+    "stage": "initial",
+    "sha256": "ddb64e4db76f67a6c5b5e703891d0872c4e5343953421f1424f044d83f844bcb",
+    "pages": 1,
+    "synthetic": true
+  },
+  {
+    "id": "D05",
+    "title": "Harborlight - Prior Review Approval",
+    "path": "documents/05-authorization.pdf",
+    "stage": "initial",
+    "sha256": "583943810fc5d17df7cfb5ebe135f6fdd0ce3e696af85df95d175aa930a94728",
+    "pages": 1,
+    "synthetic": true
+  },
+  {
+    "id": "D06",
+    "title": "Encounter and Network Confirmation Packet",
+    "path": "documents/06-location-confirmation.pdf",
+    "stage": "clarification",
+    "sha256": "b2c8ae0a2c5826d229f6a9da2b38fe7b9a199a5858bd9e5754319bc8a97f013d",
+    "pages": 2,
+    "synthetic": true
+  }
+]

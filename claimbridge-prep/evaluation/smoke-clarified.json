@@ -1,0 +1,242 @@
+{
+  "stage": "clarified",
+  "passed": 23,
+  "total": 23,
+  "results": [
+    {
+      "id": "clarified-01",
+      "category": "document",
+      "passed": true,
+      "actual": "SYN-C260812-A",
+      "expected": "SYN-C260812-A"
+    },
+    {
+      "id": "clarified-02",
+      "category": "document",
+      "passed": true,
+      "actual": "SYN-M1042",
+      "expected": "SYN-M1042"
+    },
+    {
+      "id": "clarified-03",
+      "category": "document",
+      "passed": true,
+      "actual": "2026-08-12",
+      "expected": "2026-08-12"
+    },
+    {
+      "id": "clarified-04",
+      "category": "document",
+      "passed": true,
+      "actual": "11",
+      "expected": "11"
+    },
+    {
+      "id": "clarified-05",
+      "category": "document",
+      "passed": true,
+      "actual": "network",
+      "expected": "network"
+    },
+    {
+      "id": "clarified-06",
+      "category": "financial",
+      "passed": true,
+      "actual": 420000,
+      "expected": 420000
+    },
+    {
+      "id": "clarified-07",
+      "category": "financial",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "id": "clarified-08",
+      "category": "financial",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "id": "clarified-09",
+      "category": "financial",
+      "passed": true,
+      "actual": 420000,
+      "expected": 420000
+    },
+    {
+      "id": "clarified-10",
+      "category": "financial",
+      "passed": true,
+      "actual": 600000,
+      "expected": 600000
+    },
+    {
+      "id": "clarified-11",
+      "category": "financial",
+      "passed": true,
+      "actual": 120000,
+      "expected": 120000
+    },
+    {
+      "id": "clarified-12",
+      "category": "financial",
+      "passed": true,
+      "actual": 420000,
+      "expected": 420000
+    },
+    {
+      "id": "clarified-13",
+      "category": "financial",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "id": "clarified-14",
+      "category": "scope",
+      "passed": true,
+      "actual": "self_funded",
+      "expected": "self_funded"
+    },
+    {
+      "id": "clarified-15",
+      "category": "scope",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "id": "clarified-16",
+      "category": "scope",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "id": "clarified-extra-1",
+      "category": "reasoning",
+      "passed": true,
+      "actual": "asc",
+      "expected": "asc"
+    },
+    {
+      "id": "clarified-extra-2",
+      "category": "clarification",
+      "passed": true,
+      "actual": "user_reported",
+      "expected": "user_reported"
+    },
+    {
+      "id": "clarified-extra-3",
+      "category": "deadline",
+      "passed": true,
+      "actual": "2027-02-28",
+      "expected": "2027-02-28"
+    },
+    {
+      "id": "clarified-extra-4",
+      "category": "reasoning",
+      "passed": true,
+      "actual": "possible_processing_error",
+      "expected": "possible_processing_error"
+    },
+    {
+      "id": "clarified-policy",
+      "category": "policy_retrieval",
+      "passed": true,
+      "actual": [
+        "P7",
+        "P8",
+        "P13"
+      ],
+      "expected": [
+        "P7",
+        "P8",
+        "P13"
+      ]
+    },
+    {
+      "id": "clarified-external",
+      "category": "external_retrieval",
+      "passed": true,
+      "actual": [
+        "D01:P1",
+        "D01:P2",
+        "D01:P3",
+        "D01:P4",
+        "D01:P5",
+        "D01:P6",
+        "D01:P7",
+        "D01:P8",
+        "D01:P9",
+        "D01:P10",
+        "D01:P11",
+        "D01:P12",
+        "D01:P13",
+        "D01:P14",
+        "D01:P15",
+        "D02:E1",
+        "D02:E2",
+        "D02:E3",
+        "D02:E4",
+        "D02:E5",
+        "D02:E6",
+        "D03:N1",
+        "D03:N2",
+        "D03:N3",
+        "D04:B1",
+        "D04:B2",
+        "D04:B3",
+        "D05:A1",
+        "D05:A2",
+        "D05:A3",
+        "D06:L1",
+        "D06:L2",
+        "D06:L3",
+        "D06:L4",
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "U-receipt",
+        "U-payment"
+      ],
+      "expected": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R06"
+      ]
+    },
+    {
+      "id": "clarified-questions",
+      "category": "clarification",
+      "passed": true,
+      "actual": [
+        "Q-location",
+        "Q-receipt",
+        "Q-payment"
+      ],
+      "expected": [
+        "Q-location",
+        "Q-receipt",
+        "Q-payment"
+      ]
+    }
+  ],
+  "limitations": "Field/source-presence assertions only; human citation entailment/actionability review still required."
+}

@@ -1,0 +1,120 @@
+{
+  "claim_id": "SYN-C260812-A",
+  "claim_revision": 2,
+  "status": "ready_for_review",
+  "actions": [
+    {
+      "id": "ACT-correct",
+      "owner": "provider",
+      "title": "Review service-location fields",
+      "instructions": "Compare submitted claim with D06; correct only if supported, and request written billing hold.",
+      "status": "suggested",
+      "due": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "No provider response deadline established",
+        "derivation": null
+      },
+      "depends_on": [],
+      "evidence_ids": [
+        "D02:E3",
+        "D06:L1"
+      ],
+      "completion_evidence_ids": []
+    },
+    {
+      "id": "ACT-appeal",
+      "owner": "member",
+      "title": "Preserve the internal appeal deadline",
+      "instructions": "Review and submit through verified plan instructions; keep proof. Do not wait for correction if that risks the filing deadline.",
+      "status": "draft",
+      "due": {
+        "value": "2027-02-28",
+        "status": "derived",
+        "evidence_ids": [
+          "U-receipt",
+          "D01:P13",
+          "R01"
+        ],
+        "reason": "Provisional on user-reported receipt; no weekend extension assumed",
+        "derivation": {
+          "method": "receipt_date_plus_180_calendar_days",
+          "input_fact_paths": [
+            "denial.received_date"
+          ]
+        }
+      },
+      "depends_on": [],
+      "evidence_ids": [
+        "D01:P13",
+        "D03:N2",
+        "U-receipt",
+        "R01"
+      ],
+      "completion_evidence_ids": []
+    },
+    {
+      "id": "ACT-records",
+      "owner": "plan",
+      "title": "Request records and reprocessing",
+      "instructions": "Supply claim data and review facility protection; explain recognized amount and revised accounting.",
+      "status": "suggested",
+      "due": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "No appeal submitted yet",
+        "derivation": null
+      },
+      "depends_on": [],
+      "evidence_ids": [
+        "D01:P8",
+        "D01:P14",
+        "R02"
+      ],
+      "completion_evidence_ids": []
+    },
+    {
+      "id": "ACT-external",
+      "owner": "member",
+      "title": "Check external review if still denied",
+      "instructions": "Obtain final internal notice and confirm eligibility, route and filing window before requesting review.",
+      "status": "blocked",
+      "due": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Final internal adverse notice absent",
+        "derivation": null
+      },
+      "depends_on": [
+        "ACT-appeal"
+      ],
+      "evidence_ids": [
+        "D01:P15",
+        "R04"
+      ],
+      "completion_evidence_ids": []
+    }
+  ],
+  "arguments": [
+    {
+      "id": "ARG-location",
+      "statement": "The office classification appears inconsistent with the corroborated ASC encounter.",
+      "evidence_ids": [
+        "D03:N1",
+        "D06:L1",
+        "D06:L3",
+        "D01:P8",
+        "R02"
+      ],
+      "limitations": [
+        "No corrected EOB or recognized amount",
+        "Who caused the discrepancy is not known"
+      ],
+      "requested_remedy": "Review and reprocess if supported, with corrected EOB and claim-file access"
+    }
+  ],
+  "submitted": false
+}

@@ -1,0 +1,240 @@
+[
+  {
+    "evidence_id": "D01:P1",
+    "page": 1,
+    "normalized_start": 135,
+    "normalized_end": 683,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P2",
+    "page": 1,
+    "normalized_start": 715,
+    "normalized_end": 1025,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P3",
+    "page": 1,
+    "normalized_start": 1060,
+    "normalized_end": 1326,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P4",
+    "page": 2,
+    "normalized_start": 113,
+    "normalized_end": 506,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P5",
+    "page": 2,
+    "normalized_start": 530,
+    "normalized_end": 957,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P6",
+    "page": 2,
+    "normalized_start": 997,
+    "normalized_end": 1287,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P7",
+    "page": 3,
+    "normalized_start": 127,
+    "normalized_end": 442,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P8",
+    "page": 3,
+    "normalized_start": 479,
+    "normalized_end": 1015,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P9",
+    "page": 3,
+    "normalized_start": 1041,
+    "normalized_end": 1378,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P10",
+    "page": 4,
+    "normalized_start": 131,
+    "normalized_end": 495,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P11",
+    "page": 4,
+    "normalized_start": 528,
+    "normalized_end": 859,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P12",
+    "page": 4,
+    "normalized_start": 887,
+    "normalized_end": 1204,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P13",
+    "page": 5,
+    "normalized_start": 117,
+    "normalized_end": 668,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P14",
+    "page": 5,
+    "normalized_start": 698,
+    "normalized_end": 1001,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D01:P15",
+    "page": 5,
+    "normalized_start": 1036,
+    "normalized_end": 1590,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D02:E1",
+    "page": 1,
+    "normalized_start": 116,
+    "normalized_end": 539,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D02:E2",
+    "page": 1,
+    "normalized_start": 627,
+    "normalized_end": 950,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D02:E3",
+    "page": 1,
+    "normalized_start": 986,
+    "normalized_end": 1300,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D02:E4",
+    "page": 1,
+    "normalized_start": 1327,
+    "normalized_end": 1615,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D02:E5",
+    "page": 2,
+    "normalized_start": 148,
+    "normalized_end": 651,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D02:E6",
+    "page": 2,
+    "normalized_start": 675,
+    "normalized_end": 1051,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D03:N1",
+    "page": 1,
+    "normalized_start": 131,
+    "normalized_end": 660,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D03:N2",
+    "page": 1,
+    "normalized_start": 680,
+    "normalized_end": 1117,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D03:N3",
+    "page": 1,
+    "normalized_start": 1152,
+    "normalized_end": 1634,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D04:B1",
+    "page": 1,
+    "normalized_start": 112,
+    "normalized_end": 465,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D04:B2",
+    "page": 1,
+    "normalized_start": 488,
+    "normalized_end": 866,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D04:B3",
+    "page": 1,
+    "normalized_start": 897,
+    "normalized_end": 1268,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D05:A1",
+    "page": 1,
+    "normalized_start": 124,
+    "normalized_end": 490,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D05:A2",
+    "page": 1,
+    "normalized_start": 518,
+    "normalized_end": 955,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D05:A3",
+    "page": 1,
+    "normalized_start": 989,
+    "normalized_end": 1286,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D06:L1",
+    "page": 1,
+    "normalized_start": 154,
+    "normalized_end": 611,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D06:L2",
+    "page": 1,
+    "normalized_start": 645,
+    "normalized_end": 989,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D06:L3",
+    "page": 2,
+    "normalized_start": 155,
+    "normalized_end": 497,
+    "normalization": "Unicode whitespace collapsed to single space"
+  },
+  {
+    "evidence_id": "D06:L4",
+    "page": 2,
+    "normalized_start": 522,
+    "normalized_end": 931,
+    "normalization": "Unicode whitespace collapsed to single space"
+  }
+]

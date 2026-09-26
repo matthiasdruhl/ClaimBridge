@@ -1,0 +1,1703 @@
+{
+  "id": "SYN-C260812-A",
+  "revision": 1,
+  "as_of": "2026-09-24",
+  "synthetic": true,
+  "patient": {
+    "member_id": {
+      "value": "SYN-M1042",
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "name": {
+      "value": "Avery Rowan",
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "residence_state": {
+      "value": "CA",
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P1"
+      ],
+      "reason": null,
+      "derivation": null
+    }
+  },
+  "plan": {
+    "id": {
+      "value": "LM-2026-EPO",
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "funding": {
+      "value": "self_funded",
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "erisa": {
+      "value": true,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "grandfathered": {
+      "value": false,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "coverage_active": {
+      "value": true,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "year": {
+      "value": 2026,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "coinsurance_bps": {
+      "value": 2000,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P4"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "deductible_cents": {
+      "value": 100000,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P4"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "oop_max_cents": {
+      "value": 500000,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P4"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "appeal_levels": {
+      "value": 1,
+      "status": "explicit",
+      "evidence_ids": [
+        "D01:P13"
+      ],
+      "reason": null,
+      "derivation": null
+    }
+  },
+  "providers": [
+    {
+      "id": "SYN-P-AN1",
+      "name": {
+        "value": "Seabright Anesthesia Group",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "role": "anesthesia",
+      "network": {
+        "value": "out",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    },
+    {
+      "id": "SYN-F-2401",
+      "name": {
+        "value": "Juniper Bay Surgery Center",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "role": "facility",
+      "network": {
+        "value": "in",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "services": [
+    {
+      "id": "SV-A",
+      "description": {
+        "value": "Anesthesia associated with knee arthroscopy",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "date": {
+        "value": "2026-08-12",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "provider_id": "SYN-P-AN1",
+      "facility_id": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Submitted anesthesia claim has blank facility ID",
+        "derivation": null
+      },
+      "submitted_pos": {
+        "value": "11",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E3"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "actual_setting": {
+        "value": null,
+        "status": "conflicted",
+        "evidence_ids": [
+          "D02:E3",
+          "D02:E5",
+          "D05:A1"
+        ],
+        "reason": "Actual anesthesia location needs corroboration",
+        "derivation": null
+      },
+      "code": {
+        "value": "SYN-AN-KNEE",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "code_system": {
+        "value": "fictional_internal",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    },
+    {
+      "id": "SV-F",
+      "description": {
+        "value": "Knee arthroscopy facility services",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "date": {
+        "value": "2026-08-12",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "provider_id": "SYN-F-2401",
+      "facility_id": {
+        "value": "SYN-F-2401",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "submitted_pos": {
+        "value": "24",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "actual_setting": {
+        "value": "asc",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "code": {
+        "value": "SYN-FAC-KNEE",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "code_system": {
+        "value": "fictional_internal",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "eobs": [
+    {
+      "id": "EOB-A",
+      "claim_id": {
+        "value": "SYN-C260812-A",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "service_id": "SV-A",
+      "financial": {
+        "billed_cents": {
+          "value": 420000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E2"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "allowed_cents": {
+          "value": null,
+          "status": "unknown",
+          "evidence_ids": [],
+          "reason": "EOB shows -- / not determined",
+          "derivation": null
+        },
+        "paid_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E2"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "member_cents": {
+          "value": 420000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E2"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "deductible_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E2"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "copay_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E2"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "coinsurance_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E2"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "adjustment_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E2"
+          ],
+          "reason": null,
+          "derivation": null
+        }
+      },
+      "deductible_used_cents": {
+        "value": 100000,
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E4"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "oop_used_cents": {
+        "value": 240000,
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E4"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    },
+    {
+      "id": "EOB-F",
+      "claim_id": {
+        "value": "SYN-C260812-F",
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E5"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "service_id": "SV-F",
+      "financial": {
+        "billed_cents": {
+          "value": 1200000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "allowed_cents": {
+          "value": 600000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "paid_cents": {
+          "value": 480000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "member_cents": {
+          "value": 120000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "deductible_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "copay_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "coinsurance_cents": {
+          "value": 120000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "adjustment_cents": {
+          "value": 600000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D02:E5"
+          ],
+          "reason": null,
+          "derivation": null
+        }
+      },
+      "deductible_used_cents": {
+        "value": 100000,
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E6"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "oop_used_cents": {
+        "value": 240000,
+        "status": "explicit",
+        "evidence_ids": [
+          "D02:E6"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "bills": [
+    {
+      "id": "SYN-B-905",
+      "claim_id": {
+        "value": "SYN-C260812-A",
+        "status": "explicit",
+        "evidence_ids": [
+          "D04:B1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "balance_cents": {
+        "value": 420000,
+        "status": "explicit",
+        "evidence_ids": [
+          "D04:B2"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "posted_patient_payments_cents": {
+        "value": 0,
+        "status": "explicit",
+        "evidence_ids": [
+          "D04:B2"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "statement_date": {
+        "value": "2026-09-05",
+        "status": "explicit",
+        "evidence_ids": [
+          "D04:B2"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "payment_requested_date": {
+        "value": "2026-10-05",
+        "status": "explicit",
+        "evidence_ids": [
+          "D04:B2"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "denial": {
+    "reason_code": {
+      "value": "SYN-NET07",
+      "status": "explicit",
+      "evidence_ids": [
+        "D03:N1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "reason": {
+      "value": "Non-emergency out-of-network office service",
+      "status": "explicit",
+      "evidence_ids": [
+        "D03:N1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "type": {
+      "value": "network",
+      "status": "explicit",
+      "evidence_ids": [
+        "D03:N1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "notice_date": {
+      "value": "2026-08-28",
+      "status": "explicit",
+      "evidence_ids": [
+        "D03:N1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "received_date": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Receipt date is absent",
+      "derivation": null
+    },
+    "deadline": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Receipt date required",
+      "derivation": null
+    },
+    "final_internal": {
+      "value": false,
+      "status": "explicit",
+      "evidence_ids": [
+        "D03:N1",
+        "D03:N3"
+      ],
+      "reason": null,
+      "derivation": null
+    }
+  },
+  "authorizations": [
+    {
+      "id": {
+        "value": "SYN-AUTH-771",
+        "status": "explicit",
+        "evidence_ids": [
+          "D05:A1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "start": {
+        "value": "2026-08-10",
+        "status": "explicit",
+        "evidence_ids": [
+          "D05:A1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "end": {
+        "value": "2026-08-20",
+        "status": "explicit",
+        "evidence_ids": [
+          "D05:A1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "facility_id": {
+        "value": "SYN-F-2401",
+        "status": "explicit",
+        "evidence_ids": [
+          "D05:A1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "scope": {
+        "value": "One scheduled outpatient knee arthroscopy encounter",
+        "status": "explicit",
+        "evidence_ids": [
+          "D05:A1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "policy_provisions": [
+    {
+      "id": "P7",
+      "section": "7",
+      "topic": "network exclusion",
+      "evidence_ids": [
+        "D01:P7"
+      ]
+    },
+    {
+      "id": "P8",
+      "section": "8",
+      "topic": "facility exception",
+      "evidence_ids": [
+        "D01:P8"
+      ]
+    },
+    {
+      "id": "P13",
+      "section": "13",
+      "topic": "internal appeal",
+      "evidence_ids": [
+        "D01:P13"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q-location",
+      "prompt": "Where was the anesthesia performed, and can you provide the encounter record?",
+      "why": "Office versus ASC changes the relevant plan exception.",
+      "target_fact_path": "services.0.actual_setting",
+      "status": "open",
+      "answer": null,
+      "evidence_ids": [
+        "D02:E3",
+        "D05:A1"
+      ],
+      "blocking_for": [
+        "facility_protection"
+      ]
+    },
+    {
+      "id": "Q-receipt",
+      "prompt": "When did you first receive the denial?",
+      "why": "Needed for the internal appeal filing date.",
+      "target_fact_path": "denial.received_date",
+      "status": "open",
+      "answer": null,
+      "evidence_ids": [
+        "D03:N2"
+      ],
+      "blocking_for": [
+        "exact_deadline"
+      ]
+    },
+    {
+      "id": "Q-payment",
+      "prompt": "Any payments or newer EOBs since the statement?",
+      "why": "The bill is only a dated ledger snapshot.",
+      "target_fact_path": "bills.0.balance_cents",
+      "status": "open",
+      "answer": null,
+      "evidence_ids": [
+        "D04:B2"
+      ],
+      "blocking_for": [
+        "current_balance"
+      ]
+    }
+  ],
+  "conclusions": [
+    {
+      "id": "C-location",
+      "text": "The records conflict about anesthesia location; investigate before applying the facility exception.",
+      "classification": "conditional",
+      "outcome": "missing_information",
+      "evidence_ids": [
+        "D02:E3",
+        "D02:E5",
+        "D05:A1",
+        "D01:P8"
+      ],
+      "unresolved": [
+        "actual_location",
+        "recognized_amount",
+        "receipt_date"
+      ]
+    }
+  ],
+  "corrected_liability_cents": {
+    "value": null,
+    "status": "unknown",
+    "evidence_ids": [],
+    "reason": "Recognized amount and corrected adjudication absent",
+    "derivation": null
+  },
+  "evidence": [
+    {
+      "id": "D01:P1",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "P1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "SYNTHETIC / DEMONSTRATION DATA. Fictional abbreviated SPD, not a complete legally compliant benefit booklet. Plan sponsor: Lumen Meadow Design LLC. Plan ID: LM-2026-EPO. Administrator: Lumen Meadow Benefits Committee. Claims administrator: Harborlight Benefit Services (fictional). This is a private, single-employer self-funded ERISA group health plan, not an insurance policy issued by Harborlight. The plan is non-grandfathered. Plan year January 1 through December 31, 2026. California member residence does not change this funding designation.",
+      "text_kind": "verbatim",
+      "content_sha256": "59789e7bab18731b5ab2d6f612664a6e8e077eb6b2ff3129698bbc7e35ad1f9f",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P2",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "P2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Member: Avery Rowan. Member ID: SYN-M1042. Individual coverage effective January 1, 2026; active through September 24, 2026 in this demonstration. Member services: benefits@harborlight.example (non-operational). Group: SYN-LM26. No other health coverage is recorded, but members must report any other coverage.",
+      "text_kind": "verbatim",
+      "content_sha256": "d8c181dbacd74ada93844b9917b9e0fe3791d4bba8d4ac3210cb8b9b7669df37",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P3",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "P3",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Address and dependent updates may be submitted through the demonstration member portal. Keep a copy of notices. This excerpt includes relevant benefit terms and selected unrelated benefits. A real reviewer should obtain all controlling plan documents and amendments.",
+      "text_kind": "verbatim",
+      "content_sha256": "ff4b64d161a584c2aeb1e9b8b9f26213e471e757b322a33cdaa2160b1d555136",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P4",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 2,
+        "section": "P4",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Annual in-network deductible: $1,000. Annual in-network out-of-pocket maximum: $5,000. Covered outpatient surgery facility services and associated anesthesiology: 20% member coinsurance after the deductible; no separate copayment. Applicable statutory cost-sharing limits and exceptions control. The deductible and out-of-pocket ledger on the EOB shows processing status, not proof of payment.",
+      "text_kind": "verbatim",
+      "content_sha256": "ae70a764c85d5a3f0b3940c5104be2da662e8cb27ce6c4c8aef60966e07e9dba",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P5",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 2,
+        "section": "P5",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Primary-care office visit: $25 copayment. Specialist office visit: $40 copayment. Covered preventive services use the preventive-benefit schedule. Outpatient physical therapy: 20% after deductible, ordinarily 20 visits per plan year subject to the plan review process. Retail pharmacy: generic tier $10; preferred brand tier $35. Dental cleaning and routine adult vision hardware are outside this medical demonstration benefit.",
+      "text_kind": "verbatim",
+      "content_sha256": "0537f634f6d5794799a9d28527fa37a34cfec50f5cc932fbf9235d082cff01f0",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P6",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 2,
+        "section": "P6",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "When other coverage exists, the administrator will request details before determining payer order under the controlling coordination provisions. Itemized receipts may be requested for member-submitted reimbursement. This abbreviated booklet does not establish a universal coordination rule.",
+      "text_kind": "verbatim",
+      "content_sha256": "40a37563d3009ec7def0c00acd45c56e2cdbf222304f0259507a217539cb9373",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P7",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 3,
+        "section": "P7",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Non-emergency services by out-of-network providers are excluded unless an exception in Section 8 or another controlling requirement applies. Network status must be determined for the specific provider or facility and the service date. A participating facility does not necessarily mean every clinician participates.",
+      "text_kind": "verbatim",
+      "content_sha256": "990439ad4dcfa378438337a38121c1a6911d111495cf7d63a76874517cf2f56a",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P8",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 3,
+        "section": "P8",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Covered non-emergency anesthesiology furnished by a nonparticipating provider during a visit to a participating hospital, hospital outpatient department or ambulatory surgical center is handled using applicable federal surprise-billing protections. For those services, the plan applies in-network cost sharing based on the legally applicable recognized amount and credits applicable in-network accumulators. Provider reimbursement is determined separately. An ordinary office visit is not automatically a visit to a qualifying facility.",
+      "text_kind": "verbatim",
+      "content_sha256": "ff847c3694382d3f9dbca82733fa009b89203eb63c83bb5bb90ecf6b6da99712",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P9",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 3,
+        "section": "P9",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Protected cost sharing can still be owed. A bill alone does not determine the legally collectible balance. If an item is disputed, ask for the submitted claim, service location and an explanation of benefit calculations. The patient should not determine or change medical billing codes without the provider reviewing the actual services.",
+      "text_kind": "verbatim",
+      "content_sha256": "052656c6f8b9435ce68b71004925ef1cc20162cffb429e96cd45cbfb6dd444c0",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P10",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 4,
+        "section": "P10",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Scheduled outpatient knee arthroscopy requires advance review. Associated anesthesia for an approved covered surgery does not require a separate authorization under this fictional plan. Approval applies to the specified service, facility and date range. It does not establish the actual place of service, continued enrollment, claim coding or final payment amount.",
+      "text_kind": "verbatim",
+      "content_sha256": "42bfdb0ebc532844bb8913c06b1eea4f77164d08a6953e4fbc73ddfe23a0a2f7",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P11",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 4,
+        "section": "P11",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Purely cosmetic services and noncovered convenience items are excluded under this demonstration plan. Medical necessity, benefit exclusions and a missing authorization are different review issues. An adverse notice should identify the basis for its decision. Do not infer a clinical denial from an administrative or network denial.",
+      "text_kind": "verbatim",
+      "content_sha256": "9b7b2c4d60c2e7f1889dca302b0fcef781fe988614ff222974a36697aac912c1",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P12",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 4,
+        "section": "P12",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "For this demonstration plan, initial claims ordinarily must be submitted within 365 days of service, subject to applicable exceptions. This is a fictional plan term, not a federal filing deadline. Members may obtain help from the claims administrator if a provider cannot submit. Original receipts should be retained.",
+      "text_kind": "verbatim",
+      "content_sha256": "dc24c24a1119bfdb032214e3eeae992e2f8603d5258e12542fdf4ff0e92b44d6",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P13",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 5,
+        "section": "P13",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "This plan has one mandatory internal appeal level. Submit a written appeal within 180 calendar days after receiving the adverse determination. For the demonstration deadline calculation, exclude the receipt date and add 180 days; submit early and retain proof. Identify the member, claim, disputed decision, requested remedy and supporting records. Use the demo appeal intake at appeals@harborlight.example; this address is fictional and must never receive real records. A correction request does not extend the appeal deadline under these plan terms.",
+      "text_kind": "verbatim",
+      "content_sha256": "bac45f441dfbbf7f2b54f444681505e3fb4f9f9ecaf93e64db02c53af2bc1825",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P14",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 5,
+        "section": "P14",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "The plan will provide relevant claim records free on request. A new reviewer will consider the appeal. The plan provides a post-service appeal decision within 60 days after receipt of the appeal. Ask for copies of the submitted claim data, applicable rules and the basis for the location classification.",
+      "text_kind": "verbatim",
+      "content_sha256": "7bd4f3b6c2bc6a91f07a95c4e5b9752e7b742bb6c566ca0f361e2cdc24d2a415",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D01:P15",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D01",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 5,
+        "section": "P15",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Eligible unresolved claims may use the applicable federal external-review process administered through a contracted independent review organization. The final internal adverse notice will provide instructions and the deadline. This plan is not assigned to the HHS-administered process in this demo. Contact the plan administrator or U.S. DOL EBSA for help with plan claims rights; applicable provider surprise-billing concerns can also be raised with the CMS No Surprises Help Desk. This excerpt is demonstration material, not an actual notice of rights.",
+      "text_kind": "verbatim",
+      "content_sha256": "859c5e1d1274ccb0f385a88f736808ab1bfbd8c0eec83fe80008cfd6ef7f8a76",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D02:E1",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D02",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "E1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "SYNTHETIC / DEMONSTRATION DATA. THIS IS NOT A BILL. Statement date: August 28, 2026. Member: Avery Rowan / SYN-M1042. Plan: LM-2026-EPO. Claim received: August 18, 2026. Service date: August 12, 2026. Billing/rendering provider: Seabright Anesthesia Group, provider ID SYN-P-AN1. Network: out-of-network. Service: anesthesia associated with knee arthroscopy. Internal demo service code SYN-AN-KNEE, not a CPT or HCPCS code.",
+      "text_kind": "verbatim",
+      "content_sha256": "5fd8fab7699b1cceefecbd075456dbacc197830a7aa633f908e30ff9aa467a19",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D02:E2",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D02",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "E2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Claim line: 1. Billed: $4,200.00. Allowed amount: not determined (shown as --). Plan paid: $0.00. Member responsibility as adjudicated: $4,200.00. Deductible applied to this line: $0.00. Copayment: $0.00. Coinsurance applied: $0.00. Noncovered amount: $4,200.00. Contractual adjustment: $0.00. Do not interpret -- as $0.00.",
+      "text_kind": "verbatim",
+      "content_sha256": "73c75d429d89b6f938e364c1b0f255c523b43db4962be98f1cc302cd5d3364e1",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D02:E3",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D02",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "E3",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Reason code SYN-NET07 (Harborlight demonstration code): non-emergency out-of-network office service excluded under Section 7. Submitted place-of-service code: 11. Service facility identifier: blank on submitted anesthesia claim. Please see the adverse benefit determination dated August 28, 2026 for appeal rights.",
+      "text_kind": "verbatim",
+      "content_sha256": "9a83f3f9d1bed271f2f7ff35f11af4c3531ef03e429e779f04f5d22305f3a461",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D02:E4",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D02",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "E4",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Individual in-network deductible used: $1,000 of $1,000. Individual in-network out-of-pocket amount credited: $2,400 of $5,000 after the facility claim on page 2. Denied anesthesia charges did not increase either accumulator. Snapshot includes other claims; no payment receipt is implied.",
+      "text_kind": "verbatim",
+      "content_sha256": "83f3ae32f2c663602da0d0538ddafc1423c670e4c6b76166e8888c2e4864601d",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D02:E5",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D02",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 2,
+        "section": "E5",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Member SYN-M1042; service August 12, 2026. Provider: Juniper Bay Surgery Center, facility ID SYN-F-2401. Network adjudication: in-network. Service: knee arthroscopy facility services. Place-of-service code: 24. Internal service code SYN-FAC-KNEE (not a medical code). Authorization reference SYN-AUTH-771. Status: paid. Billed $12,000.00; allowed $6,000.00; contractual adjustment $6,000.00; plan paid $4,800.00; member responsibility $1,200.00. Deductible $0.00; copayment $0.00; coinsurance $1,200.00.",
+      "text_kind": "verbatim",
+      "content_sha256": "bc0e20bbf2906e5b2c76d4ce4991bc4e7ea362580c2cc7ba816c4c111c5b8972",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D02:E6",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D02",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 2,
+        "section": "E6",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Before this facility claim, the in-network deductible was fully met and $1,200 was credited to the out-of-pocket maximum. The facility claim adds $1,200, resulting in $2,400. This is a separate claim, not a $1,200 payment on the anesthesia bill. Facility adjudication is supporting evidence about the encounter; it does not establish where every professional service occurred.",
+      "text_kind": "verbatim",
+      "content_sha256": "e03cd91bf1b3918a4c1fcb4ac193a263e6544dd7734be83cad4b93165d0749f9",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D03:N1",
+      "domain": "user",
+      "kind": "denial",
+      "document_id": "D03",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "N1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "SYNTHETIC / DEMONSTRATION DATA. Notice date: August 28, 2026. To Avery Rowan, member SYN-M1042. Claim SYN-C260812-A; service August 12, 2026; Seabright Anesthesia Group; billed $4,200.00. We denied this claim under plan Section 7, General network restriction. Reason SYN-NET07: non-emergency out-of-network office service. Our submitted claim record lists place of service 11 and no facility identifier. We therefore did not apply Section 8. This is not a medical-necessity determination or a separate prior-authorization denial.",
+      "text_kind": "verbatim",
+      "content_sha256": "1b3b84a1289e9c35126f6efb91a5fa031e384f30606507c4426bc8c151e21472",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D03:N2",
+      "domain": "user",
+      "kind": "denial",
+      "document_id": "D03",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "N2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "You may submit one internal appeal within 180 calendar days after you receive this notice. The date you received it is not recorded here. Include claim/member IDs, why you disagree and supporting records. A corrected claim or phone call does not extend that deadline under this plan. Demo intake: appeals@harborlight.example (fictional; do not send). For this post-service claim we will decide your appeal within 60 days of receiving it.",
+      "text_kind": "verbatim",
+      "content_sha256": "cfdafbc2c39cf0c9611cbb34c38db11dbdb85344f4693c5596287b4727c53bc4",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D03:N3",
+      "domain": "user",
+      "kind": "denial",
+      "document_id": "D03",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "N3",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "You may request relevant claim records free of charge, including the submitted service-location fields and the plan provisions relied on. A final adverse appeal decision will explain any available federal external review through our contracted IRO. You may also have rights under ERISA Section 502(a) following an adverse decision on review. The plan administrator and U.S. DOL EBSA can assist with plan claims questions. This fictional abbreviated notice is for demonstration only.",
+      "text_kind": "verbatim",
+      "content_sha256": "4dd56867d6384d21afe2548ebf016fb51789c5e17a8910a6a85b99c510d053a9",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D04:B1",
+      "domain": "user",
+      "kind": "bill",
+      "document_id": "D04",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "B1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "SYNTHETIC / DEMONSTRATION DATA. Member/patient Avery Rowan, SYN-M1042. Account SYN-AC-901. Claim reference SYN-C260812-A. Service August 12, 2026: anesthesia associated with knee arthroscopy. Internal code SYN-AN-KNEE; not a medical billing code. Billing office: Seabright Anesthesia Group, California. Service facility is not printed on this statement.",
+      "text_kind": "verbatim",
+      "content_sha256": "9c425aa87dacf995e26b96736502068e8e1cc09a20f37e9019f14acf19e82aac",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D04:B2",
+      "domain": "user",
+      "kind": "bill",
+      "document_id": "D04",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "B2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Statement date: September 5, 2026. Original charge: $4,200.00. Insurance payment: $0.00. Patient payments posted: $0.00. Adjustments: $0.00. Current balance requested: $4,200.00. Requested payment date: October 5, 2026. This payment request is not your health-plan appeal deadline. This statement reflects the current ledger and does not independently establish final liability.",
+      "text_kind": "verbatim",
+      "content_sha256": "b003c113ad16e91dd700f706d43b41433ebc68fa129abaf7173fed68612f7092",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D04:B3",
+      "domain": "user",
+      "kind": "bill",
+      "document_id": "D04",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "B3",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "For a disputed claim, request an itemized account and billing review. You may ask whether a temporary collection hold is available; no hold has been granted in this demonstration. Account questions: billing@seabright.example (fictional and non-operational). Payments on other provider accounts are not automatically applied to this account. Keep copies of correspondence.",
+      "text_kind": "verbatim",
+      "content_sha256": "c0aac3e91257112d309095c95a487d7c88f485652b971ea6f009e9552a6dfeb6",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D05:A1",
+      "domain": "user",
+      "kind": "authorization",
+      "document_id": "D05",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "A1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "SYNTHETIC / DEMONSTRATION DATA. Avery Rowan / SYN-M1042; plan LM-2026-EPO. Scheduled outpatient knee arthroscopy at Juniper Bay Surgery Center, facility ID SYN-F-2401. Approved date range: August 10 through August 20, 2026; one encounter. Scheduled date: August 12, 2026. Facility network shown as participating as of this approval. Scheduling reference SYN-ENC-812.",
+      "text_kind": "verbatim",
+      "content_sha256": "318eb9061b1f73b68b624458473686bc6ec4b5e429a7471bdd11abd13cdfbf03",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D05:A2",
+      "domain": "user",
+      "kind": "authorization",
+      "document_id": "D05",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "A2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "This approval concerns the proposed surgery and named facility. Associated anesthesia for an approved covered surgery requires no separate prior authorization under plan Section 10. Eligibility, actual services, location and claim data remain subject to review. This letter is not proof the scheduled visit occurred or that every clinician participates. It does not quote a negotiated anesthesia rate or determine patient responsibility.",
+      "text_kind": "verbatim",
+      "content_sha256": "fddfc4c9681b4f92684599b8fda93f5095f59fdb0c9314fb91d79f21e670e16a",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "D05:A3",
+      "domain": "user",
+      "kind": "authorization",
+      "document_id": "D05",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "A3",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "If the procedure location, date range or service changes, contact the administrator. Facility billing and professional billing may be separate. Preserve this authorization reference with the operative encounter documents. Contact authorization@harborlight.example for this fictional exercise only.",
+      "text_kind": "verbatim",
+      "content_sha256": "266c0d0c541b1e0ecd434e4656cdefac7397f00bd28e16aaf1c0c4403c80fd87",
+      "verification": "human_reviewed",
+      "authority_scope": "Fictional case document; not external authority",
+      "accessed_at": null
+    },
+    {
+      "id": "R01",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R01",
+      "source_url": "https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-G/part-2560/section-2560.503-1",
+      "location": {
+        "page": null,
+        "section": "(h)(2)(iii), (h)(3)(i), (i)(2)(iii)(A)",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Group-health claimants receive at least 180 days after receipt to appeal; relevant claim records are available free on request. A single-level post-service appeal ordinarily has a 60-day decision limit; two levels and multiemployer exceptions differ.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "e1e158b13fe54a58f3dc2e6b5a3611c84cc8dc74d03c3237c833112b555a20bd",
+      "verification": "human_reviewed",
+      "authority_scope": "ERISA employee benefit plans; group-health subsections only",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R02",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R02",
+      "source_url": "https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-L/part-2590/subpart-D/section-2590.716-5",
+      "location": {
+        "page": null,
+        "section": "(a), (b), (c)(1)-(5), (d)",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Covered non-emergency services from nonparticipating providers during visits to participating facilities receive specified cost-sharing protections. Cost sharing uses the recognized amount; the provider payment rate is a separate quantity.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "769aebbef3ca667d45c4e06aa2a3285fa4b51d76e49ca503a153e6a9f0c33b4c",
+      "verification": "human_reviewed",
+      "authority_scope": "Applicable group health plans, including this synthetic ERISA plan",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R03",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R03",
+      "source_url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-B/part-149/subpart-E/section-149.420",
+      "location": {
+        "page": null,
+        "section": "(a), (b)(1)(i), (i)",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Providers cannot impose more than protected cost sharing for qualifying covered services. The notice-and-consent exception is unavailable for anesthesiology. Provider notification to the plan about the participating facility is addressed separately.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "36cb6c3a316bfcdb4058674856b63a9d97a290d6ae9f6f4fcffef758978eb3b1",
+      "verification": "human_reviewed",
+      "authority_scope": "Nonparticipating providers at participating qualifying facilities under applicable private coverage",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R04",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R04",
+      "source_url": "https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-L/part-2590/subpart-C/section-2590.715-2719",
+      "location": {
+        "page": null,
+        "section": "(d)(1)(i)(B), (d)(1)(ii) Examples 4 and 7; (d)(2)(i)-(ii)",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Federal external review includes surprise-billing compliance disputes; the regulation illustrates anesthesia at participating facilities. The federal filing window is four months after receipt of the relevant adverse notice, with calendar exceptions; exhaustion normally matters.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "43bc980f870577ca008e9c683caed8c55e06a02fd88f568235045ef10c104af6",
+      "verification": "human_reviewed",
+      "authority_scope": "Applicable group-health internal/external review framework; verify grandfathering and route",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R05",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R05",
+      "source_url": "https://www.cms.gov/initiatives/your-patient-rights/medical-bill-rights/know-your-medical-bill-rights",
+      "location": {
+        "page": null,
+        "section": "Covered settings and exclusions",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Federal surprise-billing protections cover specified emergency, facility-based non-emergency, and air ambulance situations. Ground ambulances generally fall outside these federal protections.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "74376e6d926ccd7d0e97a2a6a6bea7ea60ce4f48d4156497ed2b2430617b7b18",
+      "verification": "human_reviewed",
+      "authority_scope": "Most private coverage; distinct Medicare/Medicaid systems",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R06",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R06",
+      "source_url": "https://www.cms.gov/medicare/coding-billing/place-of-service-codes/code-sets",
+      "location": {
+        "page": null,
+        "section": "Rows 11 and 24",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "11 identifies an office; 24 identifies an ambulatory surgical center.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "841aa604be98c7325c54612246c575fc66ee007b19af3eb0365545dbd73c5ddb",
+      "verification": "human_reviewed",
+      "authority_scope": "Professional claim place-of-service taxonomy; not a coverage entitlement",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R07",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R07",
+      "source_url": "https://www.healthcare.gov/appeal-insurance-company-decision/internal-appeals/",
+      "location": {
+        "page": null,
+        "section": "Internal appeals; What papers do I need?",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Keep denial notices, appeal copies, supporting records, and dated conversation notes. The page describes internal appeal steps and deadlines.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "b84d19344c29c201c504b8eacd1ba34282d196e55ebbf26a7e9db7357da9805c",
+      "verification": "human_reviewed",
+      "authority_scope": "Consumer guidance; apply only after matching plan and governing rules",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R08",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R08",
+      "source_url": "https://www.healthcare.gov/appeal-insurance-company-decision/external-review/",
+      "location": {
+        "page": null,
+        "section": "External Review; HHS-administered process",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "External reviewers can uphold or reverse decisions. The page currently reports a limited extension to October 2, 2026 for certain HHS-process deadlines falling July 1-August 3, 2026.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "dab52abf5a43eddb0245837298d8ee40fa8e99386e1c17e221432b01d36b3d71",
+      "verification": "human_reviewed",
+      "authority_scope": "State or federal route depends on coverage and location",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R09",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R09",
+      "source_url": "https://www.insurance.ca.gov/01-consumers/110-health/60-resources/01-imr/",
+      "location": {
+        "page": null,
+        "section": "Eligibility and timing",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "CDI IMR addresses qualifying medical-necessity, investigational, and urgent/emergency disputes; ordinary contractual coverage interpretation is excluded. It ordinarily follows an internal grievance, with a six-month request window described by CDI.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "6177097e90bda9832568d54aaf40e6d0911288a0da061f554e0f586bcd82e408",
+      "verification": "human_reviewed",
+      "authority_scope": "California CDI-regulated insurance; do not assume all California plans",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R10",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R10",
+      "source_url": "https://www.dfs.ny.gov/public-appeal/print-page/212121",
+      "location": {
+        "page": null,
+        "section": "Case metadata and Summary",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "2023 decision overturned a dental anesthesia denial; the reviewer relied on patient-specific clinical and behavioral circumstances.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "db79cc28dacb7df7311d2286ae07a6446822499f71197fa543d6beaa6017e003",
+      "verification": "human_reviewed",
+      "authority_scope": "New York; Medicaid; medical necessity",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R11",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R11",
+      "source_url": "https://www.dfs.ny.gov/public-appeals/case-number-202406-179447",
+      "location": {
+        "page": null,
+        "section": "Metadata only",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "2024 advanced-imaging appeal was upheld. The retrieved page did not supply a clinical rationale.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "eecc3da234e76176777bbde5b381464ba638eac65378b3f8ffe4d430b6360281",
+      "verification": "human_reviewed",
+      "authority_scope": "New York; HMO; medical necessity",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R12",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R12",
+      "source_url": "https://www.cms.gov/initiatives/your-patient-rights/medical-bill-rights/get-help/medical-bill-guides-resources/health-insurance-terms-you-should-know",
+      "location": {
+        "page": null,
+        "section": "EOB; cost sharing; complaint",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "An EOB describes claim adjudication and is not itself a bill. Deductible, copayment, coinsurance, and balance billing are distinct concepts.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "a003f6c44f05e4032ecf6e9fb9ea5abc21357e8d1a479d4b1c9b3451df5940de",
+      "verification": "human_reviewed",
+      "authority_scope": "Consumer terminology, subject to actual plan",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R13",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R13",
+      "source_url": "https://www.aetna.com/insights/dispute-process.html",
+      "location": {
+        "page": null,
+        "section": "Pre-service and post-service claims sections",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Explains separate pre-service authorization and post-service claim review, with EOB and appeal information when coverage is denied.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "40e88a25e255654f8b12e69e946008156c8f763b1b4773820974208323ecd783",
+      "verification": "human_reviewed",
+      "authority_scope": "Aetna explanation; not a binding term of the fictional plan",
+      "accessed_at": "2026-09-24"
+    },
+    {
+      "id": "R14",
+      "domain": "external",
+      "kind": "source_summary",
+      "document_id": null,
+      "source_id": "R14",
+      "source_url": "https://www.ftc.gov/business-guidance/resources/mobile-health-apps-interactive-tool",
+      "location": {
+        "page": null,
+        "section": "Relevant laws; HIPAA section",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "HIPAA applicability depends on covered-entity/business-associate relationships. Other obligations may apply even when HIPAA does not.",
+      "text_kind": "verified_paraphrase",
+      "content_sha256": "0e6c6c1d1f3099faee2a143a15412d4a57d47008e1adb9798264925e78862bb6",
+      "verification": "human_reviewed",
+      "authority_scope": "U.S. health-app privacy applicability",
+      "accessed_at": "2026-09-24"
+    }
+  ]
+}

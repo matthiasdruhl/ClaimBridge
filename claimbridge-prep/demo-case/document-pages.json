@@ -1,0 +1,280 @@
+{
+  "D01": {
+    "id": "D01",
+    "name": "01-plan",
+    "title": "Lumen Meadow Employee Health Plan",
+    "stage": "initial",
+    "pages": [
+      {
+        "title": "2026 Summary Plan Description - demonstration edition",
+        "sections": [
+          {
+            "id": "P1",
+            "title": "1. Plan identity",
+            "text": "SYNTHETIC / DEMONSTRATION DATA. Fictional abbreviated SPD, not a complete legally compliant benefit booklet. Plan sponsor: Lumen Meadow Design LLC. Plan ID: LM-2026-EPO. Administrator: Lumen Meadow Benefits Committee. Claims administrator: Harborlight Benefit Services (fictional). This is a private, single-employer self-funded ERISA group health plan, not an insurance policy issued by Harborlight. The plan is non-grandfathered. Plan year January 1 through December 31, 2026. California member residence does not change this funding designation."
+          },
+          {
+            "id": "P2",
+            "title": "2. Member and eligibility",
+            "text": "Member: Avery Rowan. Member ID: SYN-M1042. Individual coverage effective January 1, 2026; active through September 24, 2026 in this demonstration. Member services: benefits@harborlight.example (non-operational). Group: SYN-LM26. No other health coverage is recorded, but members must report any other coverage."
+          },
+          {
+            "id": "P3",
+            "title": "3. Enrollment administration",
+            "text": "Address and dependent updates may be submitted through the demonstration member portal. Keep a copy of notices. This excerpt includes relevant benefit terms and selected unrelated benefits. A real reviewer should obtain all controlling plan documents and amendments."
+          }
+        ]
+      },
+      {
+        "title": "Benefits schedule",
+        "sections": [
+          {
+            "id": "P4",
+            "title": "4. Individual medical benefits",
+            "text": "Annual in-network deductible: $1,000. Annual in-network out-of-pocket maximum: $5,000. Covered outpatient surgery facility services and associated anesthesiology: 20% member coinsurance after the deductible; no separate copayment. Applicable statutory cost-sharing limits and exceptions control. The deductible and out-of-pocket ledger on the EOB shows processing status, not proof of payment."
+          },
+          {
+            "id": "P5",
+            "title": "5. Other services",
+            "text": "Primary-care office visit: $25 copayment. Specialist office visit: $40 copayment. Covered preventive services use the preventive-benefit schedule. Outpatient physical therapy: 20% after deductible, ordinarily 20 visits per plan year subject to the plan review process. Retail pharmacy: generic tier $10; preferred brand tier $35. Dental cleaning and routine adult vision hardware are outside this medical demonstration benefit."
+          },
+          {
+            "id": "P6",
+            "title": "6. Coordination and reimbursement",
+            "text": "When other coverage exists, the administrator will request details before determining payer order under the controlling coordination provisions. Itemized receipts may be requested for member-submitted reimbursement. This abbreviated booklet does not establish a universal coordination rule."
+          }
+        ]
+      },
+      {
+        "title": "Network and facility exceptions",
+        "sections": [
+          {
+            "id": "P7",
+            "title": "7. General network restriction",
+            "text": "Non-emergency services by out-of-network providers are excluded unless an exception in Section 8 or another controlling requirement applies. Network status must be determined for the specific provider or facility and the service date. A participating facility does not necessarily mean every clinician participates."
+          },
+          {
+            "id": "P8",
+            "title": "8. Protected facility services",
+            "text": "Covered non-emergency anesthesiology furnished by a nonparticipating provider during a visit to a participating hospital, hospital outpatient department or ambulatory surgical center is handled using applicable federal surprise-billing protections. For those services, the plan applies in-network cost sharing based on the legally applicable recognized amount and credits applicable in-network accumulators. Provider reimbursement is determined separately. An ordinary office visit is not automatically a visit to a qualifying facility."
+          },
+          {
+            "id": "P9",
+            "title": "9. Provider charges",
+            "text": "Protected cost sharing can still be owed. A bill alone does not determine the legally collectible balance. If an item is disputed, ask for the submitted claim, service location and an explanation of benefit calculations. The patient should not determine or change medical billing codes without the provider reviewing the actual services."
+          }
+        ]
+      },
+      {
+        "title": "Authorization and coverage administration",
+        "sections": [
+          {
+            "id": "P10",
+            "title": "10. Authorization scope",
+            "text": "Scheduled outpatient knee arthroscopy requires advance review. Associated anesthesia for an approved covered surgery does not require a separate authorization under this fictional plan. Approval applies to the specified service, facility and date range. It does not establish the actual place of service, continued enrollment, claim coding or final payment amount."
+          },
+          {
+            "id": "P11",
+            "title": "11. Exclusions and review",
+            "text": "Purely cosmetic services and noncovered convenience items are excluded under this demonstration plan. Medical necessity, benefit exclusions and a missing authorization are different review issues. An adverse notice should identify the basis for its decision. Do not infer a clinical denial from an administrative or network denial."
+          },
+          {
+            "id": "P12",
+            "title": "12. Claim submission",
+            "text": "For this demonstration plan, initial claims ordinarily must be submitted within 365 days of service, subject to applicable exceptions. This is a fictional plan term, not a federal filing deadline. Members may obtain help from the claims administrator if a provider cannot submit. Original receipts should be retained."
+          }
+        ]
+      },
+      {
+        "title": "Member claims and appeal rights",
+        "sections": [
+          {
+            "id": "P13",
+            "title": "13. Internal appeal",
+            "text": "This plan has one mandatory internal appeal level. Submit a written appeal within 180 calendar days after receiving the adverse determination. For the demonstration deadline calculation, exclude the receipt date and add 180 days; submit early and retain proof. Identify the member, claim, disputed decision, requested remedy and supporting records. Use the demo appeal intake at appeals@harborlight.example; this address is fictional and must never receive real records. A correction request does not extend the appeal deadline under these plan terms."
+          },
+          {
+            "id": "P14",
+            "title": "14. Review and records",
+            "text": "The plan will provide relevant claim records free on request. A new reviewer will consider the appeal. The plan provides a post-service appeal decision within 60 days after receipt of the appeal. Ask for copies of the submitted claim data, applicable rules and the basis for the location classification."
+          },
+          {
+            "id": "P15",
+            "title": "15. Further review and help",
+            "text": "Eligible unresolved claims may use the applicable federal external-review process administered through a contracted independent review organization. The final internal adverse notice will provide instructions and the deadline. This plan is not assigned to the HHS-administered process in this demo. Contact the plan administrator or U.S. DOL EBSA for help with plan claims rights; applicable provider surprise-billing concerns can also be raised with the CMS No Surprises Help Desk. This excerpt is demonstration material, not an actual notice of rights."
+          }
+        ]
+      }
+    ]
+  },
+  "D02": {
+    "id": "D02",
+    "name": "02-eob",
+    "title": "Harborlight - Explanation of Benefits",
+    "stage": "initial",
+    "pages": [
+      {
+        "title": "Claim SYN-C260812-A - anesthesia",
+        "sections": [
+          {
+            "id": "E1",
+            "title": "Member and service",
+            "text": "SYNTHETIC / DEMONSTRATION DATA. THIS IS NOT A BILL. Statement date: August 28, 2026. Member: Avery Rowan / SYN-M1042. Plan: LM-2026-EPO. Claim received: August 18, 2026. Service date: August 12, 2026. Billing/rendering provider: Seabright Anesthesia Group, provider ID SYN-P-AN1. Network: out-of-network. Service: anesthesia associated with knee arthroscopy. Internal demo service code SYN-AN-KNEE, not a CPT or HCPCS code."
+          },
+          {
+            "id": "E2",
+            "title": "Adjudication detail",
+            "text": "Claim line: 1. Billed: $4,200.00. Allowed amount: not determined (shown as --). Plan paid: $0.00. Member responsibility as adjudicated: $4,200.00. Deductible applied to this line: $0.00. Copayment: $0.00. Coinsurance applied: $0.00. Noncovered amount: $4,200.00. Contractual adjustment: $0.00. Do not interpret -- as $0.00."
+          },
+          {
+            "id": "E3",
+            "title": "Reason and submitted location",
+            "text": "Reason code SYN-NET07 (Harborlight demonstration code): non-emergency out-of-network office service excluded under Section 7. Submitted place-of-service code: 11. Service facility identifier: blank on submitted anesthesia claim. Please see the adverse benefit determination dated August 28, 2026 for appeal rights."
+          },
+          {
+            "id": "E4",
+            "title": "Accumulator snapshot",
+            "text": "Individual in-network deductible used: $1,000 of $1,000. Individual in-network out-of-pocket amount credited: $2,400 of $5,000 after the facility claim on page 2. Denied anesthesia charges did not increase either accumulator. Snapshot includes other claims; no payment receipt is implied."
+          }
+        ]
+      },
+      {
+        "title": "Related claim SYN-C260812-F - facility; do not merge balances",
+        "sections": [
+          {
+            "id": "E5",
+            "title": "Facility claim detail",
+            "text": "Member SYN-M1042; service August 12, 2026. Provider: Juniper Bay Surgery Center, facility ID SYN-F-2401. Network adjudication: in-network. Service: knee arthroscopy facility services. Place-of-service code: 24. Internal service code SYN-FAC-KNEE (not a medical code). Authorization reference SYN-AUTH-771. Status: paid. Billed $12,000.00; allowed $6,000.00; contractual adjustment $6,000.00; plan paid $4,800.00; member responsibility $1,200.00. Deductible $0.00; copayment $0.00; coinsurance $1,200.00."
+          },
+          {
+            "id": "E6",
+            "title": "Important context",
+            "text": "Before this facility claim, the in-network deductible was fully met and $1,200 was credited to the out-of-pocket maximum. The facility claim adds $1,200, resulting in $2,400. This is a separate claim, not a $1,200 payment on the anesthesia bill. Facility adjudication is supporting evidence about the encounter; it does not establish where every professional service occurred."
+          }
+        ]
+      }
+    ]
+  },
+  "D03": {
+    "id": "D03",
+    "name": "03-denial",
+    "title": "Harborlight - Adverse Benefit Determination",
+    "stage": "initial",
+    "pages": [
+      {
+        "title": "Initial post-service decision - August 28, 2026",
+        "sections": [
+          {
+            "id": "N1",
+            "title": "Claim and decision",
+            "text": "SYNTHETIC / DEMONSTRATION DATA. Notice date: August 28, 2026. To Avery Rowan, member SYN-M1042. Claim SYN-C260812-A; service August 12, 2026; Seabright Anesthesia Group; billed $4,200.00. We denied this claim under plan Section 7, General network restriction. Reason SYN-NET07: non-emergency out-of-network office service. Our submitted claim record lists place of service 11 and no facility identifier. We therefore did not apply Section 8. This is not a medical-necessity determination or a separate prior-authorization denial."
+          },
+          {
+            "id": "N2",
+            "title": "How to appeal",
+            "text": "You may submit one internal appeal within 180 calendar days after you receive this notice. The date you received it is not recorded here. Include claim/member IDs, why you disagree and supporting records. A corrected claim or phone call does not extend that deadline under this plan. Demo intake: appeals@harborlight.example (fictional; do not send). For this post-service claim we will decide your appeal within 60 days of receiving it."
+          },
+          {
+            "id": "N3",
+            "title": "Documents and further rights",
+            "text": "You may request relevant claim records free of charge, including the submitted service-location fields and the plan provisions relied on. A final adverse appeal decision will explain any available federal external review through our contracted IRO. You may also have rights under ERISA Section 502(a) following an adverse decision on review. The plan administrator and U.S. DOL EBSA can assist with plan claims questions. This fictional abbreviated notice is for demonstration only."
+          }
+        ]
+      }
+    ]
+  },
+  "D04": {
+    "id": "D04",
+    "name": "04-provider-bill",
+    "title": "Seabright Anesthesia Group - Patient Statement",
+    "stage": "initial",
+    "pages": [
+      {
+        "title": "Statement SYN-B-905 - September 5, 2026",
+        "sections": [
+          {
+            "id": "B1",
+            "title": "Account",
+            "text": "SYNTHETIC / DEMONSTRATION DATA. Member/patient Avery Rowan, SYN-M1042. Account SYN-AC-901. Claim reference SYN-C260812-A. Service August 12, 2026: anesthesia associated with knee arthroscopy. Internal code SYN-AN-KNEE; not a medical billing code. Billing office: Seabright Anesthesia Group, California. Service facility is not printed on this statement."
+          },
+          {
+            "id": "B2",
+            "title": "Account activity",
+            "text": "Statement date: September 5, 2026. Original charge: $4,200.00. Insurance payment: $0.00. Patient payments posted: $0.00. Adjustments: $0.00. Current balance requested: $4,200.00. Requested payment date: October 5, 2026. This payment request is not your health-plan appeal deadline. This statement reflects the current ledger and does not independently establish final liability."
+          },
+          {
+            "id": "B3",
+            "title": "Questions and assistance",
+            "text": "For a disputed claim, request an itemized account and billing review. You may ask whether a temporary collection hold is available; no hold has been granted in this demonstration. Account questions: billing@seabright.example (fictional and non-operational). Payments on other provider accounts are not automatically applied to this account. Keep copies of correspondence."
+          }
+        ]
+      }
+    ]
+  },
+  "D05": {
+    "id": "D05",
+    "name": "05-authorization",
+    "title": "Harborlight - Prior Review Approval",
+    "stage": "initial",
+    "pages": [
+      {
+        "title": "Authorization SYN-AUTH-771 - July 28, 2026",
+        "sections": [
+          {
+            "id": "A1",
+            "title": "Approved request",
+            "text": "SYNTHETIC / DEMONSTRATION DATA. Avery Rowan / SYN-M1042; plan LM-2026-EPO. Scheduled outpatient knee arthroscopy at Juniper Bay Surgery Center, facility ID SYN-F-2401. Approved date range: August 10 through August 20, 2026; one encounter. Scheduled date: August 12, 2026. Facility network shown as participating as of this approval. Scheduling reference SYN-ENC-812."
+          },
+          {
+            "id": "A2",
+            "title": "Scope and limitations",
+            "text": "This approval concerns the proposed surgery and named facility. Associated anesthesia for an approved covered surgery requires no separate prior authorization under plan Section 10. Eligibility, actual services, location and claim data remain subject to review. This letter is not proof the scheduled visit occurred or that every clinician participates. It does not quote a negotiated anesthesia rate or determine patient responsibility."
+          },
+          {
+            "id": "A3",
+            "title": "Administrative instructions",
+            "text": "If the procedure location, date range or service changes, contact the administrator. Facility billing and professional billing may be separate. Preserve this authorization reference with the operative encounter documents. Contact authorization@harborlight.example for this fictional exercise only."
+          }
+        ]
+      }
+    ]
+  },
+  "D06": {
+    "id": "D06",
+    "name": "06-location-confirmation",
+    "title": "Encounter and Network Confirmation Packet",
+    "stage": "clarification",
+    "pages": [
+      {
+        "title": "Juniper Bay Surgery Center - encounter record",
+        "sections": [
+          {
+            "id": "L1",
+            "title": "Encounter verification - September 15, 2026",
+            "text": "SYNTHETIC / DEMONSTRATION DATA. Avery Rowan / SYN-M1042. Encounter SYN-ENC-812. Service August 12, 2026, Juniper Bay Surgery Center, SYN-F-2401. The knee arthroscopy and associated anesthesia were both performed within our licensed ambulatory surgical center. Seabright Anesthesia Group supplied anesthesia during this encounter. No anesthesia was performed in an adjacent office. This confirmation does not reproduce the electronic claim sent by Seabright."
+          },
+          {
+            "id": "L2",
+            "title": "Other encounter information",
+            "text": "Check-in 07:10; discharged home 11:20. Accompanying adult documented in facility chart but omitted from this synthetic extract. Routine postoperative instructions were provided. Clinical indication and medical necessity are not adjudicated by this administrative confirmation. Actual procedure coding should be verified by the billing provider."
+          }
+        ]
+      },
+      {
+        "title": "Harborlight member-services message - September 16, 2026",
+        "sections": [
+          {
+            "id": "L3",
+            "title": "Service-date network confirmation",
+            "text": "SYNTHETIC / DEMONSTRATION DATA. Regarding member SYN-M1042 and facility SYN-F-2401: Juniper Bay Surgery Center was participating in LM-2026-EPO on August 12, 2026. Seabright Anesthesia Group was nonparticipating on that date. Our facility claim SYN-C260812-F was paid as in-network. We have not yet reprocessed anesthesia claim SYN-C260812-A."
+          },
+          {
+            "id": "L4",
+            "title": "Outstanding review",
+            "text": "The submitted anesthesia service-location fields should be checked against the encounter record. We have not determined the recognized amount for protected anesthesia cost sharing, any corrected payment, or a new member balance. A request for a collection hold must be discussed separately with the billing provider. This correspondence is not an appeal decision and does not extend an appeal filing deadline."
+          }
+        ]
+      }
+    ]
+  }
+}

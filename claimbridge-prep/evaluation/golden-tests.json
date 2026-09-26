@@ -1,0 +1,394 @@
+{
+  "version": 1,
+  "tests": [
+    {
+      "id": "initial-01",
+      "stage": "initial",
+      "category": "document",
+      "op": "equals",
+      "path": "id",
+      "expected": "SYN-C260812-A"
+    },
+    {
+      "id": "initial-02",
+      "stage": "initial",
+      "category": "document",
+      "op": "equals",
+      "path": "patient.member_id.value",
+      "expected": "SYN-M1042"
+    },
+    {
+      "id": "initial-03",
+      "stage": "initial",
+      "category": "document",
+      "op": "equals",
+      "path": "services.0.date.value",
+      "expected": "2026-08-12"
+    },
+    {
+      "id": "initial-04",
+      "stage": "initial",
+      "category": "document",
+      "op": "equals",
+      "path": "services.0.submitted_pos.value",
+      "expected": "11"
+    },
+    {
+      "id": "initial-05",
+      "stage": "initial",
+      "category": "document",
+      "op": "equals",
+      "path": "denial.type.value",
+      "expected": "network"
+    },
+    {
+      "id": "initial-06",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.billed_cents.value",
+      "expected": 420000
+    },
+    {
+      "id": "initial-07",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.allowed_cents.value",
+      "expected": null
+    },
+    {
+      "id": "initial-08",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.paid_cents.value",
+      "expected": 0
+    },
+    {
+      "id": "initial-09",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.member_cents.value",
+      "expected": 420000
+    },
+    {
+      "id": "initial-10",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.1.financial.allowed_cents.value",
+      "expected": 600000
+    },
+    {
+      "id": "initial-11",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.1.financial.member_cents.value",
+      "expected": 120000
+    },
+    {
+      "id": "initial-12",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "bills.0.balance_cents.value",
+      "expected": 420000
+    },
+    {
+      "id": "initial-13",
+      "stage": "initial",
+      "category": "financial",
+      "op": "equals",
+      "path": "corrected_liability_cents.value",
+      "expected": null
+    },
+    {
+      "id": "initial-14",
+      "stage": "initial",
+      "category": "scope",
+      "op": "equals",
+      "path": "plan.funding.value",
+      "expected": "self_funded"
+    },
+    {
+      "id": "initial-15",
+      "stage": "initial",
+      "category": "scope",
+      "op": "equals",
+      "path": "plan.grandfathered.value",
+      "expected": false
+    },
+    {
+      "id": "initial-16",
+      "stage": "initial",
+      "category": "scope",
+      "op": "equals",
+      "path": "denial.final_internal.value",
+      "expected": false
+    },
+    {
+      "id": "initial-extra-1",
+      "stage": "initial",
+      "category": "missing_information",
+      "op": "equals",
+      "path": "services.0.actual_setting.value",
+      "expected": null
+    },
+    {
+      "id": "initial-extra-2",
+      "stage": "initial",
+      "category": "missing_information",
+      "op": "equals",
+      "path": "denial.deadline.value",
+      "expected": null
+    },
+    {
+      "id": "initial-extra-3",
+      "stage": "initial",
+      "category": "clarification",
+      "op": "equals",
+      "path": "questions.0.status",
+      "expected": "open"
+    },
+    {
+      "id": "initial-policy",
+      "stage": "initial",
+      "category": "policy_retrieval",
+      "op": "contains",
+      "path": "policy_provisions.*.id",
+      "expected": [
+        "P7",
+        "P8",
+        "P13"
+      ]
+    },
+    {
+      "id": "initial-external",
+      "stage": "initial",
+      "category": "external_retrieval",
+      "op": "contains",
+      "path": "evidence.*.id",
+      "expected": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R06"
+      ]
+    },
+    {
+      "id": "initial-questions",
+      "stage": "initial",
+      "category": "clarification",
+      "op": "contains",
+      "path": "questions.*.id",
+      "expected": [
+        "Q-location",
+        "Q-receipt",
+        "Q-payment"
+      ]
+    },
+    {
+      "id": "clarified-01",
+      "stage": "clarified",
+      "category": "document",
+      "op": "equals",
+      "path": "id",
+      "expected": "SYN-C260812-A"
+    },
+    {
+      "id": "clarified-02",
+      "stage": "clarified",
+      "category": "document",
+      "op": "equals",
+      "path": "patient.member_id.value",
+      "expected": "SYN-M1042"
+    },
+    {
+      "id": "clarified-03",
+      "stage": "clarified",
+      "category": "document",
+      "op": "equals",
+      "path": "services.0.date.value",
+      "expected": "2026-08-12"
+    },
+    {
+      "id": "clarified-04",
+      "stage": "clarified",
+      "category": "document",
+      "op": "equals",
+      "path": "services.0.submitted_pos.value",
+      "expected": "11"
+    },
+    {
+      "id": "clarified-05",
+      "stage": "clarified",
+      "category": "document",
+      "op": "equals",
+      "path": "denial.type.value",
+      "expected": "network"
+    },
+    {
+      "id": "clarified-06",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.billed_cents.value",
+      "expected": 420000
+    },
+    {
+      "id": "clarified-07",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.allowed_cents.value",
+      "expected": null
+    },
+    {
+      "id": "clarified-08",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.paid_cents.value",
+      "expected": 0
+    },
+    {
+      "id": "clarified-09",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.0.financial.member_cents.value",
+      "expected": 420000
+    },
+    {
+      "id": "clarified-10",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.1.financial.allowed_cents.value",
+      "expected": 600000
+    },
+    {
+      "id": "clarified-11",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "eobs.1.financial.member_cents.value",
+      "expected": 120000
+    },
+    {
+      "id": "clarified-12",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "bills.0.balance_cents.value",
+      "expected": 420000
+    },
+    {
+      "id": "clarified-13",
+      "stage": "clarified",
+      "category": "financial",
+      "op": "equals",
+      "path": "corrected_liability_cents.value",
+      "expected": null
+    },
+    {
+      "id": "clarified-14",
+      "stage": "clarified",
+      "category": "scope",
+      "op": "equals",
+      "path": "plan.funding.value",
+      "expected": "self_funded"
+    },
+    {
+      "id": "clarified-15",
+      "stage": "clarified",
+      "category": "scope",
+      "op": "equals",
+      "path": "plan.grandfathered.value",
+      "expected": false
+    },
+    {
+      "id": "clarified-16",
+      "stage": "clarified",
+      "category": "scope",
+      "op": "equals",
+      "path": "denial.final_internal.value",
+      "expected": false
+    },
+    {
+      "id": "clarified-extra-1",
+      "stage": "clarified",
+      "category": "reasoning",
+      "op": "equals",
+      "path": "services.0.actual_setting.value",
+      "expected": "asc"
+    },
+    {
+      "id": "clarified-extra-2",
+      "stage": "clarified",
+      "category": "clarification",
+      "op": "equals",
+      "path": "denial.received_date.status",
+      "expected": "user_reported"
+    },
+    {
+      "id": "clarified-extra-3",
+      "stage": "clarified",
+      "category": "deadline",
+      "op": "equals",
+      "path": "denial.deadline.value",
+      "expected": "2027-02-28"
+    },
+    {
+      "id": "clarified-extra-4",
+      "stage": "clarified",
+      "category": "reasoning",
+      "op": "equals",
+      "path": "conclusions.0.outcome",
+      "expected": "possible_processing_error"
+    },
+    {
+      "id": "clarified-policy",
+      "stage": "clarified",
+      "category": "policy_retrieval",
+      "op": "contains",
+      "path": "policy_provisions.*.id",
+      "expected": [
+        "P7",
+        "P8",
+        "P13"
+      ]
+    },
+    {
+      "id": "clarified-external",
+      "stage": "clarified",
+      "category": "external_retrieval",
+      "op": "contains",
+      "path": "evidence.*.id",
+      "expected": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R06"
+      ]
+    },
+    {
+      "id": "clarified-questions",
+      "stage": "clarified",
+      "category": "clarification",
+      "op": "contains",
+      "path": "questions.*.id",
+      "expected": [
+        "Q-location",
+        "Q-receipt",
+        "Q-payment"
+      ]
+    }
+  ],
+  "note": "Paths assume canonical service/EOB ordering. A candidate adapter must sort by service/claim ID before comparison. Presence tests do not prove retrieval ranking or citation entailment."
+}

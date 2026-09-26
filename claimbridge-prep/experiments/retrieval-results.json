@@ -1,0 +1,10 @@
+{
+  "query": "out-of-network OR nonparticipating OR Section 8",
+  "distractor_chunks": 500,
+  "top_6": [
+    "P7",
+    "distractor-8",
+    "P8"
+  ],
+  "limitation": "single query, hand-authored corpus; no clinical/generalization benchmark"
+}
