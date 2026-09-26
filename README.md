@@ -47,3 +47,11 @@ Canonical claim/evidence schemas stay in claimbridge-prep/schemas; contracts/REA
 ## First implementation slice
 
 Upload -> extract PDF pages -> validated claim state -> display cited facts. Then add scoped retrieval, conditional analysis, clarification revisions, appeal strategy and draft. The appeal view must explain why an argument addresses the denial and link to its supporting plan/document/external evidence.
+
+## Local diagnostics
+
+Run `make dev-api` and `make dev-web`, then open http://127.0.0.1:5173/diagnostics. The dashboard shows browser-to-API connectivity through the Vite proxy, database readiness, latency, request counts, and correlated frontend/backend/PDF events. Select a request ID to see its trace.
+
+`make dev-api` enables diagnostics using `CLAIMBRIDGE_DIAGNOSTICS=1`. Direct Flask starts leave it disabled unless explicitly enabled. Keep this local developer interface disabled on public deployments; it has no authentication. Logs contain allowlisted metadata, not documents, filenames, API keys, or request bodies.
+
+Events persist in `var/diagnostics.sqlite3` for 24 hours, capped at 10,000 rows. Console events are JSON. Up to 200 undelivered browser events are retained in memory per tab and disappear on navigation/reload. Diagnostics polls are excluded from events and metrics. Stop the API to see the dashboard report an outage; stop the frontend and the dashboard cannot be loaded. Both services still use Control+C to stop.

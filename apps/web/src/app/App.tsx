@@ -1,3 +1,4 @@
+import { apiRequest } from '../lib/api/client';
 import { useEffect, useState } from 'react';
 
 type SourcePage = { id: string; page: number; text: string };
@@ -16,23 +17,15 @@ async function request(
   path: string,
   options?: RequestInit,
 ): Promise<Workspace> {
-  const response = await fetch(`/api/v1${path}`, options);
-  const data: unknown = await response.json();
-  if (!response.ok) {
-    const failure = data as { error?: { message?: string } };
-    throw new Error(
-      failure.error?.message ?? 'The request could not be completed.',
+  return apiRequest(path, options, (data): data is Workspace => {
+    if (!data || typeof data !== 'object') return false;
+    const workspace = data as Workspace;
+    return (
+      typeof workspace.id === 'string' &&
+      Number.isInteger(workspace.revision) &&
+      Array.isArray(workspace.documents)
     );
-  }
-  const workspace = data as Workspace;
-  if (
-    !workspace.id ||
-    !Number.isInteger(workspace.revision) ||
-    !Array.isArray(workspace.documents)
-  ) {
-    throw new Error('Unexpected workspace response.');
-  }
-  return workspace;
+  });
 }
 
 export function App() {
@@ -107,6 +100,7 @@ export function App() {
         <a className="brand" href="/">
           ClaimBridge<span>Evidence before answers.</span>
         </a>
+        <a href="/diagnostics">Diagnostics</a>
         <span className="badge">LOCAL DEMO · SYNTHETIC DATA</span>
       </header>
       <section className="intro">

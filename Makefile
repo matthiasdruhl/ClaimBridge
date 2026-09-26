@@ -8,7 +8,7 @@ setup-api:
 	$(VENV_PY) -m pip install --no-deps --no-build-isolation -e apps/api
 
 dev-api:
-	PYTHONPATH=apps/api/src $(VENV_PY) -m flask --app claimbridge:create_app run --host 127.0.0.1 --port 5001
+	CLAIMBRIDGE_DIAGNOSTICS=1 PYTHONPATH=apps/api/src $(VENV_PY) -m flask --app claimbridge:create_app run --host 127.0.0.1 --port 5001
 
 dev-web:
 	npm run dev:web
@@ -19,6 +19,7 @@ check-api:
 	PYTHONPATH=apps/api/src $(VENV_PY) -m pytest apps/api/tests
 
 check-web:
+	node --experimental-strip-types --test tests/frontend/*.test.mjs
 	npm run lint:web
 	npm run typecheck
 	npm run build:web

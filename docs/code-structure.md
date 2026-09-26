@@ -2,7 +2,7 @@
 
 ## Scope and status
 
-This is the agreed implementation layout plus a runnable foundation: a static React shell and a Flask liveness route. Claim ingestion, reasoning, retrieval, persistence, model calls and appeal workflows remain hackathon implementation work. Existing research and evaluation artifacts stay in place.
+The local app implements persistent synthetic-PDF workspaces, synchronous page-text extraction, original-document viewing, and an opt-in diagnostics dashboard. Model-derived claim facts, reasoning, retrieval, clarification and appeal workflows remain unimplemented. Existing research and evaluation artifacts stay in place.
 
 ## Repository map
 
@@ -13,6 +13,7 @@ Claimbridge/
 │   │   ├── src/
 │   │   │   ├── app/                  # Application composition and later navigation
 │   │   │   ├── features/
+│   │   │   │   ├── diagnostics/      # Implemented developer dashboard
 │   │   │   │   ├── workspace/        # Overview, money summary, related claims
 │   │   │   │   ├── documents/        # Upload, processing, document viewer
 │   │   │   │   ├── evidence/         # Citations and source viewer
@@ -36,6 +37,7 @@ Claimbridge/
 │       └── requirements-dev.lock
 ├── contracts/                        # Canonical schema ownership / API guidance
 ├── docs/                             # Current code/contributor architecture
+├── tests/frontend/                   # Node API-client behavior tests
 ├── tests/e2e/                        # Full-workflow test location (future)
 ├── scripts/                          # Cross-project tooling (future)
 ├── claimbridge-prep/                 # Research, schemas, synthetic assets, oracles
@@ -63,7 +65,15 @@ flowchart LR
 
 The composition root constructs dependencies. Domain code never imports Flask, PDF parsers, databases or LLM SDKs. Application use cases consume passed-in adapters; do not fetch global Flask state there. Infrastructure implements those interfaces without deciding insurance coverage. Routes translate validated requests into calls and map results/errors to HTTP. Avoid decorators, abstract base classes or generic repositories until actual repeated behavior justifies them.
 
-### Planned backend modules, added when first implemented
+### Implemented modules
+
+- `api/workspaces.py` currently owns workspace creation/reads, upload and original-content routes. `application/ingest.py` synchronously parses PDFs with pypdf; `infrastructure/workspaces.py` stores workspace snapshots and original blobs in `var/workspaces.sqlite3`. PDF parsing has not yet been separated into its planned adapter.
+- `api/diagnostics.py` installs request-ID/timing hooks, sanitized generic errors, readiness/event routes and browser-event validation. `infrastructure/diagnostics.py` owns bounded event persistence and structured console emission. Upload routes emit correlated extraction events; domain logic does not depend on diagnostics.
+- The composition root enables diagnostics only when application configuration or `CLAIMBRIDGE_DIAGNOSTICS=1` requests it. `make dev-api` sets the environment flag. Direct Flask starts default to disabled diagnostics.
+
+### Target backend modules
+
+The table describes intended ownership as the product grows; it is not an inventory of implemented files. In particular, uploads/content remain in `api/workspaces.py`, extraction is synchronous, and no job worker, model adapter or analysis revision invalidation exists yet.
 
 | Location                    | Responsibility                                                 | Must not do                                                  |
 | --------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -96,7 +106,21 @@ Single process and one sequential worker are sufficient initially. Transactions 
 
 Organize by user feature. A feature may contain `components/`, `hooks/`, `api.ts`, `types.ts` and colocated `*.test.tsx`, but create only what is used. `app/` composes features. Features export a small public API from `index.ts` once implemented. Other features must not import internal components. Share primitives only when actual reuse appears; avoid a catch-all utils directory.
 
-Server owns claim facts, revisions, calculations and conclusions. Client owns navigation, selected evidence, expanded panels and unsaved form text. Keep local component state until cross-component needs justify a store. Do not add Redux or a router for one workspace by default. The future API client treats JSON as unknown, validates it and exposes typed errors. Use request cancellation and explicit loading/error states. React text rendering is the default; untrusted content must not be injected as HTML.
+Server owns claim facts, revisions, calculations and conclusions. Client owns navigation, selected evidence, expanded panels and unsaved form text. Keep local component state until cross-component needs justify a store. Do not add Redux or a router for one workspace by default. The shared API client treats response JSON as unknown and accepts a caller-supplied validator; the workspace currently validates only the top-level response shape. It reports network, timeout, HTTP and response-format failures. Use request cancellation and explicit loading/error states. React text rendering is the default; untrusted content must not be injected as HTML.
+
+### Local diagnostics frontend
+
+`main.tsx` selects `features/diagnostics/Dashboard.tsx` for `/diagnostics` and the workspace `App` otherwise, using full-page navigation without a router. The upload UI currently remains in `app/App.tsx`; the reserved claim feature directories are not yet implementations.
+
+`lib/api/client.ts` attaches a UUID `X-Request-ID` to workspace API calls, applies a default 60-second timeout, validates responses and queues metadata-only outcomes. Startup telemetry also captures uncaught application errors using fixed descriptions. The in-memory queue holds at most 200 events, retries batches of 50 after backend recovery, and disappears on page navigation/reload. Diagnostics requests bypass the instrumented client to avoid feedback loops.
+
+The dashboard polls readiness through the same `/api` proxy every five seconds and events every two seconds while visible. Health failures retain prior values with stale labels; a loaded dashboard remains usable during an API outage, but cannot be loaded when the frontend server is stopped. Manual health checks and event-feed pause/resume are available. Events are cursor-paginated and deduplicated in the browser (10,000 maximum). The UI filters the loaded history by source, severity and request-ID substring, shows the latest 300 matches, and traces a selected request using received events. Server filters instead use exact matches.
+
+### Diagnostics storage and boundaries
+
+`var/diagnostics.sqlite3` is separate from claim storage. Events retain up to 24 hours and 10,000 rows, with pruning on writes and expiration filtering on reads. Event timestamps reflect server receipt time, including queued browser events. Structured console records carry their own severity field; the current Python emitter uses the warning log level for all records. Event writes are best effort and must not interrupt claim processing. Logs exclude document text, filenames, credentials and bodies. Flask access output is separate.
+
+The interface has no authentication and is intended for local development only. Keep diagnostics disabled on public deployments. It provides health checks and observation, not service start/stop controls. See [implemented API contracts](../claimbridge-prep/engineering/api-contracts.md#implemented-local-diagnostics-september-26) for wire fields and error behavior.
 
 ### Appeal reasoning is a first-class view
 
@@ -141,8 +165,10 @@ Lockfiles freeze the verified dependency resolution; manifests express supported
 
 These references inform the scaffold. Feature ownership and module choices are project decisions, not universal requirements.
 
-## Scaffold verification
+## Local verification
 
-Local backend checks passed: two pytest smoke tests, Ruff lint and formatting. Frontend checks passed: ESLint, TypeScript, Vite production build and Prettier. These validate the foundation only; there are no claim-workflow tests or live model calls yet. GitHub CI is configured but has not run on a remote repository.
+`make check` runs nine backend tests, the Node frontend API-client behavior test, Ruff, ESLint, TypeScript, the Vite production build and formatting checks. Backend coverage includes actual synthetic PDF ingestion, persistence/deduplication, workspace isolation, diagnostics correlation, validation, retention and logging failure isolation. The client test covers success, network failures, timeouts, malformed JSON and non-JSON HTTP errors.
+
+The diagnostics layout and API outage/recovery states were manually checked in the browser. A full automated browser upload-to-trace test, live model evaluation and hosted verification remain outstanding. No new hosted CI result has been verified for this branch.
 
 Dependency resolution deliberately keeps TypeScript 5.9 within the linter peer range. The npm lock captures the tested toolchain; do not bypass peer conflicts with force or legacy-peer-deps. The official [checkout](https://github.com/actions/checkout), [setup-node](https://github.com/actions/setup-node) and [setup-python](https://github.com/actions/setup-python) documentation informed the CI configuration.

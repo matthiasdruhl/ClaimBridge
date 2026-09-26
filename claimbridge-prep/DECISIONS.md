@@ -17,3 +17,5 @@
 | 2026-09-24 | Add a P1 case-specific evidence map | Five or six clickable cards explain why the appeal argument follows from the evidence; clarify supports/contradicts/needs-confirmation links and update after clarification. Reuse JSON/SQLite and existing citations; defer a broad ontology and graph database. |
 
 | 2026-09-26 | Begin hackathon implementation: solo builder, local first, API credentials later | Deadline Sunday at 8 (AM/PM not yet specified). First slice persists PDFs and extracted pages without claiming model-derived facts. |
+
+| 2026-09-26 | Local diagnostics page with correlated metadata-only events | Separate bounded SQLite event storage, local opt-in, no external monitoring service or document payload logging. |

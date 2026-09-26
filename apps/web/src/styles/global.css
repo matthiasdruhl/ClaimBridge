@@ -258,3 +258,77 @@ footer {
     flex-wrap: wrap;
   }
 }
+.diagnostic-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.metric {
+  font-size: 25px;
+}
+.connection {
+  text-transform: capitalize;
+  font-weight: 700;
+}
+.connected {
+  color: #206650;
+}
+.unreachable,
+.degraded {
+  color: #a23c25;
+}
+.filters {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px 0;
+}
+.filters label {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+}
+.filters input,
+.filters select,
+.panel button {
+  padding: 8px 12px;
+  border: 1px solid #cad8cd;
+  border-radius: 6px;
+  background: #f6f9f5;
+  color: #244b3d;
+}
+.panel button {
+  cursor: pointer;
+}
+.event-table {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+th,
+td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e4ebe3;
+  white-space: nowrap;
+}
+.trace {
+  margin-top: 24px;
+}
+.trace-id {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1000px) {
+  .diagnostic-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 550px) {
+  .diagnostic-cards {
+    grid-template-columns: 1fr;
+  }
+}
