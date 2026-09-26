@@ -332,3 +332,78 @@ td {
     grid-template-columns: 1fr;
   }
 }
+.claim-workflow {
+  margin-top: 28px;
+}
+.claim-workflow h3 {
+  margin-top: 24px;
+}
+.claim-money {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.citations {
+  display: inline-flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-left: 8px;
+}
+.citations button {
+  font-size: 10px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.claim-workflow input,
+.claim-workflow select {
+  display: block;
+  padding: 10px;
+  border: 1px solid #b9ccbf;
+  border-radius: 6px;
+  margin-top: 8px;
+  max-width: 100%;
+}
+.claim-workflow input {
+  width: 100%;
+}
+.workflow-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.draft textarea {
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #a7bfae;
+  border-radius: 8px;
+  font:
+    14px/1.6 ui-monospace,
+    monospace;
+}
+.evidence-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(650px, 100%);
+  z-index: 10;
+  background: #fff;
+  padding: 32px;
+  overflow: auto;
+  box-shadow: -8px 0 40px #203a3640;
+}
+.evidence-drawer blockquote {
+  white-space: pre-wrap;
+  line-height: 1.8;
+  margin: 24px 0;
+  border-left: 3px solid #206650;
+  padding-left: 20px;
+}
+.viewer {
+  max-height: 680px;
+  overflow-y: auto;
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "D1",
+    "title": "Synthetic plan excerpt",
+    "kind": "policy",
+    "sections": [
+      "Member Morgan Vale, member ID SYN-OFF-M01, has active coverage for September 2026 under plan SYN-CEDAR-2026. This employer group health plan is self-funded, ERISA-governed and non-grandfathered. This is a synthetic training plan, not an actual benefit contract.",
+      "Section 7: Non-emergency out-of-network office services are excluded unless an exception applies. Section 8: Covered non-emergency anesthesiology from a nonparticipating provider at a participating hospital or ambulatory surgical center uses protected in-network cost sharing. An ordinary office is not such a facility.",
+      "Section 10: Knee MRI requires prior authorization for the rendering provider, service code and date range listed on the approval. Approval is not a guarantee of payment; active coverage and other benefit conditions still apply.",
+      "Section 13: One internal appeal is available. File within 180 calendar days after receipt of the denial. For this synthetic plan, exclude receipt day and add 180 days. Request the claim file and verify the actual intake instructions. No real destination is provided. A bill's payment request date is not the appeal deadline."
+    ]
+  },
+  {
+    "id": "D2",
+    "title": "Synthetic EOB and denial",
+    "kind": "eob",
+    "sections": [
+      "Member Morgan Vale, SYN-OFF-M01. Claim SYN-OFF-101. Service Office consultation, code SYN-CONSULT (fictional internal code), September 10, 2026. Rendering provider SYN-OFF-P1, Willow Office Clinic, nonparticipating. Submitted place of service 11. Billed $650.00; allowed amount not determined; paid $0.00; member responsibility $650.00; adjustment $0.00. Deductible, copayment and coinsurance each $0.00 on this denied claim.",
+      "Initial adverse determination dated September 18, 2026 for claim SYN-OFF-101. Reason SYN-NET-O: Non-emergency out-of-network office service excluded under Section 7. This is a network denial, not a medical-necessity determination. Date actually received by the member is not recorded. This is not a final internal appeal decision."
+    ]
+  },
+  {
+    "id": "D3",
+    "title": "Synthetic encounter confirmation",
+    "kind": "correspondence",
+    "sections": [
+      "Encounter confirmation for Morgan Vale, SYN-OFF-M01, claim SYN-OFF-101: the consultation on September 10, 2026 occurred in an ordinary office operated by SYN-OFF-P1. No hospital or ambulatory surgical center was involved and no anesthesia was performed. This record does not establish another benefit exception."
+    ]
+  }
+]

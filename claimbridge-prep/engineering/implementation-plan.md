@@ -1,6 +1,6 @@
 # Build backlog
 
-Estimates assume two developers for one focused day; timeboxes are planning assumptions. Critical path: contracts -> PDF spans -> facts -> deterministic checks -> retrieval -> analysis -> clarification -> citations/actions -> rehearsal.
+Historical estimates below assumed two developers; current work is solo with a Sunday September 27, 8 AM Eastern deadline. Critical path: contracts -> PDF spans -> facts -> deterministic checks -> retrieval -> analysis -> clarification -> citations/actions -> rehearsal.
 
 | Priority / task | Dependencies | Difficulty / timebox | Failure mode | Simplest fallback |
 |---|---|---|---|---|
@@ -41,8 +41,18 @@ Frontend teammate can build components against expected JSON while backend teamm
 9. Run positive/negative evaluation against actual candidate outputs.
 10. Rehearse four-minute story and timeout/reset fallback; only then polish.
 
-Full UI, live LLM integration, endpoints, deployment and submission integrations must wait for the hackathon. The isolated preparation scripts are intentionally not a finished app.
+The hackathon is now active. Local upload, diagnostics and claim workflow code are implemented; live provider evaluation is pending credits/configuration. Deployment and submission integrations remain deferred.
 
 ## Optional evidence-map enhancement
 
 After core citations and clarification work reliably, visualize the small case-specific evidence graph using five or six cards and labeled connections. The map explains existing validated reasoning; it adds no new inference capability. Keep it outside the critical path and stop at the timebox if it threatens rehearsal. See product/ui-spec.md for acceptance criteria. A broad insurance ontology, automatic relationship discovery and dedicated graph database remain outside MVP scope.
+
+
+## Current remaining critical path
+
+1. Configure the provider and verify account-specific schema/model support.
+2. Run actual extraction on the three packets (three repetitions), inspect grounding and latency, and fix failures without fixture replay.
+3. Complete a live browser run including the D06 clarification and saved draft, then rehearse the four-minute story.
+4. Reserve the final two hours for corrections and rehearsal. Keep hosting, OCR, medical-necessity reasoning and evidence-map work off the critical path.
+
+Implemented since the historical backlog: processing worker/revisions, canonical schema and quotation validation, deterministic reasoning/actions/drafts, FTS retrieval, scoped summaries, clarification invalidation, new workspace, and offline scenario/provider tests. See ../../docs/claim-workflow.md for actual scope. No paid evaluation has yet been run.

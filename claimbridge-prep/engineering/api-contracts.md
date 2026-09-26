@@ -31,7 +31,7 @@ P0 limits: 20 MB per PDF, 100 pages, six initial/reveal fixture documents; these
 
 ## Implemented local ingestion slice (September 26)
 
-POST /workspaces requires synthetic=true and returns the workspace with documents. GET /workspaces/{id} restores that snapshot. POST /workspaces/{id}/documents accepts file and expected_revision and currently extracts synchronously, returning the updated workspace rather than the planned document envelope. Each documents entry contains the canonical Document plus pages with id, page and text. Duplicate bytes leave revision unchanged. Originals are served by the content route above. Analysis/job endpoints remain unimplemented. This bounded local slice uses SQLite blobs; asynchronous processing is deferred.
+POST /workspaces requires synthetic=true and returns the workspace with documents. GET /workspaces/{id} restores that snapshot. POST /workspaces/{id}/documents accepts file and expected_revision and currently extracts synchronously, returning the updated workspace rather than the planned document envelope. Each documents entry contains the canonical Document plus pages with id, page and text. Duplicate bytes leave revision unchanged. Originals are served by the content route above. Analysis/job endpoints are now implemented as described in the claim-workflow section below. This bounded local slice uses SQLite blobs; asynchronous processing is deferred.
 
 
 ## Implemented local diagnostics (September 26)
@@ -65,3 +65,32 @@ When diagnostics is enabled, all responses receive `X-Request-ID`. Incoming valu
 Backend request events use `http.<Flask endpoint>` (or `http.unmatched`), response status, elapsed milliseconds and severity `info`/`warning`/`error` for <400/400–499/>=500. Uploads emit `pdf.extract` with `started`, followed by a document status or `failed`. These currently surround the ingestion call, so duplicate uploads can also emit extraction events. Unexpected exceptions return a sanitized 500 without raw exception text. Diagnostics routes are excluded from request events to prevent telemetry loops.
 
 No document contents, filenames, request/response bodies, credentials or raw browser exception messages are captured by the structured event pipeline. Event-write failures are suppressed so they do not fail claim operations. Event-read failures use the generic error response; status reports logging unavailability. Existing Flask development-server access output is separate from these structured events.
+
+## Implemented claim workflow (September 26)
+
+These routes supersede the corresponding design-only rows above. All IDs are opaque. The existing upload endpoint remains synchronous and returns the workspace snapshot. Processing consumes existing extracted pages; no model runs implicitly on reads or upload.
+
+| Method / route | Request | Response |
+|---|---|---|
+| GET /provider-status | none | `{configured:boolean, model:string, live_validation:"not_measured"}`; never returns a key |
+| POST /workspaces/{id}/process | `{expected_revision, document_ids:[...]}` | 202 Job; 503 with `PROVIDER_NOT_CONFIGURED` before enqueue when configuration is missing |
+| GET /jobs/{job_id} | none | Job with workspace ID, revision, status, stage, safe error code, retryable flag and timestamps |
+| GET /workspaces/{id}/claim | optional `revision` query | `{claim:Claim|null, revision:currentWorkspaceRevision, analysis_status, metadata, revisions:[...], draft_ids:[...], job:Job|null}` |
+| GET /workspaces/{id}/evidence/{evidence_id} | optional `revision`, defaults to current workspace revision | Canonical EvidenceReference; 404 if absent at that revision |
+| POST /workspaces/{id}/questions/{question_id}/answer | `{expected_revision, answer, supporting_document_ids:[]}` | Updated workspace with incremented revision; prior analysis/drafts become stale |
+| POST /workspaces/{id}/action-plan | `{expected_revision}` | Canonical ActionPlan for current analyzed revision; 409 if stale or not analyzed |
+| POST /workspaces/{id}/appeal-draft | `{expected_revision}` | 201 Draft from all current supported arguments; 422 if no supported argument exists |
+| GET /workspaces/{id}/appeal-drafts/{draft_id} | none | Draft plus `stale` flag |
+| PUT /workspaces/{id}/appeal-drafts/{draft_id} | `{expected_revision, expected_version, text}` | Updated Draft with incremented version and `user_edited:true`; 409 for stale versions/revisions |
+
+Job fields: `job_id`, `workspace_id`, `revision`, `status`, `stage`, `error` (null or safe code), `retryable`, `created_at`, `updated_at` (Unix seconds). Statuses: queued, running, succeeded, failed, obsolete. Stages: queued, extracting, retrieving, analyzing, validating, complete, failed, interrupted, discarded. Results from changed workspace revisions are discarded, not made current. Startup marks interrupted queued/running jobs as retryable failures. Reads do not recover or restart jobs automatically.
+
+Processing requires a nonempty unique list of workspace-owned readable documents and caps total extracted text at 180,000 characters. Fingerprints include revision, selected document IDs/hashes and pipeline configuration. Repeated queued/running/successful inputs return their existing Job. Failed inputs may be retried. A successful immutable claim snapshot cannot be overwritten at the same workspace revision, even with a different document subset.
+
+Claim `analysis_status`: not_analyzed, stale, needs_information, ready_for_review. A historical read retains the current workspace revision in the envelope; the Claim contains its original revision. Metadata excludes the cached extraction object but includes document hashes, configuration/schema/prompt versions, provider attempt counts, elapsed time, mode and limitations. `mode=live_model` identifies the production extraction path, not a passed live accuracy benchmark. Test harnesses explicitly use `test_double`.
+
+Supported questions: Q-location, Q-receipt, Q-payment. Answers are 1–2,000 characters. Receipt uses YYYY-MM-DD and cannot be in the future; a receipt before the notice does not produce a calculated deadline. Supporting document IDs must belong to the workspace. Saving an answer does not itself validate documentary corroboration. User reports remain distinct evidence; new documents require reanalysis. Question answers invalidate all dependent analysis/actions/drafts through the revision mismatch.
+
+Draft fields: `draft_id`, `revision`, `version`, `text`, `evidence_ids`, `attachments` (document IDs), `unresolved_fields`, `user_edited`, `submitted:false`; reads also include `stale`. Edits are 1–50,000 characters. Text export is client-side and does not bundle attachments or validate edited prose. There is no submit/send endpoint. Argument selection, workspace deletion, open-ended ask/chat, and automatic external-review filing remain unimplemented.
+
+Diagnostics Event gains nullable `job_id` and `stage` for backend processing events. Browser ingestion still uses its restricted metadata schema, with additional operation names claim.process, claim.read, claim.answer, claim.actions, claim.draft and job.read. Job polling generates observable request events; diagnostics polling remains excluded.

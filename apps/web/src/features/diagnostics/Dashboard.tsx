@@ -11,6 +11,8 @@ type Event = {
   status: number | null;
   duration_ms: number | null;
   outcome: string;
+  job_id?: string | null;
+  stage?: string | null;
 };
 type Health = {
   status: string;
@@ -248,6 +250,7 @@ export function Dashboard() {
                   'Severity',
                   'Operation',
                   'Outcome',
+                  'Job / stage',
                   'HTTP',
                   'Duration',
                   'Request',
@@ -266,6 +269,9 @@ export function Dashboard() {
                   <td>{event.severity}</td>
                   <td>{event.operation}</td>
                   <td>{event.outcome}</td>
+                  <td title={event.job_id ?? undefined}>
+                    {event.job_id?.slice(0, 8) ?? '—'} {event.stage ?? ''}
+                  </td>
                   <td>{event.status ?? '—'}</td>
                   <td>
                     {event.duration_ms == null

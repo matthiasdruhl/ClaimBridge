@@ -19,3 +19,7 @@
 | 2026-09-26 | Begin hackathon implementation: solo builder, local first, API credentials later | Deadline Sunday at 8 (AM/PM not yet specified). First slice persists PDFs and extracted pages without claiming model-derived facts. |
 
 | 2026-09-26 | Local diagnostics page with correlated metadata-only events | Separate bounded SQLite event storage, local opt-in, no external monitoring service or document payload logging. |
+
+| 2026-09-26 | Provider extracts canonical facts; code generates bounded explanations/actions/drafts | Network/location and authorization scope first. No unconstrained second reasoning call; live quality still requires evaluation. |
+| 2026-09-26 | Jobs and claim snapshots share existing workspace SQLite with additive tables | One local worker; obsolete results discarded; startup marks interrupted jobs retryable. |
+| 2026-09-26 | Independent office and authorization packets are test assets only | Runtime never imports expected extraction fixtures; browser harness explicitly labels test output. |

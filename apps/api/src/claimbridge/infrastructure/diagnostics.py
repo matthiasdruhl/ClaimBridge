@@ -20,6 +20,10 @@ class EventStore:
             "source TEXT, severity TEXT, operation TEXT, request_id TEXT, status INTEGER, "
             "duration_ms REAL, outcome TEXT)"
         )
+        columns = {row[1] for row in db.execute("PRAGMA table_info(events)")}
+        for column in ("job_id", "stage"):
+            if column not in columns:
+                db.execute(f"ALTER TABLE events ADD COLUMN {column} TEXT")
         return db
 
     def record(self, **event):
@@ -33,6 +37,8 @@ class EventStore:
             status=event.get("status"),
             duration_ms=event.get("duration_ms"),
             outcome=event.get("outcome", "completed"),
+            job_id=event.get("job_id"),
+            stage=event.get("stage"),
         )
         try:
             logging.getLogger("claimbridge.events").warning(json.dumps(record))
@@ -40,9 +46,9 @@ class EventStore:
                 db.execute(
                     "INSERT OR IGNORE INTO events "
                     "(id,timestamp,source,severity,operation,request_id,"
-                    "status,duration_ms,outcome) "
+                    "status,duration_ms,outcome,job_id,stage) "
                     "VALUES (:id,:timestamp,:source,:severity,:operation,:request_id,:status,"
-                    ":duration_ms,:outcome)",
+                    ":duration_ms,:outcome,:job_id,:stage)",
                     record,
                 )
                 db.execute("DELETE FROM events WHERE timestamp < ?", (time.time() - 86400,))

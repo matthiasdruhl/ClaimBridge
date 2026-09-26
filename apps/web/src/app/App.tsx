@@ -1,31 +1,15 @@
 import { apiRequest } from '../lib/api/client';
 import { useEffect, useState } from 'react';
 
-type SourcePage = { id: string; page: number; text: string };
-type DocumentEntry = {
-  document: {
-    id: string;
-    filename: string;
-    status: string;
-    pages: number | null;
-  };
-  pages: SourcePage[];
-};
-type Workspace = { id: string; revision: number; documents: DocumentEntry[] };
+import { ClaimWorkflow } from '../features/analysis/ClaimWorkflow';
+import { isWorkspace } from '../lib/contracts/workflow';
+import type { Workspace } from '../lib/contracts/workflow';
 
 async function request(
   path: string,
   options?: RequestInit,
 ): Promise<Workspace> {
-  return apiRequest(path, options, (data): data is Workspace => {
-    if (!data || typeof data !== 'object') return false;
-    const workspace = data as Workspace;
-    return (
-      typeof workspace.id === 'string' &&
-      Number.isInteger(workspace.revision) &&
-      Array.isArray(workspace.documents)
-    );
-  });
+  return apiRequest(path, options, isWorkspace);
 }
 
 export function App() {
@@ -53,6 +37,7 @@ export function App() {
 
   async function upload(files: FileList | null) {
     if (!files?.length || !confirmed) return;
+    const selectedFiles = Array.from(files);
     setBusy(true);
     setError('');
     let current = workspace;
@@ -66,7 +51,7 @@ export function App() {
         localStorage.setItem('claimbridge.workspace', current.id);
         setWorkspace(current);
       }
-      for (const file of Array.from(files)) {
+      for (const file of selectedFiles) {
         const form = new FormData();
         form.append('file', file);
         form.append('expected_revision', String(current.revision));
@@ -100,7 +85,27 @@ export function App() {
         <a className="brand" href="/">
           ClaimBridge<span>Evidence before answers.</span>
         </a>
+        <a href="#claim-analysis">Claim analysis</a>
         <a href="/diagnostics">Diagnostics</a>
+        <button
+          disabled={busy}
+          onClick={() => {
+            setError('');
+            void request('/workspaces', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ synthetic: true }),
+            })
+              .then((state) => {
+                setWorkspace(state);
+                setSelected(null);
+                localStorage.setItem('claimbridge.workspace', state.id);
+              })
+              .catch((reason: Error) => setError(reason.message));
+          }}
+        >
+          New workspace
+        </button>
         <span className="badge">LOCAL DEMO · SYNTHETIC DATA</span>
       </header>
       <section className="intro">
@@ -171,14 +176,6 @@ export function App() {
               <p className="empty">Your uploaded documents will appear here.</p>
             )}
           </section>
-          <section className="notice">
-            <h3>Analysis is next</h3>
-            <p>
-              Page extraction runs locally. Claim facts, coverage analysis, and
-              appeal drafting are pending model integration. No conclusions have
-              been generated.
-            </p>
-          </section>
         </aside>
         <section className="panel viewer">
           <div className="viewer-heading">
@@ -232,6 +229,13 @@ export function App() {
           )}
         </section>
       </div>
+      {workspace && (
+        <ClaimWorkflow
+          key={workspace.id}
+          workspace={workspace}
+          onWorkspace={setWorkspace}
+        />
+      )}
       <footer>
         ClaimBridge · Local hackathon build{' '}
         <span>

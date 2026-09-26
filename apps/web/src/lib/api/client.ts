@@ -71,11 +71,23 @@ export async function apiRequest<T>(
 ): Promise<T> {
   const requestId = crypto.randomUUID();
   const started = performance.now();
-  const operation = path.endsWith('/documents')
-    ? 'document.upload'
-    : options.method === 'POST'
-      ? 'workspace.create'
-      : 'workspace.read';
+  const operation = path.startsWith('/jobs/')
+    ? 'job.read'
+    : path.endsWith('/process')
+      ? 'claim.process'
+      : path.includes('/questions/')
+        ? 'claim.answer'
+        : path.endsWith('/action-plan')
+          ? 'claim.actions'
+          : path.includes('/appeal-draft')
+            ? 'claim.draft'
+            : path.endsWith('/claim') || path.includes('/claim?')
+              ? 'claim.read'
+              : path.endsWith('/documents')
+                ? 'document.upload'
+                : options.method === 'POST'
+                  ? 'workspace.create'
+                  : 'workspace.read';
   const headers = new Headers(options.headers);
   headers.set('X-Request-ID', requestId);
   let status: number | undefined;

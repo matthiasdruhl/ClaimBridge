@@ -1,0 +1,585 @@
+{
+  "id": "SYN-OFF-101",
+  "revision": 1,
+  "as_of": "2026-09-26",
+  "synthetic": true,
+  "patient": {
+    "member_id": {
+      "value": "SYN-OFF-M01",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "name": {
+      "value": "Morgan Vale",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "residence_state": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    }
+  },
+  "plan": {
+    "id": {
+      "value": "SYN-CEDAR-2026",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "funding": {
+      "value": "self_funded",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "erisa": {
+      "value": true,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "grandfathered": {
+      "value": false,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "coverage_active": {
+      "value": true,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "year": {
+      "value": 2026,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "coinsurance_bps": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "deductible_cents": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "oop_max_cents": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "appeal_levels": {
+      "value": 1,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E4"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "appeal_days": {
+      "value": 180,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E4"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "appeal_trigger": {
+      "value": "receipt_calendar_days",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E4"
+      ],
+      "reason": null,
+      "derivation": null
+    }
+  },
+  "providers": [
+    {
+      "id": "SYN-OFF-P1",
+      "name": {
+        "value": "Willow Office Clinic",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "role": "other",
+      "network": {
+        "value": "out",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "services": [
+    {
+      "id": "SV1",
+      "description": {
+        "value": "Office consultation",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "date": {
+        "value": "2026-09-10",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "provider_id": "SYN-OFF-P1",
+      "facility_id": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      },
+      "submitted_pos": {
+        "value": "11",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "actual_setting": {
+        "value": "office",
+        "status": "explicit",
+        "evidence_ids": [
+          "D3:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "code": {
+        "value": "SYN-CONSULT",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "code_system": {
+        "value": "fictional_internal",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "eobs": [
+    {
+      "id": "EOB1",
+      "claim_id": {
+        "value": "SYN-OFF-101",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "service_id": "SV1",
+      "financial": {
+        "billed_cents": {
+          "value": 65000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "allowed_cents": {
+          "value": null,
+          "status": "unknown",
+          "evidence_ids": [],
+          "reason": "Not stated in the packet",
+          "derivation": null
+        },
+        "paid_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "member_cents": {
+          "value": 65000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "deductible_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "copay_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "coinsurance_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "adjustment_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        }
+      },
+      "deductible_used_cents": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      },
+      "oop_used_cents": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      }
+    }
+  ],
+  "bills": [],
+  "denial": {
+    "reason_code": {
+      "value": "SYN-NET-O",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "reason": {
+      "value": "Non-emergency out-of-network office service excluded",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "type": {
+      "value": "network",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "notice_date": {
+      "value": "2026-09-18",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "received_date": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "deadline": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "final_internal": {
+      "value": false,
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "claim_id": {
+      "value": "SYN-OFF-101",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    }
+  },
+  "authorizations": [],
+  "policy_provisions": [
+    {
+      "id": "P2",
+      "section": "2",
+      "topic": "network exclusion and exception",
+      "evidence_ids": [
+        "D1:E2"
+      ]
+    },
+    {
+      "id": "P3",
+      "section": "3",
+      "topic": "authorization",
+      "evidence_ids": [
+        "D1:E3"
+      ]
+    },
+    {
+      "id": "P4",
+      "section": "4",
+      "topic": "appeal",
+      "evidence_ids": [
+        "D1:E4"
+      ]
+    }
+  ],
+  "questions": [],
+  "conclusions": [],
+  "corrected_liability_cents": {
+    "value": null,
+    "status": "unknown",
+    "evidence_ids": [],
+    "reason": "Not stated in the packet",
+    "derivation": null
+  },
+  "evidence": [
+    {
+      "id": "D1:E1",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Member Morgan Vale, member ID SYN-OFF-M01, has active coverage for September 2026 under plan SYN-CEDAR-2026. This employer group health plan is self-funded, ERISA-governed and non-grandfathered. This is a synthetic training plan, not an actual benefit contract.",
+      "text_kind": "verbatim",
+      "content_sha256": "08e2cbdca277a115e28e348b9afaf770c388f7e6fed13aab2ddaefc938c91099",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D1:E2",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Section 7: Non-emergency out-of-network office services are excluded unless an exception applies. Section 8: Covered non-emergency anesthesiology from a nonparticipating provider at a participating hospital or ambulatory surgical center uses protected in-network cost sharing. An ordinary office is not such a facility.",
+      "text_kind": "verbatim",
+      "content_sha256": "c8f1d34e99d22800043733029672a8b605413d560084941d837e63ddf75258b9",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D1:E3",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E3",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Section 10: Knee MRI requires prior authorization for the rendering provider, service code and date range listed on the approval. Approval is not a guarantee of payment; active coverage and other benefit conditions still apply.",
+      "text_kind": "verbatim",
+      "content_sha256": "6f7deb296137ba02b8e5cf4b71d064bdaf4cdb4f7bcead5e08559e505d3d7667",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D1:E4",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E4",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Section 13: One internal appeal is available. File within 180 calendar days after receipt of the denial. For this synthetic plan, exclude receipt day and add 180 days. Request the claim file and verify the actual intake instructions. No real destination is provided. A bill's payment request date is not the appeal deadline.",
+      "text_kind": "verbatim",
+      "content_sha256": "b0712dc3676297f9d3b14adc9118b71f3f9273d3a725d19d360d8023b7888f0e",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D2:E1",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D2",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D2:E1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Member Morgan Vale, SYN-OFF-M01. Claim SYN-OFF-101. Service Office consultation, code SYN-CONSULT (fictional internal code), September 10, 2026. Rendering provider SYN-OFF-P1, Willow Office Clinic, nonparticipating. Submitted place of service 11. Billed $650.00; allowed amount not determined; paid $0.00; member responsibility $650.00; adjustment $0.00. Deductible, copayment and coinsurance each $0.00 on this denied claim.",
+      "text_kind": "verbatim",
+      "content_sha256": "40e1af2319e4464b8338cee21deacfac7cf3ad311fd63e9ab26a2dab34786e87",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D2:E2",
+      "domain": "user",
+      "kind": "denial",
+      "document_id": "D2",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D2:E2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Initial adverse determination dated September 18, 2026 for claim SYN-OFF-101. Reason SYN-NET-O: Non-emergency out-of-network office service excluded under Section 7. This is a network denial, not a medical-necessity determination. Date actually received by the member is not recorded. This is not a final internal appeal decision.",
+      "text_kind": "verbatim",
+      "content_sha256": "480c697fee4b9b51dc18c20e8f6f24d24c8faf6fa491f88964b7796fa6eecf17",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D3:E1",
+      "domain": "user",
+      "kind": "correspondence",
+      "document_id": "D3",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D3:E1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Encounter confirmation for Morgan Vale, SYN-OFF-M01, claim SYN-OFF-101: the consultation on September 10, 2026 occurred in an ordinary office operated by SYN-OFF-P1. No hospital or ambulatory surgical center was involved and no anesthesia was performed. This record does not establish another benefit exception.",
+      "text_kind": "verbatim",
+      "content_sha256": "e82d66223d2f3a4cb7bf8ad790fdcaf3dd2c9418bb366fd4e94e0fa2e3cddafb",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    }
+  ]
+}

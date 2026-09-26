@@ -1,6 +1,6 @@
 # ClaimBridge
 
-Evidence-backed medical-claim navigation. This repository currently contains a verified preparation package and a local document workspace. Upload synthetic PDFs, inspect extracted page text, and reopen original documents. Claim analysis and appeal workflows remain in progress.
+Evidence-backed medical-claim navigation. This repository currently contains a verified preparation package and a local document workspace. Upload synthetic PDFs, inspect extracted page text, and reopen original documents. The claim-analysis, clarification and appeal-draft workflow is implemented for local evaluation; live model accuracy remains unverified.
 
 ## Where to start
 
@@ -30,7 +30,7 @@ make dev-api
 make dev-web
 ```
 
-Frontend: http://127.0.0.1:5173. API health: http://127.0.0.1:5001/api/v1/health. Vite proxies /api locally. The workspace stores original PDFs and page text in local SQLite under var/. Uploads are revision-checked and deduplicated. Encrypted and non-text pages are explicitly flagged. Model extraction of claim facts, analysis and appeals are not implemented yet.
+Frontend: http://127.0.0.1:5173. API health: http://127.0.0.1:5001/api/v1/health. Vite proxies /api locally. The workspace stores original PDFs and page text in local SQLite under var/. Uploads are revision-checked and deduplicated. Encrypted and non-text pages are explicitly flagged. Live analysis requires backend provider configuration. See the claim workflow guide for supported categories and validation limits.
 
 ## Checks
 
@@ -44,9 +44,9 @@ This runs backend smoke tests/format/lint and frontend type/lint/build/format ch
 
 Canonical claim/evidence schemas stay in claimbridge-prep/schemas; contracts/README.md explains future transport generation. Runtime data belongs in ignored var/. Secrets stay server-side. Never place real records or golden-answer fixtures under frontend public assets. No model provider or credential is required to run the scaffold.
 
-## First implementation slice
+## Claim analysis and drafts
 
-Upload -> extract PDF pages -> validated claim state -> display cited facts. Then add scoped retrieval, conditional analysis, clarification revisions, appeal strategy and draft. The appeal view must explain why an argument addresses the denial and link to its supporting plan/document/external evidence.
+See [the claim workflow guide](docs/claim-workflow.md) for provider configuration, processing jobs, evidence validation, clarification, draft editing and scenario evaluation. The app supports network/location and prior-authorization review with bounded code-generated explanations. No appeal is submitted, and corrected liability remains unknown. Meta account/model compatibility and live performance are pending credentials and credits.
 
 ## Local diagnostics
 

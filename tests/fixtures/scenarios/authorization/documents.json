@@ -1,0 +1,30 @@
+[
+  {
+    "id": "D1",
+    "title": "Synthetic plan excerpt",
+    "kind": "policy",
+    "sections": [
+      "Member Jordan Reed, member ID SYN-AUTH-M02, has active coverage for September 2026 under plan SYN-CEDAR-2026. This employer group health plan is self-funded, ERISA-governed and non-grandfathered. This is a synthetic training plan, not an actual benefit contract.",
+      "Section 7: Non-emergency out-of-network office services are excluded unless an exception applies. Section 8: Covered non-emergency anesthesiology from a nonparticipating provider at a participating hospital or ambulatory surgical center uses protected in-network cost sharing. An ordinary office is not such a facility.",
+      "Section 10: Knee MRI requires prior authorization for the rendering provider, service code and date range listed on the approval. Approval is not a guarantee of payment; active coverage and other benefit conditions still apply.",
+      "Section 13: One internal appeal is available. File within 180 calendar days after receipt of the denial. For this synthetic plan, exclude receipt day and add 180 days. Request the claim file and verify the actual intake instructions. No real destination is provided. A bill's payment request date is not the appeal deadline."
+    ]
+  },
+  {
+    "id": "D2",
+    "title": "Synthetic EOB and denial",
+    "kind": "eob",
+    "sections": [
+      "Member Jordan Reed, SYN-AUTH-M02. Claim SYN-AUTH-202. Service Knee MRI, code SYN-MRI-KNEE (fictional internal code), September 10, 2026. Rendering provider SYN-IMG-P2, Harbor Imaging, participating. Submitted place of service 22. Billed $1,800.00; allowed amount not determined; paid $0.00; member responsibility $1,800.00; adjustment $0.00. Deductible, copayment and coinsurance each $0.00 on this denied claim.",
+      "Initial adverse determination dated September 18, 2026 for claim SYN-AUTH-202. Reason SYN-AUTH-MISSING: No prior authorization matched to the submitted MRI claim under Section 10. This is an authorization denial, not a medical-necessity determination. Date actually received by the member is not recorded. This is not a final internal appeal decision."
+    ]
+  },
+  {
+    "id": "D3",
+    "title": "Synthetic authorization",
+    "kind": "authorization",
+    "sections": [
+      "Approval SYN-APPROVAL-202 for Jordan Reed, SYN-AUTH-M02: one Knee MRI, fictional service code SYN-MRI-KNEE, rendering provider SYN-IMG-P2, valid September 1 through September 30, 2026. The approved service and provider match the September 10 encounter. Approval does not establish final payment. No revised EOB or final liability is available."
+    ]
+  }
+]

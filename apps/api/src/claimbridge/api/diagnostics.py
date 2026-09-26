@@ -12,7 +12,19 @@ from werkzeug.exceptions import HTTPException
 from claimbridge.infrastructure.diagnostics import EventStore
 
 TOKEN = re.compile(r"^[a-f0-9-]{32,36}$")
-OPERATIONS = {"workspace.create", "workspace.read", "document.upload", "api.other", "app.failure"}
+OPERATIONS = {
+    "workspace.create",
+    "workspace.read",
+    "document.upload",
+    "api.other",
+    "app.failure",
+    "claim.process",
+    "claim.read",
+    "claim.answer",
+    "claim.actions",
+    "claim.draft",
+    "job.read",
+}
 OUTCOMES = {"completed", "http_error", "network_error", "timeout", "invalid_response", "uncaught"}
 
 

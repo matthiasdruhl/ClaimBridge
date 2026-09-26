@@ -2,7 +2,7 @@
 
 ## Scope and status
 
-The local app implements persistent synthetic-PDF workspaces, synchronous page-text extraction, original-document viewing, and an opt-in diagnostics dashboard. Model-derived claim facts, reasoning, retrieval, clarification and appeal workflows remain unimplemented. Existing research and evaluation artifacts stay in place.
+The local app implements persistent synthetic-PDF workspaces, synchronous page-text extraction, original-document viewing, and an opt-in diagnostics dashboard. The claim workflow now adds provider-based extraction, bounded reasoning, retrieval, clarification, action plans and editable drafts. Live provider accuracy is not yet verified; see [the workflow guide](claim-workflow.md). Existing research and evaluation artifacts stay in place.
 
 ## Repository map
 
@@ -71,9 +71,13 @@ The composition root constructs dependencies. Domain code never imports Flask, P
 - `api/diagnostics.py` installs request-ID/timing hooks, sanitized generic errors, readiness/event routes and browser-event validation. `infrastructure/diagnostics.py` owns bounded event persistence and structured console emission. Upload routes emit correlated extraction events; domain logic does not depend on diagnostics.
 - The composition root enables diagnostics only when application configuration or `CLAIMBRIDGE_DIAGNOSTICS=1` requests it. `make dev-api` sets the environment flag. Direct Flask starts default to disabled diagnostics.
 
+### Claim workflow implementation
+
+The composition root also constructs `AnalysisStore`, `ModelProvider`, and `AnalysisWorker`. Workflow HTTP routes live in `api/analysis.py`; canonical validation and bounded reasoning live in `domain/`; persisted jobs/revisions and provider/retrieval adapters live in `infrastructure/`. `features/analysis/ClaimWorkflow.tsx` presents the claim, evidence, questions, actions and draft. Browser contracts import canonical schemas into AJV. See [the workflow guide](claim-workflow.md) for exact data flow, configuration and remaining limitations.
+
 ### Target backend modules
 
-The table describes intended ownership as the product grows; it is not an inventory of implemented files. In particular, uploads/content remain in `api/workspaces.py`, extraction is synchronous, and no job worker, model adapter or analysis revision invalidation exists yet.
+The table describes intended ownership as the product grows; it is not an inventory of implemented files. In particular, uploads/content remain in `api/workspaces.py`, extraction is synchronous, while the claim-analysis worker and adapter are now implemented under the workflow modules described above.
 
 | Location                    | Responsibility                                                 | Must not do                                                  |
 | --------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -106,7 +110,7 @@ Single process and one sequential worker are sufficient initially. Transactions 
 
 Organize by user feature. A feature may contain `components/`, `hooks/`, `api.ts`, `types.ts` and colocated `*.test.tsx`, but create only what is used. `app/` composes features. Features export a small public API from `index.ts` once implemented. Other features must not import internal components. Share primitives only when actual reuse appears; avoid a catch-all utils directory.
 
-Server owns claim facts, revisions, calculations and conclusions. Client owns navigation, selected evidence, expanded panels and unsaved form text. Keep local component state until cross-component needs justify a store. Do not add Redux or a router for one workspace by default. The shared API client treats response JSON as unknown and accepts a caller-supplied validator; the workspace currently validates only the top-level response shape. It reports network, timeout, HTTP and response-format failures. Use request cancellation and explicit loading/error states. React text rendering is the default; untrusted content must not be injected as HTML.
+Server owns claim facts, revisions, calculations and conclusions. Client owns navigation, selected evidence, expanded panels and unsaved form text. Keep local component state until cross-component needs justify a store. Do not add Redux or a router for one workspace by default. The shared API client treats response JSON as unknown and accepts a caller-supplied validator; the workspace currently validates canonical document objects and page entries. It reports network, timeout, HTTP and response-format failures. Use request cancellation and explicit loading/error states. React text rendering is the default; untrusted content must not be injected as HTML.
 
 ### Local diagnostics frontend
 
@@ -167,7 +171,7 @@ These references inform the scaffold. Feature ownership and module choices are p
 
 ## Local verification
 
-`make check` runs nine backend tests, the Node frontend API-client behavior test, Ruff, ESLint, TypeScript, the Vite production build and formatting checks. Backend coverage includes actual synthetic PDF ingestion, persistence/deduplication, workspace isolation, diagnostics correlation, validation, retention and logging failure isolation. The client test covers success, network failures, timeouts, malformed JSON and non-JSON HTTP errors.
+`make check` runs the backend workflow and diagnostics tests, the Node frontend API-client behavior test, Ruff, ESLint, TypeScript, the Vite production build and formatting checks. Backend coverage includes actual synthetic PDF ingestion, persistence/deduplication, workspace isolation, diagnostics correlation, validation, retention and logging failure isolation. The client test covers success, network failures, timeouts, malformed JSON and non-JSON HTTP errors.
 
 The diagnostics layout and API outage/recovery states were manually checked in the browser. A full automated browser upload-to-trace test, live model evaluation and hosted verification remain outstanding. No new hosted CI result has been verified for this branch.
 
