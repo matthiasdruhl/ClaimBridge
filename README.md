@@ -20,15 +20,13 @@ make setup-api
 
 If the Python executable is named differently, use `make setup-api PYTHON=/path/to/python3.12`.
 
-Run in two terminals:
+Start both services in one terminal:
 
 ```sh
-make dev-api
+make dev
 ```
 
-```sh
-make dev-web
-```
+The launcher reads backend settings from the root `.env` (existing environment variables take precedence), checks dependencies and ports, labels service logs, and stops both services with Ctrl+C. It does not make model requests. Put your key only in `.env`, which Git ignores. Run `node scripts/dev.mjs --check` for preflight checks without starting services. Separate `make dev-api` / `make dev-web` commands remain available; the standalone API command requires exported settings.
 
 Frontend: http://127.0.0.1:5173. API health: http://127.0.0.1:5001/api/v1/health. Vite proxies /api locally. The workspace stores original PDFs and page text in local SQLite under var/. Uploads are revision-checked and deduplicated. Encrypted and non-text pages are explicitly flagged. Live analysis requires backend provider configuration. See the claim workflow guide for supported categories and validation limits.
 
@@ -50,7 +48,7 @@ See [the claim workflow guide](docs/claim-workflow.md) for provider configuratio
 
 ## Local diagnostics
 
-Run `make dev-api` and `make dev-web`, then open http://127.0.0.1:5173/diagnostics. The dashboard shows browser-to-API connectivity through the Vite proxy, database readiness, latency, request counts, and correlated frontend/backend/PDF events. Select a request ID to see its trace.
+Run `make dev`, then open http://127.0.0.1:5173/diagnostics. The dashboard shows browser-to-API connectivity through the Vite proxy, database readiness, latency, request counts, and correlated frontend/backend/PDF events. Select a request ID to see its trace.
 
 `make dev-api` enables diagnostics using `CLAIMBRIDGE_DIAGNOSTICS=1`. Direct Flask starts leave it disabled unless explicitly enabled. Keep this local developer interface disabled on public deployments; it has no authentication. Logs contain allowlisted metadata, not documents, filenames, API keys, or request bodies.
 

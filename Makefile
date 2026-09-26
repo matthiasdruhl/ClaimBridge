@@ -1,7 +1,10 @@
 PYTHON ?= python3.12
 VENV_PY := .venv/bin/python
 
-.PHONY: setup-api dev-api dev-web check-api check-web check
+.PHONY: setup-api dev dev-api dev-web check-api check-web check
+dev:
+	node scripts/dev.mjs
+
 setup-api:
 	$(PYTHON) -m venv .venv
 	$(VENV_PY) -m pip install -r apps/api/requirements-dev.lock
