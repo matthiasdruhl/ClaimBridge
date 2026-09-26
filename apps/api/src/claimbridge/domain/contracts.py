@@ -43,10 +43,32 @@ def fact(value, evidence_ids, status="explicit", reason=None, derivation=None):
     )
 
 
-def extraction_schema():
+def extraction_schema(source_ids=None):
     schema = copy.deepcopy(SCHEMAS["claim"])
+    schema["properties"]["plan"]["properties"]["coverage_active"]["description"] = (
+        "Coverage active on the disputed service date under the documented eligibility interval, "
+        "not coverage active as of the analysis date."
+    )
+    schema["properties"]["services"]["items"]["properties"]["facility_id"]["description"] = (
+        "Actual documented service facility. Use the encounter's explicit facility identifier "
+        "matching a facility provider ID, even if the submitted claim facility field was blank. "
+        "Unknown when no source documents establish the actual service facility."
+    )
     schema["properties"]["evidence"]["items"] = copy.deepcopy(SCHEMAS["evidence"])
     schema["properties"]["evidence"]["items"].pop("$id", None)
+    if source_ids is not None:
+        schema["properties"]["evidence"]["items"] = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "id": {"type": "string", "enum": list(source_ids)},
+                "domain": {"enum": ["user", "plan"]},
+                "kind": {
+                    "enum": ["policy", "eob", "denial", "bill", "authorization", "correspondence"]
+                },
+            },
+            "required": ["id", "domain", "kind"],
+        }
     return schema
 
 

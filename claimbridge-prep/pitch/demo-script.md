@@ -1,6 +1,6 @@
 # Four-minute live demonstration
 
-Clock frozen at September 24, 2026. Start with the upload page, synthetic label visible, no precomputed claim conclusions on screen. Stage the five initial PDFs and keep D06 out of the initial upload. The implementation may use local verified source summaries; label them accurately.
+Use the current local analysis date; the synthetic service and receipt dates remain fixed. Coverage is assessed on the service date. Start with the upload page, synthetic label visible, no precomputed claim conclusions on screen. Stage the five initial PDFs and keep D06 out of the initial upload. The implementation may use local verified source summaries; label them accurately.
 
 | Time | Screen / presenter action | Story and expected behavior |
 |---|---|---|
@@ -12,6 +12,10 @@ Clock frozen at September 24, 2026. Start with the upload page, synthetic label 
 | 2:40-3:05 | Open federal evidence; answer receipt/payment | Show R02 and R03 source URLs/locators; 'The relevant rule fits the documented setting.' Enter receipt September 1, no later payment. Deadline becomes February 28, 2027, visibly based on user report. |
 | 3:05-3:40 | Action plan and appeal draft | Billing review, claim-file request, protect internal appeal deadline. Click a draft argument and its evidence. No send button. |
 | 3:40-4:00 | Highlight remaining unknown and close | 'The final amount is still unknown. ClaimBridge has turned scattered records into an explained, evidence-backed next step.' |
+
+## Measured timing and presentation setup
+
+Current live analysis takes roughly 35–45 seconds per original stage in successful no-repair runs; allow more if the provider retries. The original 30-second processing slot below is an aspirational script, not a measured guarantee. Prepare a completed **actual live run** and its saved revisions before presenting. If showing saved results, say so explicitly. Use the initial processing interval to explain the document packet and separate claim balances; use the D06 processing interval to explain what the encounter record adds. Receipt-only regeneration reuses validated extraction and has been verified in milliseconds at the API layer. A full four-minute browser rehearsal remains a release check, not an assumed pass.
 
 ## Rehearsal checks
 

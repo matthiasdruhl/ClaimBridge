@@ -1,4 +1,22 @@
+> **Latest walkthrough:** D06 retry, source checks, draft persistence/copy and revision protections passed. PDF rendering/download remain unverified in the embedded browser; prior generic failure remains unexplained. [Results and next steps](../../docs/browser-walkthrough.md).
+
+> **Current status:** the post-key implementation and full 12-run live suite are complete. See [validation results and remaining acceptance checks](../../docs/live-validation.md). Browser rehearsal and human citation review remain open. The plan below is retained as historical context.
+
 # Build backlog
+
+## Historical plan after API key upload — September 26, 2026
+
+Backend key, base URL and model settings are present in `.env`; authentication, account credits, model access and live accuracy are not yet verified. Configuration presence was checked without printing credentials. Startup preflight reported port 5001 occupied or unavailable; determine whether the existing API is healthy before restarting anything. This plan supersedes the historical build order below.
+
+1. **Verify the running setup (15–20 minutes).** Identify the service on port 5001, check API health and diagnostics, and restart the intended local backend if needed so it receives the new configuration. Confirm the frontend connects to that backend. Run the normal local checks before paid evaluation. Exit gate: healthy app and passing checks.
+2. **Run one real extraction (20–40 minutes).** In a fresh synthetic workspace upload only the original five PDFs; hold D06 back. Analyze and inspect provider errors, schema compatibility, quotation validation and elapsed time. Resolve authentication, model access, credit or response-format problems before expanding the run. Exit gate: a genuine provider result that passes validation and retains the initial missing-information state.
+3. **Validate the full claim story (30–45 minutes).** Review every important amount, claim identifier, quotation and conclusion against its source page. Save the receipt date, reanalyze, then upload D06 and reanalyze again. Verify old results become stale and only supported conclusions change. Confirm corrected liability remains unknown, separate claims stay separate, and a deadline is shown only when its prerequisites are supported. Generate, edit, save and export the current appeal draft. Exit gate: a complete live browser flow with grounded evidence and current draft output.
+4. **Measure repeatability (45–90 minutes, including fixes).** Run `scripts/evaluate_live.py` with backend configuration loaded into its process; unlike `make dev`, this standalone script does not load `.env`. Keep credentials out of logs and command text. The runner performs three repetitions of original-before-D06, original-after-D06, office and authorization: 12 analysis jobs, potentially more provider calls due to retries/corrections. Record automatic gates, provider attempts and latency under `var/evaluations/`, then manually review citation entailment. Fix failures and rerun affected cases. Exit gate: all 12 automatic gates pass and important facts/conclusions pass human review; document any remaining limitation explicitly.
+5. **Freeze and rehearse (final two hours).** Complete a four-minute demonstration from a fresh workspace, practice reset/provider-failure handling, and record measured performance and known limitations in the readiness report. If the provider is unavailable, use only a visibly labeled test-data demonstration. Reserve September 27, 6–8 AM Eastern for corrections and rehearsal ahead of the 8 AM deadline.
+
+Only after these gates pass: consider the optional “Why this appeal?” evidence map if its 2–3 hour timebox fits before the final rehearsal window. Hosting, OCR, additional clinical categories and production integrations remain deferred. These are planned steps; no live model requests were made while updating this plan.
+
+## Historical backlog
 
 Historical estimates below assumed two developers; current work is solo with a Sunday September 27, 8 AM Eastern deadline. Critical path: contracts -> PDF spans -> facts -> deterministic checks -> retrieval -> analysis -> clarification -> citations/actions -> rehearsal.
 
@@ -50,9 +68,6 @@ After core citations and clarification work reliably, visualize the small case-s
 
 ## Current remaining critical path
 
-1. Configure the provider and verify account-specific schema/model support.
-2. Run actual extraction on the three packets (three repetitions), inspect grounding and latency, and fix failures without fixture replay.
-3. Complete a live browser run including the D06 clarification and saved draft, then rehearse the four-minute story.
-4. Reserve the final two hours for corrections and rehearsal. Keep hosting, OCR, medical-necessity reasoning and evidence-map work off the critical path.
+Follow the active post-key plan at the top: setup/health → single live extraction → full clarification/draft flow → repeated evaluation → freeze/rehearsal. The credential-entry step is complete; live compatibility and quality gates remain open.
 
 Implemented since the historical backlog: processing worker/revisions, canonical schema and quotation validation, deterministic reasoning/actions/drafts, FTS retrieval, scoped summaries, clarification invalidation, new workspace, and offline scenario/provider tests. See ../../docs/claim-workflow.md for actual scope. No paid evaluation has yet been run.

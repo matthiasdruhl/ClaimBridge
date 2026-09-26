@@ -30,7 +30,7 @@ def test_transient_retry_once():
         return BytesIO(json.dumps({"choices": [{"message": {"content": "{}"}}]}).encode())
 
     assert provider(opener).complete([], {}) == {}
-    assert calls == [30, 30]
+    assert calls == [120, 120]
 
 
 @pytest.mark.parametrize(
@@ -66,6 +66,34 @@ def test_auth_error_not_retried():
     assert len(calls) == 1
 
 
+def test_request_settings_and_usage_are_recorded_without_secrets():
+    def opener(request, timeout):
+        body = json.loads(request.data)
+        assert body["reasoning_effort"] == "low"
+        assert body["response_format"]["type"] == "json_schema"
+        assert timeout == 120
+        return BytesIO(
+            json.dumps(
+                {
+                    "choices": [{"message": {"content": "{}"}}],
+                    "usage": {
+                        "prompt_tokens": 10,
+                        "completion_tokens": 5,
+                        "total_tokens": 15,
+                        "untrusted_extra": "test-secret",
+                    },
+                }
+            ).encode()
+        )
+
+    configured = provider(opener)
+    configured.reasoning_effort = "low"
+    assert configured.extract([], {}, lambda value: value) == {}
+    assert configured.last_metrics["total_tokens"] == 15
+    assert "test-secret" not in json.dumps(configured.last_metrics)
+    assert configured.configuration["reasoning_effort"] == "low"
+
+
 def test_one_repair_for_invalid_json():
     calls = []
 
@@ -91,3 +119,21 @@ def test_one_repair_for_invalid_evidence():
     with pytest.raises(ValidationFailure):
         provider(opener).extract([], {}, reject)
     assert len(calls) == 2
+
+
+def test_repair_receives_candidate_and_specific_validation_feedback():
+    requests = []
+
+    def opener(request, timeout):
+        requests.append(json.loads(request.data))
+        return BytesIO(b'{"choices":[{"message":{"content":"{\\"amount\\":10}"}}]}')
+
+    def reject(value):
+        raise ValidationFailure("MONEY_NOT_IN_SOURCE_AT_bills.0.balance_cents")
+
+    with pytest.raises(ValidationFailure):
+        provider(opener).extract([{"role": "user", "content": "Synthetic packet"}], {}, reject)
+    repair = requests[1]["messages"]
+    assert json.loads(repair[-2]["content"]) == {"amount": 10}
+    assert repair[-2]["role"] == "assistant"
+    assert "bills.0.balance_cents" in repair[-1]["content"]

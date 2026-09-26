@@ -44,7 +44,8 @@ def validate_extraction(candidate, workspace, documents, as_of):
         for page in item["pages"]
     }
     evidence = {}
-    for item in claim["evidence"]:
+    invalid_quotes = []
+    for index, item in enumerate(claim["evidence"]):
         if item["domain"] not in {"user", "plan"} or item["id"] in evidence:
             raise ValidationFailure("EVIDENCE_DOMAIN_OR_ID_INVALID")
         page = pages.get((item["document_id"], item["location"]["page"]))
@@ -52,7 +53,11 @@ def validate_extraction(candidate, workspace, documents, as_of):
             raise ValidationFailure("EVIDENCE_PAGE_INVALID")
         if item["domain"] == "plan" and item["kind"] != "policy":
             raise ValidationFailure("PLAN_EVIDENCE_INVALID")
-        start, end = match_span(page, item["text"])
+        try:
+            start, end = match_span(page, item["text"])
+        except ValidationFailure:
+            invalid_quotes.append(index)
+            continue
         item.update(
             text=page[start:end],
             text_kind="verbatim",
@@ -65,6 +70,11 @@ def validate_extraction(candidate, workspace, documents, as_of):
         item["content_sha256"] = hashlib.sha256(item["text"].encode()).hexdigest()
         item["location"].update(start_char=start, end_char=end, bbox=None)
         evidence[item["id"]] = item
+    if invalid_quotes:
+        raise ValidationFailure(
+            "EVIDENCE_QUOTE_NOT_FOUND_AT_INDICES_" + ",".join(map(str, invalid_quotes))
+        )
+    invalid_money = []
     for path, item in walk_facts(claim):
         if item["status"] not in {"explicit", "unknown", "conflicted"}:
             raise ValidationFailure("MODEL_FACT_STATUS_INVALID")
@@ -77,13 +87,13 @@ def validate_extraction(candidate, workspace, documents, as_of):
         if item["status"] != "unknown" and not item["evidence_ids"]:
             raise ValidationFailure("FACT_MISSING_EVIDENCE")
         if any(ref not in evidence for ref in item["evidence_ids"]):
-            raise ValidationFailure("FACT_REFERENCE_INVALID")
+            raise ValidationFailure(f"FACT_REFERENCE_INVALID_AT_{path}")
         if (
             path.startswith("plan.")
             and item["value"] is not None
             and any(evidence[ref]["domain"] != "plan" for ref in item["evidence_ids"])
         ):
-            raise ValidationFailure("PLAN_FACT_REQUIRES_PLAN_EVIDENCE")
+            raise ValidationFailure(f"PLAN_FACT_REQUIRES_PLAN_EVIDENCE_AT_{path}")
         if item["derivation"] is not None:
             raise ValidationFailure("MODEL_DERIVATION_FORBIDDEN")
         if item["value"] is not None and path.endswith("_cents"):
@@ -95,7 +105,9 @@ def validate_extraction(candidate, workspace, documents, as_of):
             if not any(
                 Decimal(token.replace("$", "").replace(",", "")) * 100 == amount for token in tokens
             ):
-                raise ValidationFailure("MONEY_NOT_IN_SOURCE")
+                invalid_money.append(path)
+    if invalid_money:
+        raise ValidationFailure("MONEY_NOT_IN_SOURCE_AT_" + ",".join(invalid_money))
     for provision in claim["policy_provisions"]:
         if not provision["evidence_ids"] or any(
             ref not in evidence or evidence[ref]["domain"] != "plan"
@@ -108,6 +120,13 @@ def validate_extraction(candidate, workspace, documents, as_of):
         raise ValidationFailure("DUPLICATE_ENTITY_ID")
     if any(item["provider_id"] not in providers for item in claim["services"]):
         raise ValidationFailure("PROVIDER_REFERENCE_INVALID")
+    facilities = {item["id"] for item in claim["providers"] if item["role"] == "facility"}
+    for index, service in enumerate(claim["services"]):
+        if (
+            service["facility_id"]["value"] is not None
+            and service["facility_id"]["value"] not in facilities
+        ):
+            raise ValidationFailure(f"FACILITY_REFERENCE_INVALID_AT_services.{index}.facility_id")
     if any(item["service_id"] not in services for item in claim["eobs"]):
         raise ValidationFailure("SERVICE_REFERENCE_INVALID")
     known_claims = [
@@ -115,6 +134,10 @@ def validate_extraction(candidate, workspace, documents, as_of):
     ]
     if len(set(known_claims)) != len(known_claims):
         raise ValidationFailure("MULTIPLE_ADJUDICATIONS_NEED_REVIEW")
+    disputed = claim["denial"]["claim_id"]
+    if disputed["status"] == "explicit" and known_claims.count(disputed["value"]) == 1:
+        # The source-backed denial identifier owns identity, not an arbitrary generated root ID.
+        claim["id"] = disputed["value"]
     member_ids = claim["patient"]["member_id"]
     if member_ids["status"] == "conflicted":
         raise ValidationFailure("MIXED_MEMBER_RECORDS")

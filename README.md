@@ -1,8 +1,11 @@
 # ClaimBridge
 
-Evidence-backed medical-claim navigation. This repository currently contains a verified preparation package and a local document workspace. Upload synthetic PDFs, inspect extracted page text, and reopen original documents. The claim-analysis, clarification and appeal-draft workflow is implemented for local evaluation; live model accuracy remains unverified.
+Evidence-backed medical-claim navigation. This repository currently contains a verified preparation package and a local document workspace. Upload synthetic PDFs, inspect extracted page text, and reopen original documents. The claim-analysis, clarification and appeal-draft workflow is implemented for local evaluation; the final synthetic live suite passed 12/12 automatic gates. The browser workflow passes through saved drafts and copy export; file download, original-PDF rendering and independent human review remain open.
 
 ## Where to start
+
+- [Browser walkthrough](docs/browser-walkthrough.md): verified flow, remaining browser limitations and next priorities.
+- [Resume handoff](docs/resume-handoff.md): September 26 implementation status, live results, remaining work and credit-conscious restart commands.
 
 - [Repository/code structure](docs/code-structure.md): folder ownership, dependencies, planned modules and conventions.
 - [Preparation package](claimbridge-prep/README.md): research, synthetic documents, golden analysis and evaluation.
@@ -44,7 +47,7 @@ Canonical claim/evidence schemas stay in claimbridge-prep/schemas; contracts/REA
 
 ## Claim analysis and drafts
 
-See [the claim workflow guide](docs/claim-workflow.md) for provider configuration, processing jobs, evidence validation, clarification, draft editing and scenario evaluation. The app supports network/location and prior-authorization review with bounded code-generated explanations. No appeal is submitted, and corrected liability remains unknown. Meta account/model compatibility and live performance are pending credentials and credits.
+See [the claim workflow guide](docs/claim-workflow.md) for provider configuration, processing jobs, evidence validation, clarification, draft editing and scenario evaluation. The app supports network/location and prior-authorization review with bounded code-generated explanations. No appeal is submitted, and corrected liability remains unknown. Meta access and synthetic live performance are verified; see [the measured validation report](docs/live-validation.md) for results and remaining acceptance checks.
 
 ## Local diagnostics
 

@@ -413,7 +413,10 @@ export function ClaimWorkflow({
                 <article className="page" key={action.id}>
                   <h3>{action.title}</h3>
                   <p>{action.instructions}</p>
-                  <p>Due: {display(action.due)}</p>
+                  <p>
+                    Due: {display(action.due)}{' '}
+                    {citations(action.due.evidence_ids)}
+                  </p>
                   {citations(action.evidence_ids)}
                 </article>
               ))}

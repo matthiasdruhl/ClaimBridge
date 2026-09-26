@@ -1,6 +1,10 @@
+> **Latest walkthrough:** D06 retry, source checks, draft persistence/copy and revision protections passed. PDF rendering/download remain unverified in the embedded browser; prior generic failure remains unexplained. [Results and next steps](../docs/browser-walkthrough.md).
+
+> **Updated September 26:** implementation and 12/12 live automatic gates passed. [Validation report](../docs/live-validation.md) records timings, one repair, workflow checks and remaining acceptance work.
+
 # Current implementation readiness — September 26
 
-Solo build, local first. Deadline: Sunday, September 27, 2026 at 8 AM Eastern. Meta credits/configuration remain pending. Hackathon prepared-asset rules have not been supplied.
+Solo build, local first. Deadline: Sunday, September 27, 2026 at 8 AM Eastern. Meta access and configuration are verified. Hackathon prepared-asset rules have not been supplied.
 
 ## Implemented and locally checked
 
@@ -14,7 +18,7 @@ Solo build, local first. Deadline: Sunday, September 27, 2026 at 8 AM Eastern. M
 
 ## Still required before calling this demo-ready
 
-- Configure actual provider/model and credits, verify supported JSON Schema subset, and run scripts/evaluate_live.py. No live model accuracy or latency result exists yet.
+- Final live suite passed 12/12 automatic gates. Complete the final-version browser rehearsal and human citation review; see the validation report.
 - Inspect every important fact/conclusion against its evidence; matching quotations do not establish entailment. Complete actual-output evaluation and rehearse the four-minute demonstration.
 - Reserve the final two hours for fixes and rehearsal. Do not add hosting/OCR/clinical categories before the core gates pass.
 - Confirm event rules and have a qualified reviewer assess any public real-world reuse. The implementation is synthetic/local only; no final liability or successful appeal is claimed.

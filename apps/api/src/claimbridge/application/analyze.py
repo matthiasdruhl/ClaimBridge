@@ -3,9 +3,11 @@
 import copy
 import hashlib
 import json
+import logging
 import queue
 import threading
 import time
+import traceback
 from pathlib import Path
 
 from claimbridge.domain.contracts import ValidationFailure, extraction_schema, validate
@@ -13,6 +15,7 @@ from claimbridge.domain.reasoning import action_plan, analyze
 from claimbridge.domain.validation import validate_extraction
 from claimbridge.infrastructure.llm import ProviderFailure, ProviderUnavailable
 from claimbridge.infrastructure.retrieval import external_sources, plan_retrieval
+from claimbridge.infrastructure.source_passages import hydrate_evidence, source_passages
 
 PROMPT = (Path(__file__).resolve().parents[1] / "infrastructure/prompts/extract.txt").read_text()
 
@@ -28,7 +31,7 @@ class AnalysisWorker:
     def configuration(self):
         return {
             **self.provider.configuration,
-            "pipeline_version": "bounded-analysis-v1",
+            "pipeline_version": "bounded-analysis-v3",
             "schema_hash": hashlib.sha256(
                 json.dumps(extraction_schema(), sort_keys=True).encode()
             ).hexdigest(),
@@ -88,18 +91,12 @@ class AnalysisWorker:
                 claim.update(revision=workspace["revision"], as_of=payload["as_of"])
                 provider_outcome = "reused_validated_extraction"
             else:
+                catalog, source_documents = source_passages(documents)
                 inputs = dict(
                     workspace_id=workspace["id"],
                     revision=workspace["revision"],
                     as_of=payload["as_of"],
-                    documents=[
-                        dict(
-                            document_id=item["document"]["id"],
-                            immutable_hash=item["document"]["sha256"],
-                            pages=item["pages"],
-                        )
-                        for item in documents
-                    ],
+                    documents=source_documents,
                 )
                 messages = [
                     {"role": "system", "content": PROMPT},
@@ -107,9 +104,9 @@ class AnalysisWorker:
                 ]
                 claim = self.provider.extract(
                     messages,
-                    extraction_schema(),
+                    extraction_schema(catalog),
                     lambda value: validate_extraction(
-                        value, workspace, documents, payload["as_of"]
+                        hydrate_evidence(value, catalog), workspace, documents, payload["as_of"]
                     ),
                 )
                 provider_outcome = "validated"
@@ -173,6 +170,15 @@ class AnalysisWorker:
                 "validation" if isinstance(error, ValidationFailure) else "provider",
                 "failed",
             )
-        except Exception:
+        except Exception as error:
+            # Record code locations only: exception messages and locals may contain source
+            # documents, provider responses or credentials and must never enter logs.
+            frames = traceback.extract_tb(error.__traceback__)
+            logging.getLogger(__name__).error(
+                "Unexpected analysis failure job=%s type=%s locations=%s",
+                job_id,
+                type(error).__name__,
+                [(Path(frame.filename).name, frame.name, frame.lineno) for frame in frames],
+            )
             self.store.stage(job_id, "failed", "failed", "PROCESSING_FAILED", retryable=True)
             self.event(job_id, payload, "processing", "failed")

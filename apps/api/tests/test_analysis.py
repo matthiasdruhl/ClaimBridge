@@ -171,6 +171,27 @@ def test_fabricated_quotes_and_foreign_references_rejected(tmp_path):
         validate_extraction(original, state, state["documents"], "2026-09-26")
 
 
+def test_claim_identity_uses_validated_denial_and_matching_eob(tmp_path):
+    _, _, state, _ = setup_case(tmp_path)
+    extracted = candidate(state["documents"])
+    extracted["id"] = state["id"]
+    result = validate_extraction(extracted, state, state["documents"], "2026-09-26")
+    assert result["id"] == "SYN-C260812-A"
+
+
+def test_unlinked_facility_identifier_is_rejected(tmp_path):
+    _, _, state, _ = setup_case(tmp_path, count=6)
+    extracted = candidate(state["documents"], clarified=True)
+    facility = next(item for item in extracted["providers"] if item["role"] == "facility")
+    old_id = facility["id"]
+    facility["id"] = "unlinked-alias"
+    for service in extracted["services"]:
+        if service["provider_id"] == old_id:
+            service["provider_id"] = facility["id"]
+    with pytest.raises(ValidationFailure, match="FACILITY_REFERENCE_INVALID"):
+        validate_extraction(extracted, state, state["documents"], "2026-09-26")
+
+
 def test_office_and_authorization_routes(tmp_path):
     _, _, state, _ = setup_case(tmp_path)
     base = validate_extraction(
@@ -208,6 +229,26 @@ def test_restart_and_obsolete_jobs(tmp_path):
     restarted = AnalysisStore(store.workspaces)
     assert restarted.job(job["job_id"])["error"] == "PROCESS_INTERRUPTED"
     assert restarted.job(job["job_id"])["retryable"]
+
+
+def test_unexpected_failure_logs_locations_without_sensitive_message(tmp_path, caplog):
+    app, _, state, provider = setup_case(tmp_path)
+    store = app.extensions["analysis_store"]
+
+    def fail(*args):
+        raise RuntimeError("SECRET-provider-body-and-credential")
+
+    provider.extract = fail
+    job, _ = store.start(
+        state["id"], state["revision"], provider.document_ids, provider.configuration, ""
+    )
+    app.extensions["analysis_worker"].run(job["job_id"])
+    assert store.job(job["job_id"])["error"] == "PROCESSING_FAILED"
+    assert "RuntimeError" in caplog.text
+    assert "test_analysis.py" in caplog.text
+    assert job["job_id"] in caplog.text
+    assert "SECRET-provider-body-and-credential" not in caplog.text
+    assert store.latest(state["id"]) is None
 
 
 def test_provider_missing_no_job_started(tmp_path, monkeypatch):

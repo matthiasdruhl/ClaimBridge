@@ -18,12 +18,14 @@ class ProviderFailure(Exception):
 
 
 class ModelProvider:
-    prompt_version = "claim-extraction-v1"
+    prompt_version = "claim-extraction-v9"
 
     def __init__(self, opener=urlopen):
         self.key = os.environ.get("CLAIMBRIDGE_API_KEY", "")
         self.base = os.environ.get("CLAIMBRIDGE_API_BASE_URL", "").rstrip("/")
         self.model = os.environ.get("CLAIMBRIDGE_MODEL", "")
+        self.timeout = 120
+        self.reasoning_effort = os.environ.get("CLAIMBRIDGE_REASONING_EFFORT", "low")
         self.opener = opener
         self.last_metrics = {"http_attempts": 0, "repair_attempts": 0}
 
@@ -33,7 +35,12 @@ class ModelProvider:
 
     @property
     def configuration(self):
-        return {"model": self.model, "base_url": self.base, "prompt_version": self.prompt_version}
+        return {
+            "model": self.model,
+            "base_url": self.base,
+            "prompt_version": self.prompt_version,
+            "reasoning_effort": self.reasoning_effort,
+        }
 
     def complete(self, messages, schema):
         if not self.ready:
@@ -44,6 +51,7 @@ class ModelProvider:
         body = json.dumps(
             {
                 "model": self.model,
+                "reasoning_effort": self.reasoning_effort,
                 "messages": messages,
                 "response_format": {
                     "type": "json_schema",
@@ -60,11 +68,16 @@ class ModelProvider:
         for attempt in range(2):
             self.last_metrics["http_attempts"] += 1
             try:
-                with self.opener(request, timeout=30) as response:
+                with self.opener(request, timeout=self.timeout) as response:
                     raw = response.read(4 * 1024 * 1024 + 1)
                 if len(raw) > 4 * 1024 * 1024:
                     raise ProviderFailure("PROVIDER_RESPONSE_TOO_LARGE")
                 envelope = json.loads(raw)
+                usage = envelope.get("usage", {})
+                for name in ("prompt_tokens", "completion_tokens", "total_tokens"):
+                    value = usage.get(name)
+                    if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                        self.last_metrics[name] = self.last_metrics.get(name, 0) + value
                 choice = envelope["choices"][0]
                 if choice.get("finish_reason") == "length":
                     raise ValidationFailure("MODEL_OUTPUT_TRUNCATED")
@@ -84,6 +97,7 @@ class ModelProvider:
     def extract(self, messages, schema, validator):
         self.last_metrics = {"http_attempts": 0, "repair_attempts": 0}
         for attempt in range(2):
+            result = None
             try:
                 result = self.complete(messages, schema)
                 return validator(result)
@@ -93,6 +107,11 @@ class ModelProvider:
                 self.last_metrics["repair_attempts"] += 1
                 messages = [
                     *messages,
+                    *(
+                        [{"role": "assistant", "content": json.dumps(result)}]
+                        if result is not None
+                        else []
+                    ),
                     {
                         "role": "user",
                         "content": f"Validation failed ({error}). "
