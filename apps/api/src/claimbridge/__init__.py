@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 
-from flask import Flask, g, jsonify
+from flask import Flask, abort, g, jsonify, send_from_directory
 
 from claimbridge.api.analysis import analysis_blueprint
 from claimbridge.api.diagnostics import install_diagnostics
@@ -18,7 +18,7 @@ from claimbridge.infrastructure.workspaces import WorkspaceError, WorkspaceStore
 
 def create_app(test_config: dict[str, object] | None = None) -> Flask:
     """Create independent application instances for local development and tests."""
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder=None)
     app.config.from_mapping(MAX_CONTENT_LENGTH=20 * 1024 * 1024)
     if test_config is not None:
         app.config.update(test_config)
@@ -58,5 +58,24 @@ def create_app(test_config: dict[str, object] | None = None) -> Flask:
     @app.errorhandler(413)
     def too_large(error):
         return jsonify(error={"code": "FILE_TOO_LARGE", "message": "Upload under 20 MB."}), 413
+
+    frontend = Path(
+        app.config.get(
+            "FRONTEND_DIR",
+            Path(__file__).resolve().parents[4] / "apps" / "web" / "dist",
+        )
+    ).resolve()
+
+    @app.get("/")
+    @app.get("/<path:path>")
+    def frontend_app(path=""):
+        if path == "api" or path.startswith("api/"):
+            abort(404)
+        requested = (frontend / path).resolve()
+        if path and requested.is_relative_to(frontend) and requested.is_file():
+            return send_from_directory(frontend, path)
+        if (frontend / "index.html").is_file():
+            return send_from_directory(frontend, "index.html")
+        abort(404)
 
     return app

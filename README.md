@@ -93,6 +93,22 @@ Run the complete local check with:
 make check
 ```
 
+## Railway deployment
+
+Create one Railway service from this GitHub repository and keep the root directory at `/`. In **Variables**, set `RAILPACK_PACKAGES=python@3.12` and `CLAIMBRIDGE_DATA_DIR=/data`. In **Settings → Build**, set:
+
+```sh
+python -m venv .venv && .venv/bin/pip install -r apps/api/requirements-dev.lock && .venv/bin/pip install --no-deps --no-build-isolation -e apps/api && npm run build:web
+```
+
+In **Settings → Deploy**, set the start command and health check:
+
+```sh
+sh -c 'exec env PYTHONPATH=apps/api/src .venv/bin/gunicorn --workers 1 --threads 4 --bind 0.0.0.0:${PORT} --timeout 180 "claimbridge:create_app()"'
+```
+
+Set **Healthcheck Path** to `/api/v1/health`. From the project canvas, right-click the service, choose **Attach Volume**, and mount it at `/data`. Then open **Settings → Networking → Public Networking**, click **Generate Domain**, visit the generated URL, confirm `/api/v1/health`, and run Demo Mode with the exact PDFs in `claimbridge-prep/demo-case/documents`. Provider variables are optional and are not needed for Demo Mode.
+
 ## Repository guide
 
 - [`apps/web`](apps/web): React interface for upload, evidence review, clarification, actions, and appeal drafting.
