@@ -1,5 +1,5 @@
 import { apiRequest } from '../lib/api/client';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ClaimWorkflow } from '../features/analysis/ClaimWorkflow';
 import { documentTypeLabel } from '../features/analysis/presentation';
@@ -19,55 +19,23 @@ export function App() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState(false);
+  const [demoMode, setDemoMode] = useState(
+    () => localStorage.getItem('claimbridge.demo-mode') === 'true',
+  );
   const [stage, setStage] = useState<'documents' | 'analysis' | 'appeal'>(
     'documents',
   );
-  const [recentCases, setRecentCases] = useState<string[]>(() => {
-    try {
-      return JSON.parse(
-        localStorage.getItem('claimbridge.recent-workspaces') ?? '[]',
-      ) as string[];
-    } catch {
-      return [];
-    }
-  });
-
-  const rememberWorkspace = useCallback((id: string) => {
-    setRecentCases((current) => {
-      const next = [id, ...current.filter((item) => item !== id)].slice(0, 5);
-      localStorage.setItem(
-        'claimbridge.recent-workspaces',
-        JSON.stringify(next),
-      );
-      return next;
-    });
-  }, []);
-
-  async function openWorkspace(id: string) {
-    setBusy(true);
-    setError('');
-    try {
-      const state = await request(`/workspaces/${id}`);
-      setWorkspace(state);
-      setSelected(null);
-      setStage('documents');
-      localStorage.setItem('claimbridge.workspace', state.id);
-      rememberWorkspace(state.id);
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Case unavailable.');
-    } finally {
-      setBusy(false);
-    }
-  }
-
   useEffect(() => {
-    const id = localStorage.getItem('claimbridge.workspace');
+    const developmentWorkspace = import.meta.env.DEV
+      ? new URLSearchParams(window.location.search).get('workspace')
+      : null;
+    const id =
+      developmentWorkspace ?? localStorage.getItem('claimbridge.workspace');
     if (!id) return;
     let active = true;
     request(`/workspaces/${id}`)
       .then((value) => {
         if (active) setWorkspace(value);
-        if (active) rememberWorkspace(value.id);
       })
       .catch((reason: Error) => {
         if (active) setError(reason.message);
@@ -75,10 +43,13 @@ export function App() {
     return () => {
       active = false;
     };
-  }, [rememberWorkspace]);
+  }, []);
 
-  async function upload(files: FileList | null) {
-    if (!files?.length || !confirmed) return;
+  async function upload(
+    files: FileList | File[] | null,
+    existingCase = false,
+  ): Promise<Workspace | null> {
+    if (!files?.length || (!confirmed && !existingCase)) return null;
     const selectedFiles = Array.from(files);
     setBusy(true);
     setError('');
@@ -91,7 +62,6 @@ export function App() {
           body: JSON.stringify({ synthetic: true }),
         });
         localStorage.setItem('claimbridge.workspace', current.id);
-        rememberWorkspace(current.id);
         setWorkspace(current);
       }
       for (const file of selectedFiles) {
@@ -105,6 +75,7 @@ export function App() {
         setWorkspace(current);
         setSelected(current.documents.at(-1)?.document.id ?? null);
       }
+      return current;
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Upload failed.');
       if (current) {
@@ -114,6 +85,7 @@ export function App() {
           /* Keep prior state. */
         }
       }
+      throw reason;
     } finally {
       setBusy(false);
     }
@@ -150,7 +122,6 @@ export function App() {
                   setSelected(null);
                   setStage('documents');
                   localStorage.setItem('claimbridge.workspace', state.id);
-                  rememberWorkspace(state.id);
                 })
                 .catch((reason: Error) => setError(reason.message));
             }}
@@ -159,31 +130,28 @@ export function App() {
           </button>
         </div>
       </header>
-      {import.meta.env.DEV && recentCases.length > 0 && (
-        <aside className="demo-tools" aria-label="Demo controls">
-          <div>
-            <strong>Demo controls</strong>
-            <span>
-              Reopen a locally saved synthetic case without rerunning analysis.
-            </span>
-          </div>
-          <select
-            aria-label="Reopen a recent synthetic case"
-            value=""
-            disabled={busy}
+      <aside
+        className={`demo-mode-bar ${demoMode ? 'active' : ''}`}
+        aria-label="Demo mode"
+      >
+        <label className="demo-mode-toggle">
+          <span>Demo mode</span>
+          <input
+            type="checkbox"
+            checked={demoMode}
             onChange={(event) => {
-              if (event.target.value) void openWorkspace(event.target.value);
+              const enabled = event.target.checked;
+              setDemoMode(enabled);
+              localStorage.setItem('claimbridge.demo-mode', String(enabled));
             }}
-          >
-            <option value="">Reopen recent synthetic case</option>
-            {recentCases.map((id, index) => (
-              <option key={id} value={id}>
-                Saved case {index + 1} · {id.slice(0, 8)}
-              </option>
-            ))}
-          </select>
-        </aside>
-      )}
+          />
+        </label>
+        {demoMode && (
+          <p role="status">
+            Uses retained validated analysis for the synthetic case.
+          </p>
+        )}
+      </aside>
       <nav className="claim-progress" aria-label="Claim review progress">
         {[
           ['documents', 'Add documents'],
@@ -246,7 +214,7 @@ export function App() {
                   multiple
                   disabled={!confirmed || busy}
                   onChange={(event) => {
-                    void upload(event.target.files);
+                    void upload(event.target.files).catch(() => undefined);
                     event.target.value = '';
                   }}
                 />
@@ -343,6 +311,8 @@ export function App() {
           onWorkspace={setWorkspace}
           stage={stage}
           onStage={setStage}
+          demoMode={demoMode}
+          onUpload={(files) => upload(files, true)}
         />
       )}
       <footer className="site-footer">

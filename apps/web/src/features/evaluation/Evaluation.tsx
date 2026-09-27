@@ -210,6 +210,11 @@ export function Evaluation() {
                 <dd>Median live analysis time</dd>
               </div>
             </dl>
+            <p className="evaluation-demo-note">
+              Demo Mode uses retained validated results from this synthetic
+              evaluation so the presentation does not depend on provider
+              latency.
+            </p>
             <div className="run-table-wrap">
               <table className="evaluation-runs">
                 <caption>All 12 retained live runs</caption>

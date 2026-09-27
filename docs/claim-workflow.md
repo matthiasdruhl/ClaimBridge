@@ -24,6 +24,16 @@ The adapter targets Chat Completions with JSON Schema response format. The confi
 
 Processing fingerprints include workspace revision, selected document IDs/hashes, model/provider/prompt configuration, pipeline version and canonical schema hash. Queued/running/successful repeats return the same job. Failed jobs can retry. New results cannot overwrite a successful immutable snapshot at the same revision. Uploads/answers advance the workspace revision; obsolete jobs are discarded before saving. Actions/drafts require current successful analysis. Draft writes also require their current version.
 
+## Explicit Demo Mode
+
+Demo Mode is a presentation optimization for the checked-in synthetic network case, not a fallback analysis engine. The browser still uses the normal workspace creation, PDF upload, processing-job, immutable revision, evidence, action-plan and appeal-draft routes. It sends `demo_mode: true` only when the user enables the visible control.
+
+The API accepts exactly two SHA-256 sets: PDFs 01–05 and PDFs 01–06 from `claimbridge-prep/demo-case/manifest.json`. Unknown, incomplete or modified packets are rejected with instructions to turn Demo Mode off. Filenames do not determine a match.
+
+The checked-in `apps/api/src/claimbridge/demo_fixtures/synthetic-network-v1.json` was exported from the validated `original-1-5` and `original-1-6` rows in final live evaluation `02b1d7a12604432fba879a580395466c` on September 26, 2026. Those runs used Meta `muse-spark-1.3-contributor`, prompt `claim-extraction-v9`, and pipeline `bounded-analysis-v3`. `scripts/export_demo_fixture.py` records the reproducible export. Document UUIDs are replaced by hashes in the fixture.
+
+At runtime ClaimBridge maps the saved evidence back to the current workspace only after the exact hash-set match, validates every restored source passage against the uploaded PDFs, and runs the existing deterministic retrieval, reasoning, claim validation and action-plan code before saving the revision. Demo Mode never invokes `ModelProvider.extract`. Metadata labels the result `retained_validated_demo` and names the source live run. Normal mode continues through the provider-backed extraction path.
+
 Model output supplies extracted facts and numbered source-passage references, not final conclusions. The server splits labeled source sections (or retains complete unlabeled pages) and hydrates selected references with exact original text and page offsets. The model does not rewrite quotations. Code validates canonical shape, evidence-page membership, quote offsets, fact status, numeric-source presence and entity references. Plan retrieval uses temporary SQLite FTS5 over extracted plan evidence with section expansion and exclusion/exception retention. Scope-filtered external evidence is restricted to registry R01, and R02/R03 when the facility conditions are supported. There is no open-ended legal web agent.
 
 Explanations and drafts are deterministic templates using validated inputs. This avoids a second unconstrained generation stage but limits supported reasoning. Lexical plan checks and model classification remain imperfect; human citation/applicability review is required. Current corrected liability is deliberately always unknown. Multiple adjudications for a single claim require review instead of automatic merging.

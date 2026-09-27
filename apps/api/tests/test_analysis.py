@@ -88,11 +88,28 @@ def process(app, client, state):
     return client.get(f"/api/v1/workspaces/{state['id']}/claim").json
 
 
+def process_demo(app, client, state):
+    response = client.post(
+        f"/api/v1/workspaces/{state['id']}/process",
+        json={
+            "expected_revision": state["revision"],
+            "document_ids": [item["document"]["id"] for item in state["documents"]],
+            "demo_mode": True,
+        },
+    )
+    assert response.status_code == 202, response.json
+    app.extensions["analysis_worker"].queue.join()
+    job = client.get("/api/v1/jobs/" + response.json["job_id"]).json
+    assert job["status"] == "succeeded", job
+    return client.get(f"/api/v1/workspaces/{state['id']}/claim").json
+
+
 def test_original_flow_clarification_drafts_and_staleness(tmp_path):
     app, client, state, provider = setup_case(tmp_path)
     prefix = f"/api/v1/workspaces/{state['id']}"
     result = process(app, client, state)
     claim = result["claim"]
+    assert result["metadata"]["mode"] == "test_double"
     assert claim["corrected_liability_cents"]["value"] is None
     assert claim["denial"]["deadline"]["value"] is None
     assert len(claim["eobs"]) == 2
@@ -157,6 +174,78 @@ def test_original_flow_clarification_drafts_and_staleness(tmp_path):
         ]
         is None
     )
+
+
+def test_demo_mode_uses_exact_retained_snapshots_without_provider(tmp_path):
+    app, client, state, provider = setup_case(tmp_path)
+    provider.ready = False
+    prefix = f"/api/v1/workspaces/{state['id']}"
+
+    initial = process_demo(app, client, state)
+    assert provider.calls == 0
+    assert initial["metadata"]["mode"] == "retained_validated_demo"
+    assert initial["metadata"]["provider_outcome"] == "retained_validated_snapshot"
+    assert initial["metadata"]["provider_metrics"] == {}
+    assert initial["metadata"]["demo_fixture"]["source_run"] == "original-1-5"
+    assert initial["claim"]["conclusions"][1]["outcome"] == "missing_information"
+
+    document_ids = {item["document"]["id"] for item in state["documents"]}
+    cited = next(item for item in initial["claim"]["evidence"] if item["document_id"] is not None)
+    assert cited["document_id"] in document_ids
+    original = client.get(prefix + f"/documents/{cited['document_id']}/content")
+    assert original.status_code == 200
+    document = next(
+        item for item in state["documents"] if item["document"]["id"] == cited["document_id"]
+    )
+    page = next(item for item in document["pages"] if item["page"] == cited["location"]["page"])
+    assert cited["text"] in page["text"]
+
+    old_revision = state["revision"]
+    path = PREP / "demo-case/documents/06-location-confirmation.pdf"
+    response = client.post(
+        prefix + "/documents",
+        data={
+            "expected_revision": state["revision"],
+            "file": (BytesIO(path.read_bytes()), path.name),
+        },
+    )
+    assert response.status_code == 201
+    state = response.json
+    assert client.get(prefix + "/claim").json["analysis_status"] == "stale"
+
+    clarified = process_demo(app, client, state)
+    assert provider.calls == 0
+    assert clarified["metadata"]["demo_fixture"]["source_run"] == "original-1-6"
+    assert clarified["claim"]["services"][0]["actual_setting"]["status"] == "explicit"
+    assert clarified["claim"]["conclusions"][1]["outcome"] == "possible_processing_error"
+    assert (
+        next(item for item in clarified["claim"]["questions"] if item["id"] == "Q-location")[
+            "status"
+        ]
+        == "resolved_by_document"
+    )
+    assert old_revision in clarified["revisions"]
+    assert state["revision"] in clarified["revisions"]
+
+    draft = client.post(prefix + "/appeal-draft", json={"expected_revision": state["revision"]})
+    assert draft.status_code == 201
+    assert draft.json["submitted"] is False
+
+
+def test_demo_mode_refuses_unknown_packet_before_provider(tmp_path):
+    app, client, state, provider = setup_case(tmp_path, count=1)
+    response = client.post(
+        f"/api/v1/workspaces/{state['id']}/process",
+        json={
+            "expected_revision": state["revision"],
+            "document_ids": [item["document"]["id"] for item in state["documents"]],
+            "demo_mode": True,
+        },
+    )
+    assert response.status_code == 422
+    assert "not part of the saved demo case" in response.json["error"]["message"]
+    assert provider.calls == 0
+    assert app.extensions["analysis_store"].latest(state["id"]) is None
 
 
 def test_fabricated_quotes_and_foreign_references_rejected(tmp_path):

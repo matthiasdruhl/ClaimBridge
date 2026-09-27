@@ -10,6 +10,7 @@ import {
 } from '../../lib/contracts/workflow';
 import type {
   Actions,
+  Claim,
   ClaimResponse,
   Draft,
   Evidence,
@@ -21,13 +22,15 @@ import {
   analysisProgress,
   documentTypeLabel,
   evidenceLabel,
+  evidenceStatusMarker,
   evidenceStory,
+  orderClarifications,
   outcomePresentation,
+  prioritizedUnresolvedItems,
   selectDisputedRecord,
   selectPrimaryConclusion,
   trustSummary,
   technicalTrace,
-  unresolvedItems,
 } from './presentation';
 
 const json = (value: unknown): RequestInit => ({
@@ -51,11 +54,15 @@ export function ClaimWorkflow({
   onWorkspace,
   stage,
   onStage,
+  demoMode,
+  onUpload,
 }: {
   workspace: Workspace;
   onWorkspace: (value: Workspace) => void;
   stage: 'documents' | 'analysis' | 'appeal';
   onStage: (value: 'documents' | 'analysis' | 'appeal') => void;
+  demoMode: boolean;
+  onUpload: (files: FileList | File[] | null) => Promise<Workspace | null>;
 }) {
   const [result, setResult] = useState<ClaimResponse | null>(null);
   const [job, setJob] = useState<Job | null>(null);
@@ -68,20 +75,34 @@ export function ClaimWorkflow({
   const [saved, setSaved] = useState('');
   const [evidence, setEvidence] = useState<Evidence | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [evidenceAdded, setEvidenceAdded] = useState(false);
   const prefix = `/workspaces/${workspace.id}`;
   const claim = result?.claim;
   const stale =
     !!claim &&
     (claim.revision !== workspace.revision ||
       result?.analysis_status === 'stale');
+  const currentRevisionAnalyzed =
+    result?.revisions.includes(workspace.revision) ?? false;
+  const updateNeeded = stale && !currentRevisionAnalyzed;
   const running = job?.status === 'queued' || job?.status === 'running';
   const disputed = claim ? selectDisputedRecord(claim) : null;
   const primaryConclusion = claim ? selectPrimaryConclusion(claim) : undefined;
   const presentation = outcomePresentation(primaryConclusion?.outcome);
   const story = claim ? evidenceStory(claim) : [];
-  const unknowns = claim ? unresolvedItems(claim) : [];
+  const unknowns = claim
+    ? prioritizedUnresolvedItems(claim)
+    : { highImpact: [], secondary: [] };
   const trust = claim ? trustSummary(claim) : null;
   const trace = claim ? technicalTrace(claim) : null;
+  const savedDemoResult = result?.metadata.mode === 'retained_validated_demo';
+  const questions = claim
+    ? orderClarifications(
+        claim.questions.filter(
+          (question) => question.status !== 'resolved_by_document',
+        ),
+      )
+    : [];
   useEffect(() => {
     let active = true;
     void Promise.all([
@@ -176,6 +197,7 @@ export function ClaimWorkflow({
         json({
           expected_revision: workspace.revision,
           document_ids: workspace.documents.map((item) => item.document.id),
+          demo_mode: demoMode,
         }),
         isJob,
       ),
@@ -220,6 +242,129 @@ export function ClaimWorkflow({
       </span>
     );
   };
+  const clarificationForm = (
+    question: Claim['questions'][number],
+    critical = false,
+  ) => (
+    <form
+      className={`clarification-card ${critical ? 'critical' : 'secondary'}`}
+      key={question.id}
+      onSubmit={(event) => {
+        event.preventDefault();
+        const formAnswer = new FormData(event.currentTarget).get('answer');
+        void perform(async () => {
+          const state = await apiRequest(
+            `${prefix}/questions/${question.id}/answer`,
+            json({
+              expected_revision: workspace.revision,
+              answer: String(formAnswer ?? ''),
+              supporting_document_ids: [],
+            }),
+            isWorkspace,
+          );
+          onWorkspace(state);
+          setActions(null);
+          setDraft(null);
+        });
+      }}
+    >
+      <div>
+        {critical && (
+          <span className="clarification-priority">Most important</span>
+        )}
+        <h3>{question.prompt}</h3>
+        <p>{question.why}</p>
+      </div>
+      {question.id === 'Q-location' ? (
+        <>
+          <strong className="choice-heading">Tell us what you know</strong>
+          <input
+            name="answer"
+            type="hidden"
+            value={answers[question.id] ?? question.answer ?? ''}
+          />
+          <div
+            className="choice-group"
+            role="group"
+            aria-label={question.prompt}
+          >
+            {[
+              { value: 'asc', label: 'Ambulatory surgical center' },
+              { value: 'hospital', label: 'Hospital' },
+              { value: 'office', label: 'Office' },
+              { value: 'unknown', label: 'I’m not sure' },
+            ].map(({ value, label }) => (
+              <button
+                type="button"
+                aria-pressed={
+                  (answers[question.id] ?? question.answer) === value
+                }
+                key={value}
+                onClick={() => setAnswers({ ...answers, [question.id]: value })}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : (
+        <input
+          name="answer"
+          aria-label={question.prompt}
+          type={question.id === 'Q-receipt' ? 'date' : 'text'}
+          value={answers[question.id] ?? question.answer ?? ''}
+          onChange={(event) =>
+            setAnswers({ ...answers, [question.id]: event.target.value })
+          }
+          required
+          maxLength={2000}
+        />
+      )}
+      <div className="clarification-actions">
+        <span>User-reported until documented</span>
+        <button
+          className="secondary-button"
+          disabled={
+            busy || running || !(answers[question.id] ?? question.answer)
+          }
+        >
+          Add this information
+        </button>
+      </div>
+      {critical && (
+        <section className="supporting-document-prompt">
+          <div>
+            <strong>Have a document that confirms this?</strong>
+            <p>
+              Upload an encounter record, facility record, network record, or
+              other supporting document.
+            </p>
+          </div>
+          <label className={`secondary-button ${busy ? 'disabled' : ''}`}>
+            Upload supporting document
+            <input
+              aria-label="Upload a supporting document to this case"
+              type="file"
+              accept="application/pdf"
+              disabled={busy}
+              onChange={(event) => {
+                const files = Array.from(event.target.files ?? []);
+                event.target.value = '';
+                void perform(async () => {
+                  const state = await onUpload(files);
+                  if (!state) return;
+                  onWorkspace(state);
+                  setEvidenceAdded(true);
+                  setActions(null);
+                  setDraft(null);
+                });
+              }}
+            />
+          </label>
+        </section>
+      )}
+    </form>
+  );
   if (!claim || stage === 'documents') {
     if (running) {
       const progress = analysisProgress(job?.stage);
@@ -233,8 +378,9 @@ export function ClaimWorkflow({
             <p className="kicker">Evidence-backed review</p>
             <h2>Reviewing your claim</h2>
             <p>
-              ClaimBridge checks conclusions against the documents before
-              showing them. This usually takes 30–60 seconds.
+              {demoMode
+                ? 'ClaimBridge is loading and revalidating the retained result for this exact synthetic document packet.'
+                : 'ClaimBridge checks conclusions against the documents before showing them. This usually takes 30–60 seconds.'}
             </p>
           </div>
           <ol className="progress-stages">
@@ -269,13 +415,16 @@ export function ClaimWorkflow({
         <button
           className="primary-button"
           disabled={
-            busy || running || !workspace.documents.length || provider === false
+            busy ||
+            running ||
+            !workspace.documents.length ||
+            (!demoMode && provider === false)
           }
           onClick={() => void perform(startAnalysis)}
         >
-          Analyze claim
+          {demoMode ? 'Open saved analysis' : 'Analyze claim'}
         </button>
-        {provider === false && (
+        {provider === false && !demoMode && (
           <p className="notice" role="status">
             Analysis is unavailable until the model provider is configured. Your
             documents are saved.
@@ -493,7 +642,13 @@ export function ClaimWorkflow({
           Review evidence
         </a>
       </div>
-      {provider === false && (
+      {savedDemoResult && (
+        <p className="demo-analysis-note" role="status">
+          Demo mode — this result comes from a retained validated run for the
+          exact synthetic document packet, not a live provider request.
+        </p>
+      )}
+      {provider === false && !demoMode && (
         <p className="notice">
           Live analysis is unavailable until the backend API key, base URL, and
           model are configured. Your documents are saved. No simulated
@@ -512,21 +667,24 @@ export function ClaimWorkflow({
           {job.retryable && ' · Retry analysis after resolving the issue.'}
         </p>
       )}
-      {stale && (
+      {updateNeeded && (
         <section className="update-analysis" role="status">
           <div>
-            <strong>New information added — update the claim review</strong>
+            <strong>
+              {evidenceAdded ? 'New evidence added' : 'New information added'}
+            </strong>
             <p>
-              Your previous finding is preserved, but next steps and appeal
-              preparation are paused until the new evidence is checked.
+              Update the claim review to incorporate this{' '}
+              {evidenceAdded ? 'document' : 'information'}. Your previous
+              finding and analysis history are preserved.
             </p>
           </div>
           <button
             className="primary-button"
-            disabled={busy || running || provider === false}
+            disabled={busy || running || (!demoMode && provider === false)}
             onClick={() => void perform(startAnalysis)}
           >
-            Update analysis
+            Update claim review
           </button>
         </section>
       )}
@@ -589,7 +747,15 @@ export function ClaimWorkflow({
                 <li className={step.kind} key={`${step.title}-${index}`}>
                   <span className="story-number">{index + 1}</span>
                   <div>
-                    <span className={`evidence-classification ${step.status}`}>
+                    <span
+                      className={`evidence-classification status-${step.status}`}
+                    >
+                      <span
+                        className="evidence-status-marker"
+                        aria-hidden="true"
+                      >
+                        {evidenceStatusMarker(step.status)}
+                      </span>
                       {step.statusLabel}
                     </span>
                     <h3>{step.title}</h3>
@@ -606,12 +772,11 @@ export function ClaimWorkflow({
               <p className="kicker">Honest uncertainty</p>
               <h2>What we still don’t know</h2>
               <p>
-                ClaimBridge keeps unsupported details unknown instead of turning
-                them into guesses.
+                These details are most likely to change or narrow the finding.
               </p>
             </div>
-            <div className="unknown-list">
-              {unknowns.slice(0, 5).map((item) => (
+            <div className="unknown-list high-impact-unknowns">
+              {unknowns.highImpact.map((item) => (
                 <article key={item.title}>
                   <span aria-hidden="true">?</span>
                   <div>
@@ -621,9 +786,27 @@ export function ClaimWorkflow({
                 </article>
               ))}
             </div>
+            {!!unknowns.secondary.length && (
+              <details className="secondary-unresolved">
+                <summary>
+                  Other unresolved details ({unknowns.secondary.length})
+                </summary>
+                <div className="unknown-list">
+                  {unknowns.secondary.map((item) => (
+                    <article key={item.title}>
+                      <span aria-hidden="true">?</span>
+                      <div>
+                        <h3>{item.title}</h3>
+                        <p>{item.why}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </details>
+            )}
           </section>
 
-          {!!claim.questions.length && (
+          {!!questions.length && (
             <section className="clarification-section" id="claim-next-steps">
               <div className="section-intro">
                 <p className="kicker">Strengthen the case</p>
@@ -633,103 +816,27 @@ export function ClaimWorkflow({
                   document.
                 </p>
               </div>
-              {claim.questions.map((question) => (
-                <form
-                  className="clarification-card"
-                  key={question.id}
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    const formAnswer = new FormData(event.currentTarget).get(
-                      'answer',
-                    );
-                    void perform(async () => {
-                      const state = await apiRequest(
-                        `${prefix}/questions/${question.id}/answer`,
-                        json({
-                          expected_revision: workspace.revision,
-                          answer: String(formAnswer ?? ''),
-                          supporting_document_ids: [],
-                        }),
-                        isWorkspace,
-                      );
-                      onWorkspace(state);
-                      setActions(null);
-                      setDraft(null);
-                    });
-                  }}
-                >
-                  <div>
-                    <h3>{question.prompt}</h3>
-                    <p>{question.why}</p>
-                  </div>
-                  {question.id === 'Q-location' ? (
-                    <>
-                      <input
-                        name="answer"
-                        type="hidden"
-                        value={answers[question.id] ?? question.answer ?? ''}
-                      />
-                      <div
-                        className="choice-group"
-                        role="group"
-                        aria-label={question.prompt}
-                      >
-                        {[
-                          {
-                            value: 'asc',
-                            label: 'Ambulatory surgical center',
-                          },
-                          { value: 'hospital', label: 'Hospital' },
-                          { value: 'office', label: 'Office' },
-                          { value: 'unknown', label: 'I’m not sure' },
-                        ].map(({ value, label }) => (
-                          <button
-                            type="button"
-                            aria-pressed={
-                              (answers[question.id] ?? question.answer) ===
-                              value
-                            }
-                            key={value}
-                            onClick={() =>
-                              setAnswers({ ...answers, [question.id]: value })
-                            }
-                          >
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <input
-                      name="answer"
-                      aria-label={question.prompt}
-                      type={question.id === 'Q-receipt' ? 'date' : 'text'}
-                      value={answers[question.id] ?? question.answer ?? ''}
-                      onChange={(event) =>
-                        setAnswers({
-                          ...answers,
-                          [question.id]: event.target.value,
-                        })
-                      }
-                      required
-                      maxLength={2000}
-                    />
-                  )}
-                  <div className="clarification-actions">
-                    <span>User-reported until documented</span>
-                    <button
-                      className="secondary-button"
-                      disabled={
-                        busy ||
-                        running ||
-                        !(answers[question.id] ?? question.answer)
-                      }
-                    >
-                      Add this information
-                    </button>
-                  </div>
-                </form>
-              ))}
+              {questions.find((question) => question.id === 'Q-location') &&
+                clarificationForm(
+                  questions.find((question) => question.id === 'Q-location')!,
+                  true,
+                )}
+              {questions.some((question) => question.id !== 'Q-location') && (
+                <details className="secondary-clarifications">
+                  <summary>
+                    Other details that may help (
+                    {
+                      questions.filter(
+                        (question) => question.id !== 'Q-location',
+                      ).length
+                    }
+                    )
+                  </summary>
+                  {questions
+                    .filter((question) => question.id !== 'Q-location')
+                    .map((question) => clarificationForm(question))}
+                </details>
+              )}
             </section>
           )}
 
@@ -813,22 +920,26 @@ export function ClaimWorkflow({
                 <strong>Extraction path</strong>
                 <p>
                   {result?.metadata.provider_outcome ===
-                  'reused_validated_extraction'
-                    ? 'Previously validated extraction reused; downstream reasoning was regenerated without a provider call.'
-                    : `Live provider extraction${
-                        result?.metadata.provider_metrics?.http_attempts == null
-                          ? ''
-                          : ` · ${result.metadata.provider_metrics.http_attempts} HTTP attempt${
-                              result.metadata.provider_metrics.http_attempts ===
-                              1
-                                ? ''
-                                : 's'
-                            }`
-                      }${
-                        result?.metadata.provider_metrics?.repair_attempts
-                          ? ` · ${result.metadata.provider_metrics.repair_attempts} repair`
-                          : ''
-                      }.`}
+                  'retained_validated_snapshot'
+                    ? `Retained validated extraction loaded from ${result.metadata.demo_fixture?.source_run ?? 'the saved synthetic evaluation'}; no provider call was made.`
+                    : result?.metadata.provider_outcome ===
+                        'reused_validated_extraction'
+                      ? 'Previously validated extraction reused; downstream reasoning was regenerated without a provider call.'
+                      : `Live provider extraction${
+                          result?.metadata.provider_metrics?.http_attempts ==
+                          null
+                            ? ''
+                            : ` · ${result.metadata.provider_metrics.http_attempts} HTTP attempt${
+                                result.metadata.provider_metrics
+                                  .http_attempts === 1
+                                  ? ''
+                                  : 's'
+                              }`
+                        }${
+                          result?.metadata.provider_metrics?.repair_attempts
+                            ? ` · ${result.metadata.provider_metrics.repair_attempts} repair`
+                            : ''
+                        }.`}
                 </p>
               </div>
               <p className="technical-trace-note">

@@ -10,6 +10,23 @@ type StoryStep = {
   statusLabel: string;
 };
 
+export const evidenceStatusMarker = (status: StoryStep['status']) =>
+  ({
+    document: '✓',
+    user: '•',
+    conflict: '!',
+    unresolved: '?',
+    derived: '→',
+  })[status];
+
+export function orderClarifications(questions: Claim['questions']) {
+  return [...questions].sort((left, right) => {
+    if (left.id === 'Q-location') return -1;
+    if (right.id === 'Q-location') return 1;
+    return 0;
+  });
+}
+
 function factAuthority(status?: string) {
   if (status === 'user_reported') {
     return { status: 'user' as const, statusLabel: 'User reported' };
@@ -258,13 +275,42 @@ export function unresolvedItems(claim: Claim) {
     }
   }
   for (const question of claim.questions.filter(
-    (item) => item.status !== 'answered' && !item.answer,
+    (item) => item.status === 'open' && !item.answer,
   )) {
+    const targetLabel = question.target_fact_path
+      ?.split('.')
+      .at(-1)
+      ?.replaceAll('_', ' ');
+    const representedByConclusion =
+      (targetLabel &&
+        (primary?.unresolved ?? []).some((item) =>
+          item.toLowerCase().includes(targetLabel.toLowerCase()),
+        )) ||
+      (question.id === 'Q-location' &&
+        (primary?.unresolved ?? []).some((item) =>
+          item.toLowerCase().includes('actual service setting'),
+        ));
+    if (representedByConclusion) continue;
     if (!items.some((item) => item.title === question.prompt)) {
       items.push({ title: question.prompt, why: question.why });
     }
   }
   return items;
+}
+
+export function prioritizedUnresolvedItems(claim: Claim) {
+  const items = unresolvedItems(claim);
+  const primary = selectPrimaryConclusion(claim);
+  const conclusionItems = (primary?.unresolved ?? [])
+    .map((title) => items.find((item) => item.title === title))
+    .filter((item): item is (typeof items)[number] => Boolean(item));
+  const candidates = conclusionItems.length ? conclusionItems : items;
+  const highImpact = candidates.slice(0, 2);
+  const highImpactTitles = new Set(highImpact.map((item) => item.title));
+  return {
+    highImpact,
+    secondary: items.filter((item) => !highImpactTitles.has(item.title)),
+  };
 }
 
 function factValues(claim: Claim) {
