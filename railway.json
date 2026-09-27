@@ -1,0 +1,12 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "python -m venv .venv && .venv/bin/pip install -r apps/api/requirements-dev.lock && .venv/bin/pip install --no-deps --no-build-isolation -e apps/api && npm run build:web"
+  },
+  "deploy": {
+    "startCommand": "sh -c 'exec env PYTHONPATH=apps/api/src .venv/bin/gunicorn --workers 1 --threads 4 --bind 0.0.0.0:${PORT} --timeout 180 \"claimbridge:create_app()\"'",
+    "healthcheckPath": "/api/v1/health",
+    "healthcheckTimeout": 300
+  }
+}
