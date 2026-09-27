@@ -7,7 +7,12 @@ name = "claimbridge-api"
 version = "0.0.0"
 description = "Evidence-backed local medical claim analysis API"
 requires-python = ">=3.12"
-dependencies = ["Flask>=3.1,<4", "pypdf==6.19.0", "jsonschema==4.26.0"]
+dependencies = [
+  "Flask>=3.1,<4",
+  "gunicorn>=23,<24",
+  "pypdf==6.19.0",
+  "jsonschema==4.26.0",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<9", "ruff>=0.11,<1"]
