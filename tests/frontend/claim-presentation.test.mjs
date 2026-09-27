@@ -4,8 +4,11 @@ import {
   analysisProgress,
   documentTypeLabel,
   evidenceLabel,
+  evidenceStatusMarker,
   evidenceStory,
+  orderClarifications,
   outcomePresentation,
+  prioritizedUnresolvedItems,
   selectDisputedRecord,
   selectPrimaryConclusion,
   settingLabel,
@@ -218,10 +221,117 @@ test('creates a traceable evidence story and honest trust summary', () => {
   const unknowns = unresolvedItems(richClaim);
   assert.equal(unknowns[0].title, 'Final corrected amount owed');
   assert.ok(unknowns.some((item) => item.title === 'Recognized amount'));
+  assert.ok(unknowns.some((item) => item.title === 'When did you receive the denial?'));
+  assert.ok(
+    !unresolvedItems({
+      ...richClaim,
+      questions: [
+        {
+          ...richClaim.questions[0],
+          status: 'resolved_by_document',
+        },
+      ],
+    }).some((item) => item.title === 'When did you receive the denial?'),
+  );
   const trust = trustSummary(richClaim);
   assert.ok(trust.supportedFacts >= 6);
   assert.equal(trust.primarySourceCount, 3);
   assert.ok(trust.unresolvedItems >= 2);
+
+  const prioritized = prioritizedUnresolvedItems(richClaim);
+  assert.deepEqual(
+    prioritized.highImpact.map((item) => item.title),
+    ['Recognized amount'],
+  );
+  assert.ok(
+    prioritized.secondary.some(
+      (item) => item.title === 'Final corrected amount owed',
+    ),
+  );
+  assert.ok(
+    prioritized.secondary.some(
+      (item) => item.title === 'When did you receive the denial?',
+    ),
+  );
+});
+
+test('keeps every evidence status explicit and puts location first', () => {
+  assert.deepEqual(
+    ['document', 'user', 'conflict', 'unresolved', 'derived'].map(
+      evidenceStatusMarker,
+    ),
+    ['✓', '•', '!', '?', '→'],
+  );
+  const questions = [
+    { id: 'Q-receipt' },
+    { id: 'Q-payment' },
+    { id: 'Q-location' },
+  ];
+  assert.deepEqual(
+    orderClarifications(questions).map((item) => item.id),
+    ['Q-location', 'Q-receipt', 'Q-payment'],
+  );
+  assert.deepEqual(
+    questions.map((item) => item.id),
+    ['Q-receipt', 'Q-payment', 'Q-location'],
+  );
+});
+
+test('surfaces two conclusion-critical unknowns and keeps the rest available', () => {
+  const claimWithUnknowns = {
+    corrected_liability_cents: {
+      ...fact(null),
+      reason: 'Final adjudication remains unresolved',
+    },
+    conclusions: [
+      {
+        id: 'network-location',
+        classification: 'interpretation',
+        outcome: 'possible_processing_error',
+        text: 'The submitted setting needs review.',
+        evidence_ids: [],
+        unresolved: [
+          'Actual service setting',
+          'Service-date facility participation',
+          'Applicable plan scope',
+        ],
+      },
+    ],
+    questions: [
+      {
+        id: 'Q-location',
+        prompt: 'Where did the disputed service occur?',
+        why: 'Needed to confirm the service setting.',
+        status: 'open',
+        answer: null,
+        evidence_ids: [],
+        target_fact_path: 'services.actual_setting',
+      },
+      {
+        id: 'Q-receipt',
+        prompt: 'When did you receive the denial?',
+        why: 'Needed to calculate the appeal date.',
+        status: 'open',
+        answer: null,
+        evidence_ids: [],
+      },
+    ],
+  };
+  const prioritized = prioritizedUnresolvedItems(claimWithUnknowns);
+  assert.deepEqual(
+    prioritized.highImpact.map((item) => item.title),
+    ['Actual service setting', 'Service-date facility participation'],
+  );
+  assert.ok(
+    prioritized.secondary.some(
+      (item) => item.title === 'Applicable plan scope',
+    ),
+  );
+  assert.ok(
+    ![...prioritized.highImpact, ...prioritized.secondary].some(
+      (item) => item.title === 'Where did the disputed service occur?',
+    ),
+  );
 });
 
 test('recognizes document types without exposing raw filenames as the label', () => {

@@ -21,8 +21,9 @@ PROMPT = (Path(__file__).resolve().parents[1] / "infrastructure/prompts/extract.
 
 
 class AnalysisWorker:
-    def __init__(self, store, provider, events=None):
+    def __init__(self, store, provider, events=None, demo_fixtures=None):
         self.store, self.provider, self.events = store, provider, events
+        self.demo_fixtures = demo_fixtures
         self.queue = queue.Queue()
         self.thread = None
         self.lock = threading.Lock()
@@ -36,6 +37,27 @@ class AnalysisWorker:
                 json.dumps(extraction_schema(), sort_keys=True).encode()
             ).hexdigest(),
         }
+
+    @property
+    def demo_configuration(self):
+        if self.demo_fixtures is None:
+            raise RuntimeError("Demo fixtures are unavailable.")
+        return self.demo_fixtures.configuration
+
+    def require_known_demo(self, workspace_id, document_ids):
+        state = self.store.workspaces.get(workspace_id)
+        available = {item["document"]["id"]: item for item in state["documents"]}
+        if (
+            not isinstance(document_ids, list)
+            or not document_ids
+            or not all(isinstance(item, str) and item in available for item in document_ids)
+            or len(set(document_ids)) != len(document_ids)
+            or set(document_ids) != set(available)
+        ):
+            from claimbridge.infrastructure.workspaces import WorkspaceError
+
+            raise WorkspaceError("Demo Mode must use every document in the current workspace.")
+        self.demo_fixtures.require_known([available[item] for item in sorted(document_ids)])
 
     def enqueue(self, job_id):
         with self.lock:
@@ -82,7 +104,13 @@ class AnalysisWorker:
             stage("extracting")
             hashes = {item["document"]["id"]: item["document"]["sha256"] for item in documents}
             previous = self.store.latest(workspace["id"])
-            if (
+            fixture_metadata = None
+            if payload["config"].get("mode") == "retained_validated_demo":
+                claim, fixture_metadata = self.demo_fixtures.extraction(
+                    workspace, documents, payload["as_of"]
+                )
+                provider_outcome = "retained_validated_snapshot"
+            elif (
                 previous
                 and previous["metadata"].get("document_hashes") == hashes
                 and previous["metadata"].get("configuration") == payload["config"]
@@ -149,6 +177,7 @@ class AnalysisWorker:
                 elapsed_ms=round((time.monotonic() - start) * 1000),
                 retrieved_evidence_ids=plan_ids,
                 mode=payload["config"].get("mode", "live_model"),
+                demo_fixture=fixture_metadata,
                 limitations=[
                     "Quotation matching does not prove semantic entailment.",
                     "Source summaries retain their recorded verification dates.",

@@ -11,6 +11,7 @@ from claimbridge.api.health import blueprint
 from claimbridge.api.workspaces import workspace_blueprint
 from claimbridge.application.analyze import AnalysisWorker
 from claimbridge.infrastructure.analysis_store import AnalysisStore
+from claimbridge.infrastructure.demo_fixtures import DemoFixtureCatalog
 from claimbridge.infrastructure.llm import ModelProvider
 from claimbridge.infrastructure.workspaces import WorkspaceError, WorkspaceStore
 
@@ -36,7 +37,13 @@ def create_app(test_config: dict[str, object] | None = None) -> Flask:
 
     analysis_store = AnalysisStore(workspaces)
     provider = app.config.get("MODEL_PROVIDER") or ModelProvider()
-    worker = AnalysisWorker(analysis_store, provider, app.extensions.get("diagnostics"))
+    demo_fixtures = DemoFixtureCatalog()
+    worker = AnalysisWorker(
+        analysis_store,
+        provider,
+        app.extensions.get("diagnostics"),
+        demo_fixtures,
+    )
     app.extensions["analysis_worker"] = worker
     app.extensions["analysis_store"] = analysis_store
     app.register_blueprint(analysis_blueprint(analysis_store, worker), url_prefix="/api/v1")

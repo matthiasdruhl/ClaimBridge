@@ -19,6 +19,7 @@ def analysis_blueprint(store, worker):
     def provider_status():
         return jsonify(
             configured=worker.provider.ready,
+            demo_available=worker.demo_fixtures is not None,
             model=worker.provider.configuration["model"],
             live_validation="not_measured",
         )
@@ -26,7 +27,8 @@ def analysis_blueprint(store, worker):
     @bp.post("/workspaces/<workspace_id>/process")
     def process(workspace_id):
         data = body()
-        if not worker.provider.ready:
+        demo_mode = data.get("demo_mode") is True
+        if not demo_mode and not worker.provider.ready:
             return jsonify(
                 error={
                     "code": "PROVIDER_NOT_CONFIGURED",
@@ -34,11 +36,14 @@ def analysis_blueprint(store, worker):
                     "running live analysis.",
                 }
             ), 503
+        if demo_mode:
+            worker.require_known_demo(workspace_id, data.get("document_ids"))
+        configuration = worker.demo_configuration if demo_mode else worker.configuration
         job, created = store.start(
             workspace_id,
             data.get("expected_revision"),
             data.get("document_ids"),
-            worker.configuration,
+            configuration,
             getattr(g, "request_id", ""),
         )
         if created:

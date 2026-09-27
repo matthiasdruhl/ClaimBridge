@@ -67,6 +67,8 @@ export type Claim = {
     status: string;
     answer: string | null;
     evidence_ids: string[];
+    target_fact_path?: string;
+    blocking_for?: string[];
   }[];
 };
 export type Workspace = {
@@ -109,6 +111,14 @@ export type ClaimResponse = {
     };
     retrieved_evidence_ids?: string[];
     limitations?: string[];
+    demo_fixture?: {
+      fixture_id: string;
+      snapshot_id: string;
+      source_run: string;
+      recorded_at: string;
+      source_provider_outcome: string;
+      source_elapsed_ms: number;
+    } | null;
   };
 };
 export type Actions = {
@@ -218,12 +228,17 @@ export function isDraft(value: unknown): value is Draft {
     (value.stale === undefined || typeof value.stale === 'boolean')
   );
 }
-export function isProvider(
-  value: unknown,
-): value is { configured: boolean; model: string; live_validation: string } {
+export function isProvider(value: unknown): value is {
+  configured: boolean;
+  demo_available?: boolean;
+  model: string;
+  live_validation: string;
+} {
   return (
     object(value) &&
     typeof value.configured === 'boolean' &&
+    (value.demo_available === undefined ||
+      typeof value.demo_available === 'boolean') &&
     typeof value.model === 'string' &&
     typeof value.live_validation === 'string'
   );

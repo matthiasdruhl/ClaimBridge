@@ -31,6 +31,8 @@ The post-key implementation is complete for local synthetic evaluation. The fina
 
 Median analysis time: **38.72 seconds**. Eleven analyses passed on their first generation. The final authorization run emitted a duplicate evidence ID; validation rejected it and the single permitted repair succeeded. This is measured synthetic repeatability, not a general accuracy guarantee.
 
+Demo Mode uses retained validated results from the original synthetic evaluation so the presentation does not depend on provider latency. It does not change these provider-backed measurements.
+
 ## What changed
 
 - The model selects immutable numbered source passages; the server restores exact document text, page and offsets. It no longer needs to transcribe quotations.

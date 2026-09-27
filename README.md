@@ -31,7 +31,7 @@ make dev
 
 The launcher reads backend settings from the root `.env` (existing environment variables take precedence), checks dependencies and ports, labels service logs, and stops both services with Ctrl+C. It does not make model requests. Put your key only in `.env`, which Git ignores. Run `node scripts/dev.mjs --check` for preflight checks without starting services. Separate `make dev-api` / `make dev-web` commands remain available; the standalone API command requires exported settings.
 
-Frontend: http://127.0.0.1:5173. API health: http://127.0.0.1:5001/api/v1/health. Vite proxies /api locally. The workspace stores original PDFs and page text in local SQLite under var/. Uploads are revision-checked and deduplicated. Encrypted and non-text pages are explicitly flagged. Live analysis requires backend provider configuration. See the claim workflow guide for supported categories and validation limits.
+Frontend: http://127.0.0.1:5173. API health: http://127.0.0.1:5001/api/v1/health. Vite proxies /api locally. The workspace stores original PDFs and page text in local SQLite under var/. Uploads are revision-checked and deduplicated. Encrypted and non-text pages are explicitly flagged. Live analysis requires backend provider configuration. Explicit Demo Mode instead recognizes the exact synthetic 01–05 or 01–06 packet by PDF SHA-256 and revalidates retained provider-generated extraction snapshots without a provider call. See the claim workflow guide for supported categories, provenance and validation limits.
 
 ## Checks
 
