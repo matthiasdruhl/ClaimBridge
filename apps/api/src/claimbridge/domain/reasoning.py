@@ -423,8 +423,28 @@ def action_plan(claim):
     return result
 
 
+def evidence_reference(evidence):
+    labels = {
+        "policy": "Plan document",
+        "eob": "Explanation of Benefits",
+        "denial": "Denial notice",
+        "bill": "Provider bill",
+        "authorization": "Authorization",
+        "correspondence": "Supporting correspondence",
+        "government_guidance": "Government guidance",
+        "regulation": "Federal regulation",
+        "source_summary": "External source summary",
+        "answer": "User-provided answer",
+    }
+    label = labels.get(evidence["kind"], "Supporting source")
+    page = evidence["location"]["page"]
+    locator = f" · page {page}" if page is not None else ""
+    return f"{label}{locator} [{evidence['id']}]"
+
+
 def draft_text(claim, actions):
     arguments = actions["arguments"]
+    evidence = {item["id"]: item for item in claim["evidence"]}
     text = [
         "DRAFT — NOT SUBMITTED — REVIEW BEFORE USE",
         "",
@@ -436,10 +456,14 @@ def draft_text(claim, actions):
         "I request review of the adverse determination and access to the relevant claim records.",
     ]
     for argument in arguments:
+        sources = [
+            evidence_reference(evidence[item]) if item in evidence else f"Source [{item}]"
+            for item in argument["evidence_ids"]
+        ]
         text += [
             "",
             argument["statement"],
-            "Supporting references: " + ", ".join(argument["evidence_ids"]),
+            "Supporting sources: " + "; ".join(sources),
             "Unresolved: " + "; ".join(argument["limitations"]),
             argument["requested_remedy"],
         ]

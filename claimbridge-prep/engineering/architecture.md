@@ -1,37 +1,39 @@
-# Hackathon architecture
+# ClaimBridge architecture
 
-One React interface, one Python API process, SQLite and local files. Preparation artifacts are not a running application. Runtime must never retrieve golden analyses, expected JSON, or test answers.
+ClaimBridge is a local-first React and Flask application for evidence-backed analysis of synthetic medical claim packets. It separates probabilistic document understanding from deterministic validation and reasoning.
 
 ```mermaid
-flowchart TD
- U[User] --> F[React claim workspace]
- F --> A[ClaimBridge Flask API]
- A --> D[Document classification and extraction]
- D --> S[Versioned structured claim state]
- S --> P[Plan retrieval: local evidence only]
- S --> X[External retrieval: curated source registry]
- P --> R[Reasoning and conflict detection]
- X --> R
- R <--> L[LLM adapter: extraction and explanation]
- R --> V[Schema, reference and arithmetic validators]
- V --> C[Citation and provenance records]
- V --> S
- S --> F
- C --> F
- A --> DB[(SQLite and immutable PDF files)]
- D --> DB
- P --> DB
- X --> DB
- F --> Q[Clarification answers and supporting uploads]
- Q --> A
+flowchart LR
+    A[PDF upload] --> B[Page extraction and hashing]
+    B --> C[Structured model extraction]
+    C --> D[Exact source restoration]
+    D --> E[Schema and provenance validation]
+    E --> F[Bounded deterministic reasoning]
+    F --> G[Conclusions and clarifications]
+    G --> H[Actions and appeal draft]
+    G --> I[Evidence drawer and original PDF]
 ```
 
-**Boundaries:** user text and web documents are data, never instructions. The LLM cannot submit appeals, browse arbitrary URLs or edit claim source facts. Server code chooses source candidates, validates IDs and performs money/date math. A model's plan interpretation is labeled, linked and reviewable.
+## Runtime boundaries
 
-**Tables:** workspaces(id, revision, as_of); documents(id, workspace_id, hash, kind, status, path); pages(document_id, page, text, extraction_version); evidence(id, workspace_id, domain, location_json, text, hash); claim_revisions(workspace_id, revision, state_json); answers(id, question_id, revision, text); jobs(id, status, error); source_registry(id, metadata_json); action_plans(workspace_id, revision, json). FTS tables index local plan sections and external summaries separately. Artifact IDs are server-generated, not client paths.
+- The React client owns navigation, evidence selection, and unsaved draft text. It does not decide coverage or calculate claim facts.
+- Flask routes validate transport input and delegate to application use cases.
+- Application code coordinates ingestion, analysis jobs, clarification, revisions, and draft persistence.
+- Domain code performs validation, money/date handling, conflict detection, bounded conclusions, actions, and draft rendering.
+- Infrastructure code owns SQLite, PDF extraction, model calls, retrieval, and diagnostics.
+- Model output provides structured facts and source references. It does not produce final conclusions or determine liability.
+- Original PDFs, document hashes, analysis revisions, and evidence records are preserved for traceability.
 
-Single sequential background worker is sufficient; SQLite-backed jobs with polling survive refresh. Do not add Celery, microservices, graph databases or orchestration frameworks for six documents. Production concurrency, identity and retention are separate work.
+## Data and safety model
 
-## Repository implementation layout
+Uploads and runtime state remain in ignored local SQLite storage. Provider credentials are backend-only and are never stored in repository files or exposed through `VITE_*` variables. Exact evidence text is restored from the uploaded PDF after model selection, then validated for document, page, and offset consistency.
 
-The user-approved scaffold now lives in ../../apps/. See [code structure](../../docs/code-structure.md) for module ownership and dependency direction. Only a static frontend shell and API liveness route exist; the pipeline above remains to implement. Canonical schemas remain in ../schemas/.
+Unknown, user-reported, derived, and conflicted facts remain distinct. Related claims are not automatically merged. New answers or documents advance the workspace revision and make prior output stale until regeneration. No endpoint submits an appeal.
+
+Demo Mode accepts only the exact checked-in synthetic packet by PDF SHA-256. It revalidates retained provider extraction against the newly uploaded documents and runs the same deterministic reasoning path.
+
+## Deliberate constraints
+
+The application uses one local API process and a sequential background analysis worker. It has no OCR, authentication, hosted deployment, clinical reasoning, or automated submission. Those are explicit scope boundaries, not hidden capabilities.
+
+See [api-contracts.md](api-contracts.md), [retrieval.md](retrieval.md), [safeguards.md](safeguards.md), and the current [workflow guide](../../docs/claim-workflow.md) for detail.

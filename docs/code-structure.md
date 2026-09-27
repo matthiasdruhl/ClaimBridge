@@ -2,7 +2,7 @@
 
 ## Scope and status
 
-The local app implements persistent synthetic-PDF workspaces, synchronous page-text extraction, original-document viewing, and an opt-in diagnostics dashboard. The claim workflow now adds provider-based extraction, bounded reasoning, retrieval, clarification, action plans and editable drafts. Live provider accuracy is not yet verified; see [the workflow guide](claim-workflow.md). Existing research and evaluation artifacts stay in place.
+The local app implements persistent synthetic-PDF workspaces, synchronous page-text extraction, original-document viewing, an opt-in diagnostics dashboard, provider-based extraction, bounded reasoning, retrieval, clarification, action plans and editable drafts. The final provider suite passed 12/12 automatic gates; see [the validation report](live-validation.md). Existing research and evaluation artifacts stay in place.
 
 ## Repository map
 
@@ -11,17 +11,18 @@ Claimbridge/
 ├── apps/
 │   ├── web/                          # React + TypeScript + Vite
 │   │   ├── src/
-│   │   │   ├── app/                  # Application composition and later navigation
+│   │   │   ├── app/                  # Application composition and workspace shell
 │   │   │   ├── features/
-│   │   │   │   ├── diagnostics/      # Implemented developer dashboard
-│   │   │   │   ├── workspace/        # Overview, money summary, related claims
-│   │   │   │   ├── documents/        # Upload, processing, document viewer
-│   │   │   │   ├── evidence/         # Citations and source viewer
-│   │   │   │   ├── clarifications/   # Questions, answers, revision changes
-│   │   │   │   └── appeals/          # Strategy, actions, appeal draft
+│   │   │   │   ├── analysis/         # Claim, evidence, questions, actions and drafts
+│   │   │   │   ├── diagnostics/      # Developer dashboard
+│   │   │   │   ├── workspace/        # Workspace UI modules
+│   │   │   │   ├── documents/        # Document UI modules
+│   │   │   │   ├── evidence/         # Evidence UI modules
+│   │   │   │   ├── clarifications/   # Clarification UI modules
+│   │   │   │   └── appeals/          # Appeal UI modules
 │   │   │   ├── components/ui/        # Shared presentational primitives
 │   │   │   ├── lib/api/              # HTTP client and error boundary
-│   │   │   ├── lib/contracts/        # Generated transport types (future)
+│   │   │   ├── lib/contracts/        # Transport schema integration
 │   │   │   ├── styles/               # Tokens and global styles
 │   │   │   └── main.tsx
 │   │   └── package.json
@@ -38,8 +39,8 @@ Claimbridge/
 ├── contracts/                        # Canonical schema ownership / API guidance
 ├── docs/                             # Current code/contributor architecture
 ├── tests/frontend/                   # Node API-client behavior tests
-├── tests/e2e/                        # Full-workflow test location (future)
-├── scripts/                          # Cross-project tooling (future)
+├── tests/e2e/                        # Manual offline browser harness
+├── scripts/                          # Launch, evaluation and fixture tooling
 ├── claimbridge-prep/                 # Research, schemas, synthetic assets, oracles
 ├── .github/workflows/ci.yml
 ├── .env.example
@@ -114,7 +115,7 @@ Server owns claim facts, revisions, calculations and conclusions. Client owns na
 
 ### Local diagnostics frontend
 
-`main.tsx` selects `features/diagnostics/Dashboard.tsx` for `/diagnostics` and the workspace `App` otherwise, using full-page navigation without a router. The upload UI currently remains in `app/App.tsx`; the reserved claim feature directories are not yet implementations.
+`main.tsx` selects `features/diagnostics/Dashboard.tsx` for `/diagnostics` and the workspace `App` otherwise, using full-page navigation without a router. `app/App.tsx` owns the upload shell and `features/analysis/ClaimWorkflow.tsx` presents analysis, evidence, clarification, actions, and drafts. Other feature directories reserve narrower future extraction points.
 
 `lib/api/client.ts` attaches a UUID `X-Request-ID` to workspace API calls, applies a default 60-second timeout, validates responses and queues metadata-only outcomes. Startup telemetry also captures uncaught application errors using fixed descriptions. The in-memory queue holds at most 200 events, retries batches of 50 after backend recovery, and disappears on page navigation/reload. Diagnostics requests bypass the instrumented client to avoid feedback loops.
 
@@ -152,7 +153,7 @@ Keep these domains distinct:
 | golden-analysis.md, expected-*.json, golden-tests.json | Tests/evaluation; never live analyzer             |
 | Browser public assets                                  | Non-sensitive static UI assets only               |
 
-Never recursively ingest the preparation directory. Replay must be explicit and visibly labeled. Model keys stay backend-only; VITE-prefixed variables are public browser configuration. .env is ignored and not loaded automatically by this scaffold.
+Never recursively ingest the preparation directory. Replay must be explicit and visibly labeled. Model keys stay backend-only; VITE-prefixed variables are public browser configuration. The root `.env` is ignored; `make dev` and the Node evaluation launcher load it without overriding existing environment variables.
 
 ## Tests and tooling
 
@@ -173,6 +174,6 @@ These references inform the scaffold. Feature ownership and module choices are p
 
 `make check` runs the backend workflow and diagnostics tests, the Node frontend API-client behavior test, Ruff, ESLint, TypeScript, the Vite production build and formatting checks. Backend coverage includes actual synthetic PDF ingestion, persistence/deduplication, workspace isolation, diagnostics correlation, validation, retention and logging failure isolation. The client test covers success, network failures, timeouts, malformed JSON and non-JSON HTTP errors.
 
-The diagnostics layout and API outage/recovery states were manually checked in the browser. A full automated browser upload-to-trace test, live model evaluation and hosted verification remain outstanding. No new hosted CI result has been verified for this branch.
+The diagnostics layout and API outage/recovery states were manually checked in the browser. The saved claim workflow and normal-Chrome presentation path were also manually verified. The live provider suite passed 12/12 automatic gates. An automated full-browser suite and hosted verification remain outstanding.
 
 Dependency resolution deliberately keeps TypeScript 5.9 within the linter peer range. The npm lock captures the tested toolchain; do not bypass peer conflicts with force or legacy-peer-deps. The official [checkout](https://github.com/actions/checkout), [setup-node](https://github.com/actions/setup-node) and [setup-python](https://github.com/actions/setup-python) documentation informed the CI configuration.
