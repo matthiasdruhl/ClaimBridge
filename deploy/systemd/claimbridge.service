@@ -1,0 +1,29 @@
+[Unit]
+Description=ClaimBridge Flask API
+After=network.target
+
+[Service]
+Type=simple
+User=claimbridge
+Group=claimbridge
+WorkingDirectory=/opt/claimbridge
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONPATH=/opt/claimbridge/apps/api/src
+Environment=CLAIMBRIDGE_DIAGNOSTICS=0
+Environment=FLASK_SKIP_DOTENV=1
+EnvironmentFile=-/opt/claimbridge/.env
+ExecStart=/usr/bin/env CLAIMBRIDGE_DATA_DIR=/var/lib/claimbridge /opt/claimbridge/.venv/bin/gunicorn --workers 1 --threads 4 --bind 127.0.0.1:5001 --timeout 180 --access-logfile - --error-logfile - "claimbridge:create_app()"
+Restart=on-failure
+RestartSec=3
+StateDirectory=claimbridge
+StateDirectoryMode=0750
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/claimbridge
+
+[Install]
+WantedBy=multi-user.target
