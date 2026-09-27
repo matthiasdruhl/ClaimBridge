@@ -18,11 +18,16 @@ import type {
   Workspace,
 } from '../../lib/contracts/workflow';
 import {
+  analysisProgress,
+  documentTypeLabel,
   evidenceLabel,
+  evidenceStory,
   outcomePresentation,
   selectDisputedRecord,
   selectPrimaryConclusion,
-  settingLabel,
+  trustSummary,
+  technicalTrace,
+  unresolvedItems,
 } from './presentation';
 
 const json = (value: unknown): RequestInit => ({
@@ -73,6 +78,10 @@ export function ClaimWorkflow({
   const disputed = claim ? selectDisputedRecord(claim) : null;
   const primaryConclusion = claim ? selectPrimaryConclusion(claim) : undefined;
   const presentation = outcomePresentation(primaryConclusion?.outcome);
+  const story = claim ? evidenceStory(claim) : [];
+  const unknowns = claim ? unresolvedItems(claim) : [];
+  const trust = claim ? trustSummary(claim) : null;
+  const trace = claim ? technicalTrace(claim) : null;
   useEffect(() => {
     let active = true;
     void Promise.all([
@@ -131,6 +140,24 @@ export function ClaimWorkflow({
       clearInterval(interval);
     };
   }, [job, onStage, prefix]);
+  useEffect(() => {
+    if (!claim || stale || actions) return;
+    let active = true;
+    void apiRequest(
+      `${prefix}/action-plan`,
+      json({ expected_revision: workspace.revision }),
+      isActions,
+    )
+      .then((value) => {
+        if (active) setActions(value);
+      })
+      .catch(() => {
+        /* The main finding remains usable if next-step loading fails. */
+      });
+    return () => {
+      active = false;
+    };
+  }, [actions, claim, prefix, stale, workspace.revision]);
   async function perform(task: () => Promise<void>) {
     setBusy(true);
     setError('');
@@ -194,6 +221,42 @@ export function ClaimWorkflow({
     );
   };
   if (!claim || stage === 'documents') {
+    if (running) {
+      const progress = analysisProgress(job?.stage);
+      return (
+        <section
+          id="claim-analysis"
+          className="analysis-progress"
+          aria-live="polite"
+        >
+          <div className="progress-intro">
+            <p className="kicker">Evidence-backed review</p>
+            <h2>Reviewing your claim</h2>
+            <p>
+              ClaimBridge checks conclusions against the documents before
+              showing them. This usually takes 30–60 seconds.
+            </p>
+          </div>
+          <ol className="progress-stages">
+            {progress.map((item) => (
+              <li className={item.state} key={item.id}>
+                <span aria-hidden="true">
+                  {item.state === 'complete'
+                    ? '✓'
+                    : item.state === 'active'
+                      ? '●'
+                      : '○'}
+                </span>
+                <div>
+                  <strong>{item.label}</strong>
+                  {item.state === 'active' && <p>{item.detail}</p>}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      );
+    }
     return (
       <section id="claim-analysis" className="analysis-launch">
         <div>
@@ -210,7 +273,7 @@ export function ClaimWorkflow({
           }
           onClick={() => void perform(startAnalysis)}
         >
-          {running ? 'Reviewing documents…' : 'Analyze documents'}
+          Analyze claim
         </button>
         {provider === false && (
           <p className="notice" role="status">
@@ -223,11 +286,9 @@ export function ClaimWorkflow({
             {error}
           </p>
         )}
-        {job && (
+        {job?.status === 'failed' && (
           <p className="muted" role="status">
-            {job.status === 'failed'
-              ? job.error
-              : `Review status: ${job.stage.replaceAll('_', ' ')}`}
+            Analysis could not be completed. {job.error}
           </p>
         )}
       </section>
@@ -240,27 +301,41 @@ export function ClaimWorkflow({
         <div className="screen-title-row">
           <div>
             <p className="kicker">Appeal preparation</p>
-            <h1>Prepare your appeal</h1>
+            <h1>Your appeal package is ready to review</h1>
             <p className="screen-status">
               {saved || 'Draft saved'} · Not submitted
             </p>
           </div>
-          <button
-            className="primary-button"
-            disabled={historical}
-            onClick={() => {
-              const url = URL.createObjectURL(
-                new Blob([text], { type: 'text/plain' }),
-              );
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = 'claimbridge-appeal-draft.txt';
-              link.click();
-              setTimeout(() => URL.revokeObjectURL(url), 1000);
-            }}
-          >
-            Download draft
-          </button>
+          <div className="appeal-primary-actions">
+            <button
+              className="secondary-button"
+              disabled={historical}
+              onClick={() =>
+                void perform(async () => {
+                  await navigator.clipboard.writeText(text);
+                  setSaved('Copied');
+                })
+              }
+            >
+              Copy appeal
+            </button>
+            <button
+              className="primary-button"
+              disabled={historical}
+              onClick={() => {
+                const url = URL.createObjectURL(
+                  new Blob([text], { type: 'text/plain' }),
+                );
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'claimbridge-appeal-draft.txt';
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+              }}
+            >
+              Download draft
+            </button>
+          </div>
         </div>
         <button className="back-link" onClick={() => onStage('analysis')}>
           Back to claim review
@@ -324,18 +399,6 @@ export function ClaimWorkflow({
               >
                 Save edits
               </button>
-              <button
-                className="text-button"
-                disabled={historical}
-                onClick={() =>
-                  void perform(async () => {
-                    await navigator.clipboard.writeText(text);
-                    setSaved('Copied');
-                  })
-                }
-              >
-                Copy text
-              </button>
             </div>
           </section>
           <aside className="appeal-checklist">
@@ -360,7 +423,20 @@ export function ClaimWorkflow({
             </section>
             <section>
               <h2>Attachments</h2>
-              <p>{draft.attachments.length} source documents referenced.</p>
+              <ul className="attachment-list">
+                {draft.attachments.map((id) => {
+                  const document = workspace.documents.find(
+                    (item) => item.document.id === id,
+                  );
+                  return (
+                    <li key={id}>
+                      {document
+                        ? documentTypeLabel(document.document.filename)
+                        : 'Source document'}
+                    </li>
+                  );
+                })}
+              </ul>
               <p className="muted">
                 The download contains the letter text only.
               </p>
@@ -407,19 +483,15 @@ export function ClaimWorkflow({
       <div className="viewer-heading">
         <div>
           <p className="kicker">Completed claim analysis</p>
-          <h1>Your claim review is ready</h1>
+          <h1>Here’s what happened with this claim</h1>
           <p>
             Review the finding and its supporting evidence before preparing an
             appeal.
           </p>
         </div>
-        <button
-          className="primary-button"
-          disabled={busy || stale || running}
-          onClick={() => void perform(prepareDraft)}
-        >
-          Prepare appeal
-        </button>
+        <a className="primary-button" href="#evidence-story">
+          Review evidence
+        </a>
       </div>
       {provider === false && (
         <p className="notice">
@@ -441,298 +513,405 @@ export function ClaimWorkflow({
         </p>
       )}
       {stale && (
-        <p className="error">
-          This is an earlier analysis. New evidence or answers require
-          regeneration; actions and drafts are unavailable until then.
-        </p>
+        <section className="update-analysis" role="status">
+          <div>
+            <strong>New information added — update the claim review</strong>
+            <p>
+              Your previous finding is preserved, but next steps and appeal
+              preparation are paused until the new evidence is checked.
+            </p>
+          </div>
+          <button
+            className="primary-button"
+            disabled={busy || running || provider === false}
+            onClick={() => void perform(startAnalysis)}
+          >
+            Update analysis
+          </button>
+        </section>
       )}
       {claim && (
         <>
-          <p className="muted">
-            Review completed for case revision {claim.revision}. Confirm
-            important details against the original documents.
-          </p>
-          {!!result?.revisions.length && (
-            <label className="revision-picker">
-              Review saved revision{' '}
-              <select
-                value={claim.revision}
-                onChange={(event) =>
-                  void perform(async () => {
-                    setResult(
-                      await apiRequest(
-                        `${prefix}/claim?revision=${event.target.value}`,
-                        {},
-                        isClaimResponse,
-                      ),
-                    );
-                    setActions(null);
-                    setDraft(null);
-                    setEvidence(null);
-                  })
-                }
-              >
-                {result.revisions.map((revision) => (
-                  <option key={revision} value={revision}>
-                    {revision}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
-          <section className={`case-brief ${presentation.tone}`}>
-            <div className="case-brief-heading">
-              <div>
-                <p className="kicker">Main finding</p>
-                <h3>{presentation.headline}</h3>
-              </div>
-              <span className="case-status">{presentation.label}</span>
+          <section className={`finding-hero ${presentation.tone}`}>
+            <div className="finding-amount">
+              <span>Amount in dispute</span>
+              <strong>
+                {money(
+                  disputed?.eob?.financial.member_cents ??
+                    disputed?.eob?.financial.billed_cents,
+                )}
+              </strong>
+              {citations(
+                disputed?.eob?.financial.member_cents?.evidence_ids ??
+                  disputed?.eob?.financial.billed_cents?.evidence_ids ??
+                  [],
+              )}
             </div>
-            {primaryConclusion && (
-              <p className="case-summary">{primaryConclusion.text}</p>
-            )}
-            <dl className="case-facts">
-              <div>
-                <dt>Amount in dispute</dt>
-                <dd>
-                  <strong>
-                    {money(
-                      disputed?.eob?.financial.member_cents ??
-                        disputed?.eob?.financial.billed_cents,
-                    )}
-                  </strong>
-                  {citations(
-                    disputed?.eob?.financial.member_cents?.evidence_ids ??
-                      disputed?.eob?.financial.billed_cents?.evidence_ids ??
-                      [],
-                  )}
-                </dd>
+            <div className="finding-copy">
+              <span className="case-status">{presentation.label}</span>
+              <h2>{presentation.headline}</h2>
+              <p>
+                {primaryConclusion?.text ??
+                  'The available records need further review.'}
+              </p>
+              <div className="finding-proof">
+                <strong>
+                  {new Set(primaryConclusion?.evidence_ids ?? []).size} pieces
+                  of supporting evidence
+                </strong>
+                <a href="#evidence-story">Review the evidence</a>
               </div>
-              <div>
-                <dt>Denial states</dt>
-                <dd>
-                  {display(claim.denial.reason)}
-                  {citations(claim.denial.reason?.evidence_ids ?? [])}
-                </dd>
-              </div>
-              <div>
-                <dt>Submitted setting</dt>
-                <dd>
-                  {settingLabel(disputed?.service?.submitted_pos.value, true)}
-                  {citations(
-                    disputed?.service?.submitted_pos.evidence_ids ?? [],
-                  )}
-                </dd>
-              </div>
-              <div>
-                <dt>Documented setting</dt>
-                <dd>
-                  {settingLabel(disputed?.service?.actual_setting.value)}
-                  {citations(
-                    disputed?.service?.actual_setting.evidence_ids ?? [],
-                  )}
-                </dd>
-              </div>
-              <div className="case-fact-wide">
-                <dt>Corrected amount owed</dt>
-                <dd>
-                  <strong>{money(claim.corrected_liability_cents)}</strong>
-                  <span>{claim.corrected_liability_cents.reason}</span>
-                </dd>
-              </div>
-            </dl>
-            <div className="case-brief-footer">
-              <div>
-                <span>Supporting sources</span>
-                {citations(primaryConclusion?.evidence_ids ?? [])}
-              </div>
-              <nav aria-label="Case analysis shortcuts">
-                <a href="#evidence-findings">Review evidence ↓</a>
-                <a href="#claim-next-steps">Continue to next steps ↓</a>
-              </nav>
             </div>
           </section>
-          <h3 className="section-heading">
-            Claim amounts{' '}
-            <span>kept separate, never combined into one debt</span>
-          </h3>
-          <div className="claim-money">
-            {claim.eobs.map((eob) => (
-              <article className="page" key={eob.id}>
-                <h3>Claim {display(eob.claim_id)}</h3>
-                {[
-                  'billed_cents',
-                  'allowed_cents',
-                  'paid_cents',
-                  'member_cents',
-                ].map((field) => (
-                  <p key={field}>
-                    {field
-                      .replace('_cents', '')
-                      .replace('member', 'EOB member responsibility')}
-                    : <strong>{money(eob.financial[field])}</strong>
-                    {citations(eob.financial[field]?.evidence_ids ?? [])}
-                  </p>
-                ))}
-              </article>
-            ))}
-          </div>
-          {claim.bills.map((bill) => (
-            <p key={bill.id}>
-              Bill snapshot for {display(bill.claim_id)}:{' '}
-              {money(bill.balance_cents)} as of {display(bill.statement_date)}.
-              Not added to the EOB amount.{' '}
-              {citations(bill.balance_cents.evidence_ids)}
-            </p>
-          ))}
-          <p>
-            <strong>
-              Corrected liability: {money(claim.corrected_liability_cents)}
-            </strong>{' '}
-            — {claim.corrected_liability_cents.reason}
-          </p>
-          <h3 className="section-heading" id="evidence-findings">
-            What the evidence supports
-          </h3>
-          {claim.conclusions.map((conclusion) => (
-            <article className="page" key={conclusion.id}>
-              <span className="finding-type">
-                {conclusion.classification} ·{' '}
-                {conclusion.outcome.replaceAll('_', ' ')}
+
+          {trust && (
+            <section className="trust-summary" aria-label="Evidence check">
+              <strong>Evidence check</strong>
+              <span>✓ {trust.supportedFacts} document-supported facts</span>
+              <span>? {trust.unresolvedItems} items still unresolved</span>
+              <span>
+                ✓ {trust.primarySourceCount} sources for the main finding
               </span>
-              <p>{conclusion.text}</p>
-              {citations(conclusion.evidence_ids)}
-              {!!conclusion.unresolved.length && (
-                <p className="muted">
-                  Still unresolved: {conclusion.unresolved.join('; ')}
-                </p>
-              )}
-            </article>
-          ))}
-          <h3 className="section-heading" id="claim-next-steps">
-            Clarify the missing information
-          </h3>
-          {claim.questions.map((question) => (
-            <form
-              className="page"
-              key={question.id}
-              onSubmit={(event) => {
-                event.preventDefault();
-                const formAnswer = new FormData(event.currentTarget).get(
-                  'answer',
-                );
-                void perform(async () => {
-                  const state = await apiRequest(
-                    `${prefix}/questions/${question.id}/answer`,
-                    json({
-                      expected_revision: workspace.revision,
-                      answer: String(formAnswer ?? ''),
-                      supporting_document_ids: [],
-                    }),
-                    isWorkspace,
-                  );
-                  onWorkspace(state);
-                  setActions(null);
-                  setDraft(null);
-                });
-              }}
-            >
-              <label>
-                {question.prompt}
-                {question.id === 'Q-location' ? (
-                  <select
-                    name="answer"
-                    aria-label={question.prompt}
-                    value={answers[question.id] ?? question.answer ?? ''}
-                    onChange={(event) =>
-                      setAnswers({
-                        ...answers,
-                        [question.id]: event.target.value,
-                      })
-                    }
-                    required
-                  >
-                    <option value="">Choose reported setting</option>
-                    <option value="asc">Ambulatory surgical center</option>
-                    <option value="hospital">Hospital</option>
-                    <option value="office">Ordinary office</option>
-                    <option value="unknown">Not sure</option>
-                  </select>
-                ) : (
-                  <input
-                    name="answer"
-                    aria-label={question.prompt}
-                    type={question.id === 'Q-receipt' ? 'date' : 'text'}
-                    value={answers[question.id] ?? question.answer ?? ''}
-                    onChange={(event) =>
-                      setAnswers({
-                        ...answers,
-                        [question.id]: event.target.value,
-                      })
-                    }
-                    required
-                    maxLength={2000}
-                  />
-                )}
-              </label>
-              <p className="muted">
-                {question.why} · {question.status.replaceAll('_', ' ')}
+            </section>
+          )}
+
+          <section className="evidence-story" id="evidence-story">
+            <div className="section-intro">
+              <p className="kicker">Trace the finding</p>
+              <h2>Why ClaimBridge flagged this</h2>
+              <p>
+                Each step comes from the claim record or a bounded conclusion.
+                Open any source to inspect the exact supporting text.
               </p>
-              <button disabled={busy || running}>Save answer</button>
-            </form>
-          ))}
-          <p>
-            Appeal date: <strong>{display(claim.denial.deadline)}</strong>{' '}
-            {citations(claim.denial.deadline?.evidence_ids ?? [])}
-          </p>
-          <p className="muted">
-            {claim.denial.deadline?.reason} Receipt source:{' '}
-            {claim.denial.received_date?.status}. No weekend extension is
-            assumed.
-          </p>
-          <div className="workflow-buttons">
-            <button
-              className="secondary-button"
-              disabled={busy || stale || running}
-              onClick={() =>
-                void perform(async () => {
-                  setActions(
-                    await apiRequest(
-                      `${prefix}/action-plan`,
-                      json({ expected_revision: workspace.revision }),
-                      isActions,
-                    ),
-                  );
-                })
-              }
-            >
-              Show action plan
-            </button>
-          </div>
-          {actions && !stale && (
-            <section>
-              <h3>Action plan — not submitted</h3>
-              {actions.actions.map((action) => (
-                <article className="page" key={action.id}>
-                  <h3>{action.title}</h3>
-                  <p>{action.instructions}</p>
-                  <p>
-                    Due: {display(action.due)}{' '}
-                    {citations(action.due.evidence_ids)}
-                  </p>
-                  {citations(action.evidence_ids)}
+            </div>
+            <ol>
+              {story.map((step, index) => (
+                <li className={step.kind} key={`${step.title}-${index}`}>
+                  <span className="story-number">{index + 1}</span>
+                  <div>
+                    <span className={`evidence-classification ${step.status}`}>
+                      {step.statusLabel}
+                    </span>
+                    <h3>{step.title}</h3>
+                    <p>{step.detail}</p>
+                    {citations(step.evidenceIds)}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="unknowns-section">
+            <div className="section-intro">
+              <p className="kicker">Honest uncertainty</p>
+              <h2>What we still don’t know</h2>
+              <p>
+                ClaimBridge keeps unsupported details unknown instead of turning
+                them into guesses.
+              </p>
+            </div>
+            <div className="unknown-list">
+              {unknowns.slice(0, 5).map((item) => (
+                <article key={item.title}>
+                  <span aria-hidden="true">?</span>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.why}</p>
+                  </div>
                 </article>
               ))}
-              <h3>Why this approach?</h3>
-              {actions.arguments.map((argument) => (
-                <article key={argument.id}>
-                  <p>{argument.statement}</p>
-                  {citations(argument.evidence_ids)}
-                  <p>{argument.requested_remedy}</p>
-                </article>
+            </div>
+          </section>
+
+          {!!claim.questions.length && (
+            <section className="clarification-section" id="claim-next-steps">
+              <div className="section-intro">
+                <p className="kicker">Strengthen the case</p>
+                <h2>A few details could clarify the review</h2>
+                <p>
+                  Your answer is treated as user-reported until supported by a
+                  document.
+                </p>
+              </div>
+              {claim.questions.map((question) => (
+                <form
+                  className="clarification-card"
+                  key={question.id}
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    const formAnswer = new FormData(event.currentTarget).get(
+                      'answer',
+                    );
+                    void perform(async () => {
+                      const state = await apiRequest(
+                        `${prefix}/questions/${question.id}/answer`,
+                        json({
+                          expected_revision: workspace.revision,
+                          answer: String(formAnswer ?? ''),
+                          supporting_document_ids: [],
+                        }),
+                        isWorkspace,
+                      );
+                      onWorkspace(state);
+                      setActions(null);
+                      setDraft(null);
+                    });
+                  }}
+                >
+                  <div>
+                    <h3>{question.prompt}</h3>
+                    <p>{question.why}</p>
+                  </div>
+                  {question.id === 'Q-location' ? (
+                    <>
+                      <input
+                        name="answer"
+                        type="hidden"
+                        value={answers[question.id] ?? question.answer ?? ''}
+                      />
+                      <div
+                        className="choice-group"
+                        role="group"
+                        aria-label={question.prompt}
+                      >
+                        {[
+                          {
+                            value: 'asc',
+                            label: 'Ambulatory surgical center',
+                          },
+                          { value: 'hospital', label: 'Hospital' },
+                          { value: 'office', label: 'Office' },
+                          { value: 'unknown', label: 'I’m not sure' },
+                        ].map(({ value, label }) => (
+                          <button
+                            type="button"
+                            aria-pressed={
+                              (answers[question.id] ?? question.answer) ===
+                              value
+                            }
+                            key={value}
+                            onClick={() =>
+                              setAnswers({ ...answers, [question.id]: value })
+                            }
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <input
+                      name="answer"
+                      aria-label={question.prompt}
+                      type={question.id === 'Q-receipt' ? 'date' : 'text'}
+                      value={answers[question.id] ?? question.answer ?? ''}
+                      onChange={(event) =>
+                        setAnswers({
+                          ...answers,
+                          [question.id]: event.target.value,
+                        })
+                      }
+                      required
+                      maxLength={2000}
+                    />
+                  )}
+                  <div className="clarification-actions">
+                    <span>User-reported until documented</span>
+                    <button
+                      className="secondary-button"
+                      disabled={
+                        busy ||
+                        running ||
+                        !(answers[question.id] ?? question.answer)
+                      }
+                    >
+                      Add this information
+                    </button>
+                  </div>
+                </form>
               ))}
             </section>
           )}
+
+          {actions && !stale && (
+            <section className="action-plan">
+              <div className="section-intro">
+                <p className="kicker">Suggested, not completed</p>
+                <h2>Recommended next steps</h2>
+              </div>
+              <ol>
+                {actions.actions.map((action) => (
+                  <li key={action.id}>
+                    <div>
+                      <span className="action-state">Suggested</span>
+                      <h3>{action.title}</h3>
+                      <p>{action.instructions}</p>
+                      {action.due.value != null && (
+                        <p className="action-deadline">
+                          Complete by <strong>{display(action.due)}</strong>{' '}
+                          {citations(action.due.evidence_ids)}
+                        </p>
+                      )}
+                      {citations(action.evidence_ids)}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <button
+                className="primary-button"
+                disabled={busy || stale || running}
+                onClick={() => void perform(prepareDraft)}
+              >
+                Create appeal draft
+              </button>
+            </section>
+          )}
+
+          {trace && (
+            <details className="technical-trace">
+              <summary>View technical trace</summary>
+              <div className="technical-trace-intro">
+                <div>
+                  <p className="kicker">Technical transparency</p>
+                  <h2>How this result was assembled</h2>
+                </div>
+                <a href="/evaluation">How ClaimBridge works</a>
+              </div>
+              <dl>
+                <div>
+                  <dt>{workspace.documents.length}</dt>
+                  <dd>Documents considered</dd>
+                </div>
+                <div>
+                  <dt>{trace.selectedEvidence}</dt>
+                  <dd>Evidence items retained</dd>
+                </div>
+                <div>
+                  <dt>
+                    {trace.exactRestorations} / {trace.documentEvidence}
+                  </dt>
+                  <dd>Document passages restored as exact matches</dd>
+                </div>
+                <div>
+                  <dt>{trace.userReported}</dt>
+                  <dd>User-reported evidence items</dd>
+                </div>
+                <div>
+                  <dt>{trace.conflicts}</dt>
+                  <dd>Conflicted facts preserved</dd>
+                </div>
+                <div>
+                  <dt>{trace.unresolved}</dt>
+                  <dd>Items left unresolved</dd>
+                </div>
+                <div>
+                  <dt>{trace.derivedFindings}</dt>
+                  <dd>Bounded derived findings</dd>
+                </div>
+              </dl>
+              <div className="trace-run-note">
+                <strong>Extraction path</strong>
+                <p>
+                  {result?.metadata.provider_outcome ===
+                  'reused_validated_extraction'
+                    ? 'Previously validated extraction reused; downstream reasoning was regenerated without a provider call.'
+                    : `Live provider extraction${
+                        result?.metadata.provider_metrics?.http_attempts == null
+                          ? ''
+                          : ` · ${result.metadata.provider_metrics.http_attempts} HTTP attempt${
+                              result.metadata.provider_metrics.http_attempts ===
+                              1
+                                ? ''
+                                : 's'
+                            }`
+                      }${
+                        result?.metadata.provider_metrics?.repair_attempts
+                          ? ` · ${result.metadata.provider_metrics.repair_attempts} repair`
+                          : ''
+                      }.`}
+                </p>
+              </div>
+              <p className="technical-trace-note">
+                Exact source restoration proves where text came from; it does
+                not prove that every interpretation is correct.
+              </p>
+            </details>
+          )}
+
+          <details className="claim-details">
+            <summary>View claim details and analysis history</summary>
+            {!!result?.revisions.length && (
+              <label className="revision-picker">
+                Saved analysis version
+                <select
+                  value={claim.revision}
+                  onChange={(event) =>
+                    void perform(async () => {
+                      setResult(
+                        await apiRequest(
+                          `${prefix}/claim?revision=${event.target.value}`,
+                          {},
+                          isClaimResponse,
+                        ),
+                      );
+                      setActions(null);
+                      setDraft(null);
+                      setEvidence(null);
+                    })
+                  }
+                >
+                  {result.revisions.map((revision, index) => (
+                    <option key={revision} value={revision}>
+                      Version {index + 1}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <h3>Claim amounts</h3>
+            <p className="muted">
+              Related claims are kept separate and never combined into one debt.
+            </p>
+            <div className="claim-money">
+              {claim.eobs.map((eob) => (
+                <article className="page" key={eob.id}>
+                  <h3>Claim {display(eob.claim_id)}</h3>
+                  {[
+                    'billed_cents',
+                    'allowed_cents',
+                    'paid_cents',
+                    'member_cents',
+                  ].map((field) => (
+                    <p key={field}>
+                      {field
+                        .replace('_cents', '')
+                        .replace('member', 'EOB member responsibility')}
+                      : <strong>{money(eob.financial[field])}</strong>
+                      {citations(eob.financial[field]?.evidence_ids ?? [])}
+                    </p>
+                  ))}
+                </article>
+              ))}
+            </div>
+            {claim.bills.map((bill) => (
+              <p key={bill.id}>
+                Bill snapshot for {display(bill.claim_id)}:{' '}
+                {money(bill.balance_cents)} as of {display(bill.statement_date)}
+                . Not added to the EOB amount.{' '}
+                {citations(bill.balance_cents.evidence_ids)}
+              </p>
+            ))}
+            <h3>All findings</h3>
+            {claim.conclusions.map((conclusion) => (
+              <article className="page" key={conclusion.id}>
+                <span className="finding-type">
+                  {conclusion.classification.replaceAll('_', ' ')}
+                </span>
+                <p>{conclusion.text}</p>
+                {citations(conclusion.evidence_ids)}
+              </article>
+            ))}
+          </details>
         </>
       )}
       {evidence && (
@@ -750,12 +929,18 @@ export function ClaimWorkflow({
             <button onClick={() => setEvidence(null)}>Close</button>
           </div>
           <p className="evidence-meta">
-            {evidence.kind.replaceAll('_', ' ')} ·{' '}
-            {evidence.domain.replaceAll('_', ' ')} ·{' '}
-            {evidence.text_kind.replaceAll('_', ' ')}
+            {evidence.domain === 'user_answer'
+              ? 'User-reported information'
+              : evidence.source_url
+                ? 'External guidance'
+                : 'Uploaded document'}
+            {evidence.location.section &&
+              ` · ${evidence.location.section.split('|').at(-1)?.trim()}`}
           </p>
           {evidence.text_kind === 'verbatim' ? (
-            <blockquote>{evidence.text}</blockquote>
+            <blockquote>
+              {evidence.text.replace(/^[A-Z]\d+\s*\|\s*/, '')}
+            </blockquote>
           ) : (
             <p>{evidence.text}</p>
           )}
@@ -777,6 +962,13 @@ export function ClaimWorkflow({
             This excerpt supports the finding, but it does not decide the claim
             on its own.
           </p>
+          <aside className="evidence-note">
+            <strong>Evidence, not a verdict</strong>
+            <p>
+              ClaimBridge shows the source behind each fact so you can verify it
+              before taking action.
+            </p>
+          </aside>
         </section>
       )}
     </section>

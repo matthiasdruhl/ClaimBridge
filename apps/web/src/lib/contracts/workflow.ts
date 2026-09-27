@@ -22,6 +22,9 @@ export type Evidence = {
   text_kind: string;
   accessed_at: string | null;
   location: { page: number | null; section: string };
+  verification?: string;
+  authority_scope?: string;
+  content_sha256?: string;
 };
 export type Claim = {
   id: string;
@@ -96,7 +99,17 @@ export type ClaimResponse = {
   job: Job | null;
   revisions: number[];
   draft_ids: string[];
-  metadata: { mode?: string; elapsed_ms?: number };
+  metadata: {
+    mode?: string;
+    elapsed_ms?: number;
+    provider_outcome?: string;
+    provider_metrics?: {
+      http_attempts?: number;
+      repair_attempts?: number;
+    };
+    retrieved_evidence_ids?: string[];
+    limitations?: string[];
+  };
 };
 export type Actions = {
   claim_id: string;
