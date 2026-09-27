@@ -1,7 +1,8 @@
 import { apiRequest } from '../lib/api/client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ClaimWorkflow } from '../features/analysis/ClaimWorkflow';
+import { documentTypeLabel } from '../features/analysis/presentation';
 import { isWorkspace } from '../lib/contracts/workflow';
 import type { Workspace } from '../lib/contracts/workflow';
 
@@ -21,6 +22,43 @@ export function App() {
   const [stage, setStage] = useState<'documents' | 'analysis' | 'appeal'>(
     'documents',
   );
+  const [recentCases, setRecentCases] = useState<string[]>(() => {
+    try {
+      return JSON.parse(
+        localStorage.getItem('claimbridge.recent-workspaces') ?? '[]',
+      ) as string[];
+    } catch {
+      return [];
+    }
+  });
+
+  const rememberWorkspace = useCallback((id: string) => {
+    setRecentCases((current) => {
+      const next = [id, ...current.filter((item) => item !== id)].slice(0, 5);
+      localStorage.setItem(
+        'claimbridge.recent-workspaces',
+        JSON.stringify(next),
+      );
+      return next;
+    });
+  }, []);
+
+  async function openWorkspace(id: string) {
+    setBusy(true);
+    setError('');
+    try {
+      const state = await request(`/workspaces/${id}`);
+      setWorkspace(state);
+      setSelected(null);
+      setStage('documents');
+      localStorage.setItem('claimbridge.workspace', state.id);
+      rememberWorkspace(state.id);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Case unavailable.');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   useEffect(() => {
     const id = localStorage.getItem('claimbridge.workspace');
@@ -29,6 +67,7 @@ export function App() {
     request(`/workspaces/${id}`)
       .then((value) => {
         if (active) setWorkspace(value);
+        if (active) rememberWorkspace(value.id);
       })
       .catch((reason: Error) => {
         if (active) setError(reason.message);
@@ -36,7 +75,7 @@ export function App() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [rememberWorkspace]);
 
   async function upload(files: FileList | null) {
     if (!files?.length || !confirmed) return;
@@ -52,6 +91,7 @@ export function App() {
           body: JSON.stringify({ synthetic: true }),
         });
         localStorage.setItem('claimbridge.workspace', current.id);
+        rememberWorkspace(current.id);
         setWorkspace(current);
       }
       for (const file of selectedFiles) {
@@ -91,6 +131,9 @@ export function App() {
         <div className="header-meta">
           {workspace && <span>Case {workspace.id.slice(0, 12)}</span>}
           <span>Saved on this device</span>
+          <a className="technical-entry" href="/evaluation">
+            Technical evaluation
+          </a>
           <a href="/diagnostics">Help</a>
           <button
             className="text-button"
@@ -107,6 +150,7 @@ export function App() {
                   setSelected(null);
                   setStage('documents');
                   localStorage.setItem('claimbridge.workspace', state.id);
+                  rememberWorkspace(state.id);
                 })
                 .catch((reason: Error) => setError(reason.message));
             }}
@@ -115,6 +159,31 @@ export function App() {
           </button>
         </div>
       </header>
+      {import.meta.env.DEV && recentCases.length > 0 && (
+        <aside className="demo-tools" aria-label="Demo controls">
+          <div>
+            <strong>Demo controls</strong>
+            <span>
+              Reopen a locally saved synthetic case without rerunning analysis.
+            </span>
+          </div>
+          <select
+            aria-label="Reopen a recent synthetic case"
+            value=""
+            disabled={busy}
+            onChange={(event) => {
+              if (event.target.value) void openWorkspace(event.target.value);
+            }}
+          >
+            <option value="">Reopen recent synthetic case</option>
+            {recentCases.map((id, index) => (
+              <option key={id} value={id}>
+                Saved case {index + 1} · {id.slice(0, 8)}
+              </option>
+            ))}
+          </select>
+        </aside>
+      )}
       <nav className="claim-progress" aria-label="Claim review progress">
         {[
           ['documents', 'Add documents'],
@@ -138,10 +207,10 @@ export function App() {
       {stage === 'documents' && (
         <section className="screen-heading">
           <p className="kicker">Document upload and review</p>
-          <h1>Add and review your claim documents</h1>
+          <h1>Understand why your medical claim was denied</h1>
           <p>
-            Add the plan, explanation of benefits, denial letter, and bills that
-            relate to this claim. Review each file before analysis.
+            Upload your denial, EOB, insurance plan, and related bills.
+            ClaimBridge compares them and shows what the evidence supports.
           </p>
         </section>
       )}
@@ -151,6 +220,13 @@ export function App() {
             <section className="panel">
               <h2>Add PDF documents</h2>
               <p className="muted">Up to 100 pages and 20 MB per file.</p>
+              <ul className="document-types" aria-label="Recommended documents">
+                <li>Denial letter</li>
+                <li>Explanation of Benefits</li>
+                <li>Insurance plan</li>
+                <li>Medical bill</li>
+                <li>Supporting records</li>
+              </ul>
               <label className="consent">
                 <input
                   type="checkbox"
@@ -196,8 +272,11 @@ export function App() {
                     }
                     onClick={() => setSelected(item.document.id)}
                   >
-                    <strong>{item.document.filename}</strong>
-                    <span>{item.document.pages ?? '—'} pages · Ready</span>
+                    <strong>{documentTypeLabel(item.document.filename)}</strong>
+                    <span>
+                      {item.document.filename} · {item.document.pages ?? '—'}{' '}
+                      pages · Ready
+                    </span>
                   </button>
                 ))}
               </div>
