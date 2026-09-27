@@ -48,6 +48,24 @@ def test_real_documents_persist_and_deduplicate(tmp_path):
     assert client.get(f"/api/v1/workspaces/{other}/documents/{doc_id}/content").status_code == 404
 
 
+def test_preloaded_demo_uses_the_exact_initial_packet(tmp_path):
+    client = create_app({"TESTING": True, "DATA_DIR": tmp_path}).test_client()
+
+    response = client.post("/api/v1/workspaces/demo")
+
+    assert response.status_code == 201
+    state = response.json
+    assert state["revision"] == 6
+    assert [item["document"]["filename"] for item in state["documents"]] == [
+        "01-plan.pdf",
+        "02-eob.pdf",
+        "03-denial.pdf",
+        "04-provider-bill.pdf",
+        "05-authorization.pdf",
+    ]
+    assert all(item["document"]["status"] == "ready" for item in state["documents"])
+
+
 def test_invalid_encrypted_and_blank_pdfs(tmp_path):
     client = create_app({"TESTING": True, "DATA_DIR": tmp_path}).test_client()
     assert client.post("/api/v1/workspaces", json={"synthetic": False}).status_code == 400

@@ -2,8 +2,9 @@ import { apiRequest } from '../lib/api/client';
 import { useEffect, useState } from 'react';
 
 import { ClaimWorkflow } from '../features/analysis/ClaimWorkflow';
+import { LandingHero } from '../components/landing/LandingHero';
 import { documentTypeLabel } from '../features/analysis/presentation';
-import { isWorkspace } from '../lib/contracts/workflow';
+import { isJob, isWorkspace } from '../lib/contracts/workflow';
 import type { Workspace } from '../lib/contracts/workflow';
 
 async function request(
@@ -19,6 +20,7 @@ export function App() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState(false);
+  const [documentsOpen, setDocumentsOpen] = useState(false);
   const [demoMode, setDemoMode] = useState(
     () => localStorage.getItem('claimbridge.demo-mode') === 'true',
   );
@@ -91,9 +93,48 @@ export function App() {
     }
   }
 
+  async function exploreDemo() {
+    setBusy(true);
+    setError('');
+    try {
+      const state = await request('/workspaces/demo', { method: 'POST' });
+      setWorkspace(state);
+      setSelected(state.documents[0]?.document.id ?? null);
+      setDemoMode(true);
+      localStorage.setItem('claimbridge.workspace', state.id);
+      localStorage.setItem('claimbridge.demo-mode', 'true');
+      await apiRequest(
+        `/workspaces/${state.id}/process`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            expected_revision: state.revision,
+            document_ids: state.documents.map((item) => item.document.id),
+            demo_mode: true,
+          }),
+        },
+        isJob,
+      );
+      setStage('analysis');
+    } catch (reason) {
+      setError(
+        reason instanceof Error
+          ? reason.message
+          : 'The demo could not be opened.',
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const entry =
     workspace?.documents.find((item) => item.document.id === selected) ??
     workspace?.documents[0];
+  const hasDocuments = !!workspace?.documents.length;
+  const landing = stage === 'documents' && !hasDocuments;
+  const showDocumentWorkspace =
+    stage === 'documents' && (!landing || documentsOpen);
   return (
     <main className="app-shell">
       <header className="site-header">
@@ -101,15 +142,30 @@ export function App() {
           ClaimBridge<span>Medical claim review</span>
         </a>
         <div className="header-meta">
-          {workspace && <span>Case {workspace.id.slice(0, 12)}</span>}
-          <span>Saved on this device</span>
+          {hasDocuments && <span>Case {workspace?.id.slice(0, 12)}</span>}
+          {hasDocuments && <span>Saved on this device</span>}
           <a className="technical-entry" href="/evaluation">
             Technical evaluation
           </a>
           <a href="/diagnostics">Help</a>
+          <label className={`header-demo-toggle ${demoMode ? 'active' : ''}`}>
+            <span className="demo-dot" aria-hidden="true" />
+            Demo
+            <input
+              aria-label="Demo mode"
+              type="checkbox"
+              checked={demoMode}
+              onChange={(event) => {
+                const enabled = event.target.checked;
+                setDemoMode(enabled);
+                localStorage.setItem('claimbridge.demo-mode', String(enabled));
+              }}
+            />
+          </label>
           <button
             className="text-button"
             disabled={busy}
+            hidden={!hasDocuments}
             onClick={() => {
               setError('');
               void request('/workspaces', {
@@ -121,6 +177,7 @@ export function App() {
                   setWorkspace(state);
                   setSelected(null);
                   setStage('documents');
+                  setDocumentsOpen(true);
                   localStorage.setItem('claimbridge.workspace', state.id);
                 })
                 .catch((reason: Error) => setError(reason.message));
@@ -130,50 +187,55 @@ export function App() {
           </button>
         </div>
       </header>
-      <aside
-        className={`demo-mode-bar ${demoMode ? 'active' : ''}`}
-        aria-label="Demo mode"
-      >
-        <label className="demo-mode-toggle">
-          <span>Demo mode</span>
-          <input
-            type="checkbox"
-            checked={demoMode}
-            onChange={(event) => {
-              const enabled = event.target.checked;
-              setDemoMode(enabled);
-              localStorage.setItem('claimbridge.demo-mode', String(enabled));
-            }}
-          />
-        </label>
-        {demoMode && (
-          <p role="status">
-            Uses retained validated analysis for the synthetic case.
-          </p>
-        )}
-      </aside>
-      <nav className="claim-progress" aria-label="Claim review progress">
-        {[
-          ['documents', 'Add documents'],
-          ['analysis', 'Review claim'],
-          ['appeal', 'Prepare appeal'],
-        ].map(([key, label], index) => (
-          <div
-            className={`${stage === key ? 'current' : ''} ${
-              ['analysis', 'appeal'].indexOf(stage) > index - 1
-                ? 'complete'
-                : ''
-            }`}
-            key={key}
-            aria-current={stage === key ? 'step' : undefined}
-          >
-            <span>{index + 1}</span>
-            {label}
-          </div>
-        ))}
-      </nav>
-      {stage === 'documents' && (
-        <section className="screen-heading">
+      {demoMode && hasDocuments && (
+        <aside className="demo-status" aria-label="Demo mode" role="status">
+          <span>
+            <i aria-hidden="true" /> Demo mode
+          </span>
+          Validated synthetic case
+        </aside>
+      )}
+      {landing && (
+        <LandingHero
+          busy={busy}
+          error={error}
+          onDemo={() => void exploreDemo()}
+          onDocuments={() => {
+            setDemoMode(false);
+            localStorage.setItem('claimbridge.demo-mode', 'false');
+            setDocumentsOpen(true);
+            window.setTimeout(() => {
+              document
+                .getElementById('document-workspace')
+                ?.scrollIntoView({ behavior: 'smooth' });
+            }, 0);
+          }}
+        />
+      )}
+      {(!landing || documentsOpen) && (
+        <nav className="claim-progress" aria-label="Claim review progress">
+          {[
+            ['documents', 'Add documents'],
+            ['analysis', 'Review claim'],
+            ['appeal', 'Prepare appeal'],
+          ].map(([key, label], index) => (
+            <div
+              className={`${stage === key ? 'current' : ''} ${
+                ['analysis', 'appeal'].indexOf(stage) > index - 1
+                  ? 'complete'
+                  : ''
+              }`}
+              key={key}
+              aria-current={stage === key ? 'step' : undefined}
+            >
+              <span>{index + 1}</span>
+              {label}
+            </div>
+          ))}
+        </nav>
+      )}
+      {showDocumentWorkspace && (
+        <section className="screen-heading" id="document-workspace">
           <p className="kicker">Document upload and review</p>
           <h1>Understand why your medical claim was denied</h1>
           <p>
@@ -182,7 +244,7 @@ export function App() {
           </p>
         </section>
       )}
-      {stage === 'documents' && (
+      {showDocumentWorkspace && (
         <div className="workspace">
           <aside>
             <section className="panel">
@@ -304,7 +366,7 @@ export function App() {
           </section>
         </div>
       )}
-      {workspace && (
+      {workspace && (!landing || documentsOpen) && (
         <ClaimWorkflow
           key={workspace.id}
           workspace={workspace}
@@ -318,7 +380,7 @@ export function App() {
       <footer className="site-footer">
         <span>ClaimBridge does not submit claims or appeals.</span>
         <span>
-          {workspace
+          {hasDocuments
             ? `Case revision ${workspace.revision}`
             : 'Local demonstration'}
         </span>

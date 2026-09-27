@@ -30,7 +30,13 @@ def create_app(test_config: dict[str, object] | None = None) -> Flask:
         )
     )
     workspaces = WorkspaceStore(root)
-    app.register_blueprint(workspace_blueprint(workspaces), url_prefix="/api/v1")
+    demo_documents = Path(
+        app.config.get(
+            "DEMO_DOCUMENTS_DIR",
+            Path(__file__).resolve().parents[4] / "claimbridge-prep" / "demo-case" / "documents",
+        )
+    )
+    app.register_blueprint(workspace_blueprint(workspaces, demo_documents), url_prefix="/api/v1")
 
     if app.config.get("DIAGNOSTICS_ENABLED", os.environ.get("CLAIMBRIDGE_DIAGNOSTICS") == "1"):
         install_diagnostics(app, Path(root))
