@@ -230,6 +230,8 @@ def test_demo_mode_uses_exact_retained_snapshots_without_provider(tmp_path):
     draft = client.post(prefix + "/appeal-draft", json={"expected_revision": state["revision"]})
     assert draft.status_code == 201
     assert draft.json["submitted"] is False
+    assert "Supporting sources: Denial notice · page 1 [" in draft.json["text"]
+    assert "Plan document · page 3 [" in draft.json["text"]
 
 
 def test_demo_mode_refuses_unknown_packet_before_provider(tmp_path):

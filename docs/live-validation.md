@@ -1,61 +1,86 @@
-> **Latest:** [browser walkthrough results](browser-walkthrough.md). D06 retry, draft persistence/copy, revision history and stale controls passed. The earlier generic failure remains unexplained; original-PDF rendering and file download remain browser acceptance gaps. Backend tests now total 32.
+# Live validation — September 26–27, 2026
 
-# Live validation — September 26, 2026
+The final provider-backed synthetic suite passed **12/12 automatic gates**: three repetitions each of the initial network/location packet, the packet with location confirmation, an independent office packet, and an independent authorization packet.
 
-The post-key implementation is complete for local synthetic evaluation. The final runtime passed **12/12 live automatic gates**: three repetitions each of the original initial packet, original packet with location confirmation, independent office packet, and independent authorization packet. Final browser rehearsal and human citation review remain open.
+These results measure the checked synthetic scenarios. They are not a certification of medical, legal, insurance, or production accuracy.
 
-## Configuration and retained evidence
+## Configuration
 
-- Provider: Meta, `muse-spark-1.3-contributor`, reasoning effort `low`.
-- Prompt: `claim-extraction-v9`; pipeline: `bounded-analysis-v3`.
-- Schema hash: `e14727895caf69a51a9ac3681b979d15c094c73aa46176077cff2eeceeea3af9`.
-- Actual outputs, candidates and metadata: `var/evaluations/02b1d7a12604432fba879a580395466c/` (ignored local artifacts).
-- API key stays in ignored backend `.env`. No credentials are recorded here.
+- Provider/model: Meta `muse-spark-1.3-contributor`
+- Reasoning effort: `low`
+- Prompt: `claim-extraction-v9`
+- Pipeline: `bounded-analysis-v3`
+- Schema hash: `e14727895caf69a51a9ac3681b979d15c094c73aa46176077cff2eeceeea3af9`
+- Retained run ID: `02b1d7a12604432fba879a580395466c`
 
-## Live results
+Credentials and raw run artifacts remain in ignored local files. No credential is stored in the repository.
 
-| Run               | Automatic gate | Elapsed | HTTP attempts | Repairs |
-| ----------------- | -------------- | ------- | ------------- | ------- |
-| original-1-5      | Pass           | 42.32 s | 1             | 0       |
-| original-1-6      | Pass           | 44.05 s | 1             | 0       |
-| original-2-5      | Pass           | 43.59 s | 1             | 0       |
-| original-2-6      | Pass           | 35.75 s | 1             | 0       |
-| original-3-5      | Pass           | 44.16 s | 1             | 0       |
-| original-3-6      | Pass           | 38.34 s | 1             | 0       |
-| office-1-3        | Pass           | 25.98 s | 1             | 0       |
-| office-2-3        | Pass           | 39.10 s | 1             | 0       |
-| office-3-3        | Pass           | 36.24 s | 1             | 0       |
-| authorization-1-3 | Pass           | 29.78 s | 1             | 0       |
-| authorization-2-3 | Pass           | 38.09 s | 1             | 0       |
-| authorization-3-3 | Pass           | 66.82 s | 2             | 1       |
+## Provider-backed results
 
-Median analysis time: **38.72 seconds**. Eleven analyses passed on their first generation. The final authorization run emitted a duplicate evidence ID; validation rejected it and the single permitted repair succeeded. This is measured synthetic repeatability, not a general accuracy guarantee.
+| Run               | Gate | Elapsed | HTTP attempts | Repairs |
+| ----------------- | ---- | ------- | ------------- | ------- |
+| original-1-5      | Pass | 42.32 s | 1             | 0       |
+| original-1-6      | Pass | 44.05 s | 1             | 0       |
+| original-2-5      | Pass | 43.59 s | 1             | 0       |
+| original-2-6      | Pass | 35.75 s | 1             | 0       |
+| original-3-5      | Pass | 44.16 s | 1             | 0       |
+| original-3-6      | Pass | 38.34 s | 1             | 0       |
+| office-1-3        | Pass | 25.98 s | 1             | 0       |
+| office-2-3        | Pass | 39.10 s | 1             | 0       |
+| office-3-3        | Pass | 36.24 s | 1             | 0       |
+| authorization-1-3 | Pass | 29.78 s | 1             | 0       |
+| authorization-2-3 | Pass | 38.09 s | 1             | 0       |
+| authorization-3-3 | Pass | 66.82 s | 2             | 1       |
 
-Demo Mode uses retained validated results from the original synthetic evaluation so the presentation does not depend on provider latency. It does not change these provider-backed measurements.
+Median analysis time was **38.72 seconds**. Eleven runs passed on their first generation. The final authorization run returned a duplicate evidence ID; validation rejected it and the single permitted repair succeeded.
 
-## What changed
+Earlier prompt versions failed the clarified original scenario and are not counted as final evidence. Those failures were retained rather than replaced.
 
-- The model selects immutable numbered source passages; the server restores exact document text, page and offsets. It no longer needs to transcribe quotations.
-- Validation identifies money/citation errors precisely, rejects invalid facility references, preserves separate EOBs, and anchors the root claim ID to the source-backed denial.
-- Extraction distinguishes submitted claim fields from the actual documented facility, and evaluates coverage on the service date.
-- Provider handling records safe usage/timing metrics, allows a bounded repair and transient retry, and uses a 120-second request timeout.
-- A safe `.env` launcher runs paid evaluations explicitly. Independent critical-field gates cover original, office and authorization packets.
+## What the gates check
 
-Earlier v7 and v8 trials failed the clarified original scenario: first an omitted actual facility reference, then service-date coverage treated as unknown because the analysis date followed coverage expiration. Prompt/schema clarification fixed those issues before this full v9 suite. Retained failed runs: `a032fced4f1e490c9bd7987fcfe5993a` and `63414009c346461ab88ccdaf7c812bc5`. The earlier v6 partial run is historical, not final-version evidence.
+- claim and service identity;
+- separate financial records without double counting;
+- unknown values remaining unknown;
+- submitted location remaining distinct from the documented encounter location;
+- service-date plan scope and required facility evidence;
+- authorization scope across service code, provider, and date;
+- evidence IDs, pages, exact source restoration, and canonical schema validity;
+- bounded outcomes rather than guaranteed payment or appeal success.
 
-## Workflow and source checks
+Automatic gates can detect known structural and scenario-specific failures. They cannot prove that every interpretation is correct.
 
-`make check` passed: 31 backend tests, frontend telemetry test, Ruff, ESLint, TypeScript, production build and formatting. The build retains a non-blocking 532 kB JavaScript chunk warning. Evaluation scripts also pass Ruff.
+## Deterministic workflow verification
 
-`scripts/verify_live_workflow.py` used a consistent SQLite backup of the actual live results, with a provider that fails if called. All three clarified original workspaces passed receipt clarification, stale analysis/draft blocking, deterministic regeneration, draft generation/edit/save/reopen and stale-version rejection. Receipt `2026-09-01` produced `2027-02-28`, labeled user-reported. Regeneration took 13–14 ms with zero provider calls. Corrected liability stayed unknown; no appeal was submitted. See the local `workflow-verification.json` artifact.
+The saved-extraction workflow check disables provider access and verifies receipt clarification, stale analysis and draft blocking, deterministic regeneration, draft generation/edit/save/reopen, and stale-version rejection.
 
-Assistant source inspection checked the original scenario's key financial/setting/plan facts and representative office and authorization output against their cited passages. The office conclusion remains conditional; the matching authorization supports possible processing error, not guaranteed payment. Submitted POS stays distinct from actual setting. These checks do not replace human review: every run's `human_citation_review` remains `pending`. Some noncritical facts still vary conservatively (for example an explicit false or fictional code-system label may be left unknown).
+For the synthetic receipt date `2026-09-01`, the plan's explicit 180-calendar-day rule produced `2027-02-28`. The receipt date remained labeled user-reported. Corrected liability remained unknown and no appeal was submitted.
 
-## Remaining acceptance checks
+The denial notice date and the date the member received the notice remain separate facts. The notice establishes August 28, 2026, but does not establish receipt. Similarly, an EOB showing no posted patient payment does not prove that the member personally made no payment.
 
-1. The resumed browser flow now passes upload, analysis, citations, receipt regeneration, D06 retry, draft edit/save/copy/reload and stale-history controls. Original-PDF rendering and text-file download remain unverified in the embedded browser. See [the walkthrough report](browser-walkthrough.md), including the retained first-attempt D06 failure.
-2. Have a person review critical citations/conclusions against the synthetic sources; leave review status pending until actually done.
-3. Rehearse the four-minute demo using measured latency. Do not promise a 30-second live extraction. Clearly disclose any saved live result used for presentation.
-4. Review and commit the working-tree changes when ready. No commit, push, hosted CI run or deployment was performed in this implementation session.
+## Browser verification
 
-Hosting, OCR, more clinical categories and the optional evidence map remain outside this implementation scope. No additional paid evaluation or background automation is scheduled. Start the local app with `make dev`; evaluation commands and the no-network workflow check are documented in `scripts/README.md`.
+The saved walkthrough covered upload, analysis, evidence inspection, receipt-date clarification and regeneration, the D06 transition, revision history, stale controls, and draft editing and persistence.
+
+On September 27, the presentation workflow was rechecked in normal Chrome:
+
+- an EOB citation opened its exact source drawer;
+- the original EOB opened in Chrome's PDF viewer with `#page=1`, and the viewer selected page 1 of 2;
+- Copy appeal reached the confirmed `Copied` state;
+- Download draft produced a new plain-text file;
+- a saved current-revision draft reopened with the same text length and the `Saved draft loaded` state.
+
+The earlier Codex in-app browser could not render Chrome's PDF extension and did not expose its download event reliably. That was an environment limitation; the same functions passed in normal Chrome.
+
+## Current repository checks
+
+`make check` covers 34 backend tests and 13 frontend tests, plus Ruff, ESLint, TypeScript, the production build, and formatting. The build reports a non-blocking JavaScript chunk-size warning; it is not a functional failure.
+
+## Remaining limits
+
+- Independent human review of every final provider-run citation is still pending.
+- The browser workflow is manually verified; there is no automated full-browser regression suite.
+- The evaluated inputs are synthetic, English, and born-digital.
+- OCR, authentication, hosted deployment, clinical reasoning, and final liability calculation are outside the current scope.
+- Exact quotations establish provenance, not correct applicability or interpretation.
+
+See [`claim-workflow.md`](claim-workflow.md) for runtime boundaries and [`browser-walkthrough.md`](browser-walkthrough.md) for the historical development walkthrough.

@@ -47,8 +47,6 @@ const money = (fact: Fact | undefined) =>
     : 'Unknown';
 const display = (fact: Fact | undefined) =>
   fact?.value == null ? 'Unknown' : String(fact.value);
-const readableDraft = (value: string) =>
-  value.replace(/^Supporting references:.*(?:\r?\n)?/gim, '');
 export function ClaimWorkflow({
   workspace,
   onWorkspace,
@@ -210,7 +208,7 @@ export function ClaimWorkflow({
       isDraft,
     );
     setDraft(next);
-    setText(readableDraft(next.text));
+    setText(next.text);
     setSaved('Draft generated. Review before use.');
     onStage('appeal');
   }
@@ -604,7 +602,7 @@ export function ClaimWorkflow({
                           isDraft,
                         );
                         setDraft(loaded);
-                        setText(readableDraft(loaded.text));
+                        setText(loaded.text);
                         setSaved('Saved draft loaded');
                       });
                   }}

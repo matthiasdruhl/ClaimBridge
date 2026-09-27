@@ -1,58 +1,119 @@
 # ClaimBridge
 
-Evidence-backed medical-claim navigation. This repository currently contains a verified preparation package and a local document workspace. Upload synthetic PDFs, inspect extracted page text, and reopen original documents. The claim-analysis, clarification and appeal-draft workflow is implemented for local evaluation; the final synthetic live suite passed 12/12 automatic gates. The browser workflow passes through saved drafts and copy export; file download, original-PDF rendering and independent human review remain open.
+ClaimBridge is an evidence-backed medical claim analysis system that turns insurance documents into source-verified findings and an actionable appeal draft.
 
-## Where to start
+It is designed for the part of a claim dispute that is usually hardest for a patient: connecting a denial, Explanation of Benefits, plan language, bills, authorizations, and supporting records without merging unrelated claims or presenting unsupported details as facts.
 
-- [Browser walkthrough](docs/browser-walkthrough.md): verified flow, remaining browser limitations and next priorities.
-- [Resume handoff](docs/resume-handoff.md): September 26 implementation status, live results, remaining work and credit-conscious restart commands.
+## What it does
 
-- [Repository/code structure](docs/code-structure.md): folder ownership, dependencies, planned modules and conventions.
-- [Preparation package](claimbridge-prep/README.md): research, synthetic documents, golden analysis and evaluation.
-- [Readiness report](claimbridge-prep/READINESS.md) and [build backlog](claimbridge-prep/engineering/implementation-plan.md).
-- [Contribution rules](CONTRIBUTING.md).
+1. Upload a synthetic denial packet as PDF files.
+2. Review the claim amount, the main finding, and the evidence chain behind it.
+3. Open any cited passage and its original PDF page.
+4. Add clarifications or supporting documents when important facts remain unknown.
+5. Regenerate the analysis after new evidence while preserving prior revisions.
+6. Review suggested next steps and create, edit, save, copy, or download an appeal draft.
 
-## Requirements
+ClaimBridge currently supports bounded network/location and prior-authorization scenarios. It does not adjudicate claims, calculate final liability, submit appeals, or replace professional review.
 
-Node 24, npm and Python 3.12. `.nvmrc` and `.python-version` record the intended versions. Run all commands below from the repository root. Windows users can run the equivalent Python/npm commands directly; Make targets assume a POSIX shell.
+## Why the approach is different
+
+ClaimBridge is not a `PDFs → LLM → answer` pipeline.
+
+The model handles fuzzy document understanding: it maps varied insurance language into a structured claim and selects numbered source passages. Application code then restores the exact text from the uploaded PDFs, validates every reference and structured field, and performs bounded downstream reasoning.
+
+```text
+Documents
+  → structured extraction
+  → evidence selection
+  → exact source restoration
+  → schema and provenance validation
+  → bounded claim reasoning
+  → uncertainty and clarification
+  → action plan and appeal draft
+```
+
+Important safeguards include:
+
+- immutable PDF hashes and revision-checked workspaces;
+- exact-match restoration of document evidence instead of model-written quotations;
+- validation of document IDs, pages, offsets, facts, money fields, and entity references;
+- separate handling of related EOBs and bills so amounts are not silently combined;
+- explicit `unknown`, `user_reported`, and `conflicted` states;
+- deterministic money/date calculations, conclusions, actions, and draft templates after extraction;
+- no endpoint that submits an appeal.
+
+The current live adapter uses Chat Completions with JSON Schema output. The retained evaluation used Meta `muse-spark-1.3-contributor`, prompt `claim-extraction-v9`, and pipeline `bounded-analysis-v3`.
+
+## Demo Mode
+
+Demo Mode makes the judging path fast without pretending to perform a live model call.
+
+It accepts only the exact synthetic five-document or six-document packet in [`claimbridge-prep/demo-case`](claimbridge-prep/demo-case), matched by PDF SHA-256. For a match, it loads extraction snapshots retained from validated provider runs, maps them to the newly uploaded documents, restores and revalidates every cited passage against those PDFs, and runs the normal deterministic reasoning, revision, clarification, action-plan, and draft workflow.
+
+Unknown, incomplete, or modified packets are rejected. Demo Mode never calls the model provider and labels its result as retained validated analysis.
+
+## Evaluation
+
+The final provider-backed synthetic suite passed **12/12 automatic gates**:
+
+- three initial network/location runs;
+- three runs with the location-confirmation document;
+- three independent office-scenario runs;
+- three independent authorization-scenario runs.
+
+Median provider analysis time was **38.72 seconds**. Eleven runs passed on the first generation; one passed after the single permitted structured-output repair. These are measured results for the checked synthetic scenarios, not evidence of general medical, legal, or insurance accuracy.
+
+The repository check currently covers **34 backend tests and 13 frontend tests**, plus Ruff, ESLint, TypeScript, production build, and formatting. See [`docs/live-validation.md`](docs/live-validation.md) for the measured run table and [`docs/claim-workflow.md`](docs/claim-workflow.md) for validation boundaries.
+
+## Run locally
+
+Requirements: Node 24, npm, Python 3.12, and a POSIX shell for the Make targets.
 
 ```sh
 npm ci --ignore-scripts
 make setup-api
-```
-
-If the Python executable is named differently, use `make setup-api PYTHON=/path/to/python3.12`.
-
-Start both services in one terminal:
-
-```sh
 make dev
 ```
 
-The launcher reads backend settings from the root `.env` (existing environment variables take precedence), checks dependencies and ports, labels service logs, and stops both services with Ctrl+C. It does not make model requests. Put your key only in `.env`, which Git ignores. Run `node scripts/dev.mjs --check` for preflight checks without starting services. Separate `make dev-api` / `make dev-web` commands remain available; the standalone API command requires exported settings.
+Open [http://127.0.0.1:5173](http://127.0.0.1:5173). The API health endpoint is [http://127.0.0.1:5001/api/v1/health](http://127.0.0.1:5001/api/v1/health).
 
-Frontend: http://127.0.0.1:5173. API health: http://127.0.0.1:5001/api/v1/health. Vite proxies /api locally. The workspace stores original PDFs and page text in local SQLite under var/. Uploads are revision-checked and deduplicated. Encrypted and non-text pages are explicitly flagged. Live analysis requires backend provider configuration. Explicit Demo Mode instead recognizes the exact synthetic 01–05 or 01–06 packet by PDF SHA-256 and revalidates retained provider-generated extraction snapshots without a provider call. See the claim workflow guide for supported categories, provenance and validation limits.
+Demo Mode needs no provider credential. Live extraction requires these backend-only values in the ignored root `.env`:
 
-## Checks
+```sh
+CLAIMBRIDGE_API_KEY=...
+CLAIMBRIDGE_API_BASE_URL=https://provider.example/v1
+CLAIMBRIDGE_MODEL=...
+```
+
+Existing environment variables take precedence. Never place credentials in `VITE_*` variables. Run `node scripts/dev.mjs --check` for startup preflight without launching the services.
+
+Run the complete local check with:
 
 ```sh
 make check
 ```
 
-This runs backend smoke tests/format/lint and frontend type/lint/build/format checks. CI uses the same gates. Existing preparation probes have separate instructions in claimbridge-prep/experiments/README.md.
+## Repository guide
 
-## Data and contracts
+- [`apps/web`](apps/web): React interface for upload, evidence review, clarification, actions, and appeal drafting.
+- [`apps/api`](apps/api): Flask API, PDF ingestion, extraction adapter, validation, reasoning, persistence, and Demo Mode fixtures.
+- [`claimbridge-prep`](claimbridge-prep): synthetic case materials, schemas, research, golden states, and evaluation design.
+- [`scripts`](scripts): local launcher, live evaluation, retained-fixture export, and workflow verification tools.
+- [`docs/claim-workflow.md`](docs/claim-workflow.md): runtime behavior, provider configuration, storage, and safety boundaries.
+- [`docs/live-validation.md`](docs/live-validation.md): measured provider and workflow results.
+- [`docs/code-structure.md`](docs/code-structure.md): module ownership and dependency rules.
 
-Canonical claim/evidence schemas stay in claimbridge-prep/schemas; contracts/README.md explains future transport generation. Runtime data belongs in ignored var/. Secrets stay server-side. Never place real records or golden-answer fixtures under frontend public assets. No model provider or credential is required to run the scaffold.
+Historical development evidence, including the saved browser walkthrough, remains under [`docs`](docs) but is not required to understand or run the project.
 
-## Claim analysis and drafts
+## Limitations
 
-See [the claim workflow guide](docs/claim-workflow.md) for provider configuration, processing jobs, evidence validation, clarification, draft editing and scenario evaluation. The app supports network/location and prior-authorization review with bounded code-generated explanations. No appeal is submitted, and corrected liability remains unknown. Meta access and synthetic live performance are verified; see [the measured validation report](docs/live-validation.md) for results and remaining acceptance checks.
+- The evaluated inputs are synthetic, English, and born-digital PDFs.
+- There is no OCR, authentication, hosted deployment, or automated full-browser suite.
+- The reasoning covers a narrow set of administrative denial scenarios, not clinical medical necessity.
+- Plan interpretation and model classification can be wrong even when a citation is exact; applicability still requires human review.
+- Corrected liability intentionally remains unknown until the plan adjudicates the claim.
+- A notice date is not treated as proof of when the member received the notice, and a ledger showing no posted payment is not treated as proof that the member personally paid nothing.
+- Appeal drafts require review of the destination, signature, deadline, attachments, and unresolved fields before use.
+- The local diagnostics interface has no authentication and should remain disabled outside local development.
 
-## Local diagnostics
-
-Run `make dev`, then open http://127.0.0.1:5173/diagnostics. The dashboard shows browser-to-API connectivity through the Vite proxy, database readiness, latency, request counts, and correlated frontend/backend/PDF events. Select a request ID to see its trace.
-
-`make dev-api` enables diagnostics using `CLAIMBRIDGE_DIAGNOSTICS=1`. Direct Flask starts leave it disabled unless explicitly enabled. Keep this local developer interface disabled on public deployments; it has no authentication. Logs contain allowlisted metadata, not documents, filenames, API keys, or request bodies.
-
-Events persist in `var/diagnostics.sqlite3` for 24 hours, capped at 10,000 rows. Console events are JSON. Up to 200 undelivered browser events are retained in memory per tab and disappear on navigation/reload. Diagnostics polls are excluded from events and metrics. Stop the API to see the dashboard report an outage; stop the frontend and the dashboard cannot be loaded. Both services still use Control+C to stop.
+All included patient, provider, plan, claim, contact, and billing data is fictional demonstration data.
