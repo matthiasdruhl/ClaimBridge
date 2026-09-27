@@ -8,7 +8,7 @@ from claimbridge.application.ingest import ingest
 from claimbridge.infrastructure.workspaces import WorkspaceError
 
 
-def workspace_blueprint(store):
+def workspace_blueprint(store, demo_documents=None):
     blueprint = Blueprint("workspaces", __name__)
 
     @blueprint.post("/workspaces")
@@ -20,6 +20,25 @@ def workspace_blueprint(store):
     @blueprint.get("/workspaces/<workspace_id>")
     def get(workspace_id):
         return jsonify(store.get(workspace_id))
+
+    @blueprint.post("/workspaces/demo")
+    def create_demo():
+        """Create the exact five-document workspace used by retained Demo Mode."""
+        if demo_documents is None or not demo_documents.is_dir():
+            raise WorkspaceError("The preloaded demo case is unavailable.", 503)
+        paths = sorted(demo_documents.glob("0[1-5]-*.pdf"))
+        if len(paths) != 5:
+            raise WorkspaceError("The preloaded demo case is incomplete.", 503)
+        state = store.create()
+        for path in paths:
+            state = ingest(
+                store,
+                state["id"],
+                state["revision"],
+                path.name,
+                path.read_bytes(),
+            )
+        return jsonify(state), 201
 
     @blueprint.post("/workspaces/<workspace_id>/documents")
     def upload(workspace_id):
