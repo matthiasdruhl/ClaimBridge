@@ -8,9 +8,9 @@
 - Verify actual model availability, structured-output support, data controls and API latency when choosing the event provider; no live LLM trial yet.
 - No claim about exact corrected patient liability: recognized amount, final adjudication and payment history remain outstanding by design.
 - No production eligibility, state-law engine, insurer submission integration or real-patient privacy assessment completed.
-- Hackathon rules and duration were not supplied. Confirm permission to bring preparation artifacts; build estimates assume two developers and one focused day.
+- Hackathon rules remain unsupplied. Solo build; deadline Sunday September 27 at 8 AM Eastern. Confirm permission to bring preparation artifacts.
 
-- Repository scaffold now exists under apps/. Implement claim features using docs/code-structure.md; generate DTOs/OpenAPI from canonical contracts when integration starts.
-- CI workflow is configured; hosted CI requires a remote push and has not been observed here.
+- Claim workflow implemented under apps/; actual-model evaluation and API/model compatibility remain pending. OpenAPI/code generation are still deferred; frontend and backend consume canonical JSON Schemas.
+- CI workflow is configured; diagnostics branch was pushed; current claim-analysis work is local and hosted CI has not been observed here.
 
 - P1, after citations and clarification are reliable: implement the compact “Why this appeal?” evidence map, timeboxed to 2–3 hours. Validate that it improves explanation during rehearsal; retain cited text as fallback. See product/ui-spec.md.

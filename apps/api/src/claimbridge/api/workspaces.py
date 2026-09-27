@@ -2,7 +2,7 @@
 
 from io import BytesIO
 
-from flask import Blueprint, jsonify, request, send_file
+from flask import Blueprint, current_app, g, jsonify, request, send_file
 
 from claimbridge.application.ingest import ingest
 from claimbridge.infrastructure.workspaces import WorkspaceError
@@ -30,7 +30,37 @@ def workspace_blueprint(store):
             revision = int(request.form.get("expected_revision", ""))
         except ValueError:
             raise WorkspaceError("A workspace revision is required.") from None
-        return jsonify(ingest(store, workspace_id, revision, file.filename, file.read())), 201
+        events = current_app.extensions.get("diagnostics")
+        if events:
+            events.record(operation="pdf.extract", outcome="started", request_id=g.request_id)
+        try:
+            state = ingest(store, workspace_id, revision, file.filename, file.read())
+        except Exception:
+            if events:
+                events.record(
+                    operation="pdf.extract",
+                    outcome="failed",
+                    severity="error",
+                    request_id=g.request_id,
+                )
+            raise
+        if events:
+            from hashlib import sha256
+
+            file.seek(0)
+            digest = sha256(file.read()).hexdigest()
+            document = next(
+                item["document"]
+                for item in state["documents"]
+                if item["document"]["sha256"] == digest
+            )
+            events.record(
+                operation="pdf.extract",
+                outcome=document["status"],
+                request_id=g.request_id,
+                severity="info" if document["status"] == "ready" else "warning",
+            )
+        return jsonify(state), 201
 
     @blueprint.get("/workspaces/<workspace_id>/documents/<document_id>/content")
     def content(workspace_id, document_id):

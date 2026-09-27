@@ -1,0 +1,647 @@
+{
+  "id": "SYN-AUTH-202",
+  "revision": 1,
+  "as_of": "2026-09-26",
+  "synthetic": true,
+  "patient": {
+    "member_id": {
+      "value": "SYN-AUTH-M02",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "name": {
+      "value": "Jordan Reed",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "residence_state": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    }
+  },
+  "plan": {
+    "id": {
+      "value": "SYN-CEDAR-2026",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "funding": {
+      "value": "self_funded",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "erisa": {
+      "value": true,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "grandfathered": {
+      "value": false,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "coverage_active": {
+      "value": true,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "year": {
+      "value": 2026,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E1"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "coinsurance_bps": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "deductible_cents": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "oop_max_cents": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "appeal_levels": {
+      "value": 1,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E4"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "appeal_days": {
+      "value": 180,
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E4"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "appeal_trigger": {
+      "value": "receipt_calendar_days",
+      "status": "explicit",
+      "evidence_ids": [
+        "D1:E4"
+      ],
+      "reason": null,
+      "derivation": null
+    }
+  },
+  "providers": [
+    {
+      "id": "SYN-IMG-P2",
+      "name": {
+        "value": "Harbor Imaging",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "role": "other",
+      "network": {
+        "value": "in",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "services": [
+    {
+      "id": "SV1",
+      "description": {
+        "value": "Knee MRI",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "date": {
+        "value": "2026-09-10",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "provider_id": "SYN-IMG-P2",
+      "facility_id": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      },
+      "submitted_pos": {
+        "value": "22",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "actual_setting": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      },
+      "code": {
+        "value": "SYN-MRI-KNEE",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "code_system": {
+        "value": "fictional_internal",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "eobs": [
+    {
+      "id": "EOB1",
+      "claim_id": {
+        "value": "SYN-AUTH-202",
+        "status": "explicit",
+        "evidence_ids": [
+          "D2:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "service_id": "SV1",
+      "financial": {
+        "billed_cents": {
+          "value": 180000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "allowed_cents": {
+          "value": null,
+          "status": "unknown",
+          "evidence_ids": [],
+          "reason": "Not stated in the packet",
+          "derivation": null
+        },
+        "paid_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "member_cents": {
+          "value": 180000,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "deductible_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "copay_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "coinsurance_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        },
+        "adjustment_cents": {
+          "value": 0,
+          "status": "explicit",
+          "evidence_ids": [
+            "D2:E1"
+          ],
+          "reason": null,
+          "derivation": null
+        }
+      },
+      "deductible_used_cents": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      },
+      "oop_used_cents": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      }
+    }
+  ],
+  "bills": [],
+  "denial": {
+    "reason_code": {
+      "value": "SYN-AUTH-MISSING",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "reason": {
+      "value": "No prior authorization matched to the submitted MRI claim",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "type": {
+      "value": "authorization",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "notice_date": {
+      "value": "2026-09-18",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "received_date": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "deadline": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "reason": "Not stated in the packet",
+      "derivation": null
+    },
+    "final_internal": {
+      "value": false,
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    },
+    "claim_id": {
+      "value": "SYN-AUTH-202",
+      "status": "explicit",
+      "evidence_ids": [
+        "D2:E2"
+      ],
+      "reason": null,
+      "derivation": null
+    }
+  },
+  "authorizations": [
+    {
+      "id": {
+        "value": "SYN-APPROVAL-202",
+        "status": "explicit",
+        "evidence_ids": [
+          "D3:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "start": {
+        "value": "2026-09-01",
+        "status": "explicit",
+        "evidence_ids": [
+          "D3:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "end": {
+        "value": "2026-09-30",
+        "status": "explicit",
+        "evidence_ids": [
+          "D3:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "facility_id": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "reason": "Not stated in the packet",
+        "derivation": null
+      },
+      "scope": {
+        "value": "One Knee MRI",
+        "status": "explicit",
+        "evidence_ids": [
+          "D3:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "provider_id": {
+        "value": "SYN-IMG-P2",
+        "status": "explicit",
+        "evidence_ids": [
+          "D3:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      },
+      "service_code": {
+        "value": "SYN-MRI-KNEE",
+        "status": "explicit",
+        "evidence_ids": [
+          "D3:E1"
+        ],
+        "reason": null,
+        "derivation": null
+      }
+    }
+  ],
+  "policy_provisions": [
+    {
+      "id": "P2",
+      "section": "2",
+      "topic": "network exclusion and exception",
+      "evidence_ids": [
+        "D1:E2"
+      ]
+    },
+    {
+      "id": "P3",
+      "section": "3",
+      "topic": "authorization",
+      "evidence_ids": [
+        "D1:E3"
+      ]
+    },
+    {
+      "id": "P4",
+      "section": "4",
+      "topic": "appeal",
+      "evidence_ids": [
+        "D1:E4"
+      ]
+    }
+  ],
+  "questions": [],
+  "conclusions": [],
+  "corrected_liability_cents": {
+    "value": null,
+    "status": "unknown",
+    "evidence_ids": [],
+    "reason": "Not stated in the packet",
+    "derivation": null
+  },
+  "evidence": [
+    {
+      "id": "D1:E1",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Member Jordan Reed, member ID SYN-AUTH-M02, has active coverage for September 2026 under plan SYN-CEDAR-2026. This employer group health plan is self-funded, ERISA-governed and non-grandfathered. This is a synthetic training plan, not an actual benefit contract.",
+      "text_kind": "verbatim",
+      "content_sha256": "99d1a25dbea4c7beb60c08ef7135f6b5bbb98a109ef323daf7789fb3a7dfa439",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D1:E2",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Section 7: Non-emergency out-of-network office services are excluded unless an exception applies. Section 8: Covered non-emergency anesthesiology from a nonparticipating provider at a participating hospital or ambulatory surgical center uses protected in-network cost sharing. An ordinary office is not such a facility.",
+      "text_kind": "verbatim",
+      "content_sha256": "c8f1d34e99d22800043733029672a8b605413d560084941d837e63ddf75258b9",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D1:E3",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E3",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Section 10: Knee MRI requires prior authorization for the rendering provider, service code and date range listed on the approval. Approval is not a guarantee of payment; active coverage and other benefit conditions still apply.",
+      "text_kind": "verbatim",
+      "content_sha256": "6f7deb296137ba02b8e5cf4b71d064bdaf4cdb4f7bcead5e08559e505d3d7667",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D1:E4",
+      "domain": "plan",
+      "kind": "policy",
+      "document_id": "D1",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D1:E4",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Section 13: One internal appeal is available. File within 180 calendar days after receipt of the denial. For this synthetic plan, exclude receipt day and add 180 days. Request the claim file and verify the actual intake instructions. No real destination is provided. A bill's payment request date is not the appeal deadline.",
+      "text_kind": "verbatim",
+      "content_sha256": "b0712dc3676297f9d3b14adc9118b71f3f9273d3a725d19d360d8023b7888f0e",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D2:E1",
+      "domain": "user",
+      "kind": "eob",
+      "document_id": "D2",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D2:E1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Member Jordan Reed, SYN-AUTH-M02. Claim SYN-AUTH-202. Service Knee MRI, code SYN-MRI-KNEE (fictional internal code), September 10, 2026. Rendering provider SYN-IMG-P2, Harbor Imaging, participating. Submitted place of service 22. Billed $1,800.00; allowed amount not determined; paid $0.00; member responsibility $1,800.00; adjustment $0.00. Deductible, copayment and coinsurance each $0.00 on this denied claim.",
+      "text_kind": "verbatim",
+      "content_sha256": "ca8529c7ff4362e6c94fbf55bfdba39a7cfb641bf3a1fefe2416e467fbc2d020",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D2:E2",
+      "domain": "user",
+      "kind": "denial",
+      "document_id": "D2",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D2:E2",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Initial adverse determination dated September 18, 2026 for claim SYN-AUTH-202. Reason SYN-AUTH-MISSING: No prior authorization matched to the submitted MRI claim under Section 10. This is an authorization denial, not a medical-necessity determination. Date actually received by the member is not recorded. This is not a final internal appeal decision.",
+      "text_kind": "verbatim",
+      "content_sha256": "dbf7d2ec0fad787c2dbce6a899c7f3c5f01356cacad850be29d4135ee84d2bae",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    },
+    {
+      "id": "D3:E1",
+      "domain": "user",
+      "kind": "authorization",
+      "document_id": "D3",
+      "source_id": null,
+      "source_url": null,
+      "location": {
+        "page": 1,
+        "section": "Record D3:E1",
+        "start_char": null,
+        "end_char": null,
+        "bbox": null
+      },
+      "text": "Approval SYN-APPROVAL-202 for Jordan Reed, SYN-AUTH-M02: one Knee MRI, fictional service code SYN-MRI-KNEE, rendering provider SYN-IMG-P2, valid September 1 through September 30, 2026. The approved service and provider match the September 10 encounter. Approval does not establish final payment. No revised EOB or final liability is available.",
+      "text_kind": "verbatim",
+      "content_sha256": "db8655db9b549b73fbee1ffdfcb7075cedd2f5368900ee43b78aa342d8d6867e",
+      "verification": "human_reviewed",
+      "authority_scope": "Synthetic document",
+      "accessed_at": null
+    }
+  ]
+}

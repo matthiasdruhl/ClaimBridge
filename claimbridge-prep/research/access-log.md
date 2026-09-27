@@ -15,3 +15,10 @@ Verified entries appear in sources.json. Search snippets alone were not treated 
 | https://www.aetna.com/healthcare-professionals/assets/documents/rejected-returned-claims.pdf | Open failed; Aetna provider disputes HTML R15 opened instead |
 
 Full-page/source snapshots were not saved. The register saves verified paraphrases, locators, jurisdiction, URLs and dates. Official pages can change, so the future app must verify versions when refreshing sources. Some early guessed eCFR paths failed; registry URLs are the successfully opened canonical paths.
+
+## September 26 implementation recheck
+
+- R01: Reopened the eCFR claims-procedure section. Confirmed group-health receipt-based appeal period and relevant-record access in (h)(2)(iii)/(h)(3)(i): https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-G/part-2560/section-2560.503-1 .
+- R02: Reopened the plan-side non-emergency facility protection, including recognized-amount cost sharing and distinct provider payment requirements: https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-L/part-2590/subpart-D/section-2590.716-5 .
+- R03: eCFR redirected to an access-block page. Read the regulation text through Cornell LII instead: https://www.law.cornell.edu/cfr/text/45/149.420 . Confirmed (b)(1)(i) anesthesiology exception exclusion and (i) notification. This does not constitute a successful fresh opening of the registry's eCFR URL; keep its original access date. Full source snapshots were not archived.
+- These checks support the existing bounded summaries, not a determination that any particular real claim qualifies. Runtime retains the registry's original access dates and URLs.

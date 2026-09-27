@@ -1,6 +1,25 @@
 :root {
-  --color-background: #f5f8fa;
-  --color-text: #163344;
-  --color-muted: #526776;
-  --color-accent: #087d91;
+  --background: #f6f8f9;
+  --surface: #ffffff;
+  --surface-subtle: #eef3f4;
+  --ink: #18262d;
+  --ink-soft: #4f5e66;
+  --muted: #69777e;
+  --border: #cbd5da;
+  --border-strong: #9eacb3;
+  --teal: #075a69;
+  --teal-dark: #043e49;
+  --teal-light: #e2f1f2;
+  --blue: #1261a0;
+  --warning: #765514;
+  --warning-light: #fff3d2;
+  --danger: #8b2929;
+  --danger-light: #f9e8e8;
+  --font-body:
+    'Public Sans', 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --color-background: var(--background);
+  --color-text: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--teal);
 }

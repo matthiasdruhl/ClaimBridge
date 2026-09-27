@@ -2,7 +2,7 @@
   "tests_run": 19,
   "failures": 0,
   "errors": 0,
-  "elapsed_seconds": 0.353,
+  "elapsed_seconds": 0.381,
   "scope": "isolated deterministic preparation probes; no LLM/API/UI end-to-end test",
   "failed_tests": []
 }

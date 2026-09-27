@@ -17,3 +17,9 @@ Schemas constrain shape; the semantic validator must additionally enforce:
 - A state change invalidates all dependent conclusions/action plans until regenerated; immutable revisions remain reviewable.
 
 The golden fixtures use human-reviewed section-level anchors with null character offsets. This is honest coarse provenance. During implementation, the parser should add exact extracted spans; the probe demonstrates a PDF-text match, not automatic interpretation accuracy.
+
+## Claim workflow additions
+
+Optional ClaimFact fields added for live extraction: `denial.claim_id`, `plan.appeal_days`, `plan.appeal_trigger` (`receipt_calendar_days`, `other`, `unknown`), and authorization `provider_id`/`service_code`. Optionality preserves old preparation fixtures; missing fields remain unknown at runtime. Provider IDs must correspond to the rendering service for an authorization-match argument. Calendar deadlines are computed only from a supported receipt date and an explicit receipt/calendar-days rule. The schema generator includes the additions, but it also rewrites golden fixtures: do not run it merely to edit documentation.
+
+The backend validates canonical schemas using jsonschema; the frontend imports the same JSON files into AJV 8 (2020-12). Evidence character offsets refer to actual extracted text; matching collapses whitespace with an offset map. Quotation matching and numeric-presence checks do not prove semantic entailment. Live candidate quality still requires human review.

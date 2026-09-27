@@ -1,14 +1,17 @@
 PYTHON ?= python3.12
 VENV_PY := .venv/bin/python
 
-.PHONY: setup-api dev-api dev-web check-api check-web check
+.PHONY: setup-api dev dev-api dev-web check-api check-web check
+dev:
+	node scripts/dev.mjs
+
 setup-api:
 	$(PYTHON) -m venv .venv
 	$(VENV_PY) -m pip install -r apps/api/requirements-dev.lock
 	$(VENV_PY) -m pip install --no-deps --no-build-isolation -e apps/api
 
 dev-api:
-	PYTHONPATH=apps/api/src $(VENV_PY) -m flask --app claimbridge:create_app run --host 127.0.0.1 --port 5001
+	CLAIMBRIDGE_DIAGNOSTICS=1 PYTHONPATH=apps/api/src $(VENV_PY) -m flask --app claimbridge:create_app run --host 127.0.0.1 --port 5001
 
 dev-web:
 	npm run dev:web
@@ -19,6 +22,7 @@ check-api:
 	PYTHONPATH=apps/api/src $(VENV_PY) -m pytest apps/api/tests
 
 check-web:
+	node --experimental-strip-types --test tests/frontend/*.test.mjs
 	npm run lint:web
 	npm run typecheck
 	npm run build:web

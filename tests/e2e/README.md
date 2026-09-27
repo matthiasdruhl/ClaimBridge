@@ -1,5 +1,5 @@
-# End-to-end acceptance tests
+# Browser verification
 
-Implement after the first vertical slice. Exercise upload -> conflict -> clarification -> evidence-backed action/draft. Test one wrong-setting counterexample and stale revision handling. Do not submit to a real insurer or call a live model in ordinary CI; provide explicit separate live-evaluation commands.
+An explicit offline harness lives in `serve_fixture.py`. Start it using `PYTHONPATH=apps/api/src:apps/api/tests .venv/bin/python tests/e2e/serve_fixture.py`, plus `make dev-web`. It uses temporary storage and a TEST-ONLY provider with a visible result label. Upload the original five PDFs, analyze, inspect citations, save receipt 2026-09-01, reanalyze, add D06, inspect the revised argument, and edit/save/export a draft. Use New workspace afterward. Stop both servers with Control+C. Never import this harness into production.
 
-Golden evaluation fixtures stay in claimbridge-prep/evaluation and demo-case. Tests may read them; runtime application modules must not. Browser tooling will be selected when interactive flows exist.
+This is a manual browser harness, not an automated end-to-end suite. Actual model accuracy, full live browser rehearsal and timing remain pending API credits/configuration. Backend tests exercise all three scenarios and the D06 transition separately.
