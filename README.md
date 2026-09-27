@@ -93,6 +93,48 @@ Run the complete local check with:
 make check
 ```
 
+## Vultr deployment
+
+These commands target a fresh Debian 12 Bookworm VM and the included `/opt/claimbridge` service paths. Demo Mode does not need a `.env` file or provider key. Debian 12 provides Python 3.11 by default, so the commands install the required Python 3.12 runtime for the service user with `uv`.
+
+```sh
+sudo apt update
+sudo apt install -y ca-certificates curl git make nginx
+curl -fsSL https://deb.nodesource.com/setup_24.x -o /tmp/nodesource_setup.sh
+sudo -E bash /tmp/nodesource_setup.sh
+sudo apt install -y nodejs
+
+sudo useradd --system --user-group --create-home --home-dir /var/lib/claimbridge --shell /usr/sbin/nologin claimbridge
+curl -LsSf https://astral.sh/uv/install.sh -o /tmp/uv-installer.sh
+sudo -u claimbridge -H env UV_UNMANAGED_INSTALL=/var/lib/claimbridge/.local/bin sh /tmp/uv-installer.sh
+sudo -u claimbridge -H /var/lib/claimbridge/.local/bin/uv python install 3.12
+
+sudo git clone --branch codex/vultr-deployment https://github.com/matthiasdruhl/ClaimBridge.git /opt/claimbridge
+sudo chown -R claimbridge:claimbridge /opt/claimbridge
+cd /opt/claimbridge
+sudo -u claimbridge -H npm ci --ignore-scripts
+sudo -u claimbridge -H env PATH=/var/lib/claimbridge/.local/bin:/usr/local/bin:/usr/bin:/bin make setup-api
+sudo -u claimbridge -H npm run build:web
+
+sudo install -m 644 deploy/systemd/claimbridge.service /etc/systemd/system/claimbridge.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now claimbridge
+
+sudo install -m 644 deploy/nginx/claimbridge /etc/nginx/sites-available/claimbridge
+sudo ln -sfn /etc/nginx/sites-available/claimbridge /etc/nginx/sites-enabled/claimbridge
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl restart nginx
+
+sudo systemctl --no-pager --full status claimbridge nginx
+curl http://127.0.0.1/api/v1/health
+curl -I http://127.0.0.1/evaluation
+```
+
+Allow inbound TCP port 80 in the Vultr Firewall, then open `http://YOUR_VULTR_IP/`. Nginx serves the React build and keeps Flask private on `127.0.0.1:5001`; `/evaluation` and `/diagnostics` refresh through the SPA fallback. SQLite data and uploaded PDFs persist under `/var/lib/claimbridge`, created and owned by the service user. If you clone elsewhere, update `/opt/claimbridge` in both files under `deploy/`.
+
+For optional live extraction, create `/opt/claimbridge/.env` with the existing `CLAIMBRIDGE_API_KEY`, `CLAIMBRIDGE_API_BASE_URL`, `CLAIMBRIDGE_MODEL`, and reasoning-effort settings, make it readable only by `claimbridge`, then restart the service. The service always keeps hosted data in `/var/lib/claimbridge`.
+
 ## Repository guide
 
 - [`apps/web`](apps/web): React interface for upload, evidence review, clarification, actions, and appeal drafting.
@@ -108,7 +150,7 @@ Historical development evidence, including the saved browser walkthrough, remain
 ## Limitations
 
 - The evaluated inputs are synthetic, English, and born-digital PDFs.
-- There is no OCR, authentication, hosted deployment, or automated full-browser suite.
+- There is no OCR, authentication, automated full-browser suite, or production-grade hosting hardening.
 - The reasoning covers a narrow set of administrative denial scenarios, not clinical medical necessity.
 - Plan interpretation and model classification can be wrong even when a citation is exact; applicability still requires human review.
 - Corrected liability intentionally remains unknown until the plan adjudicates the claim.
